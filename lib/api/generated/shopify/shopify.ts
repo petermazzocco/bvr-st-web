@@ -30,33 +30,33 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
  * Receives and processes Shopify webhook events (orders/paid, orders/fulfilled, orders/updated).
  * @summary Handle Shopify webhooks
  */
-export type postShopifyWebhookResponse200 = {
+export type postApiV1WebhooksShopifyResponse200 = {
   data: string
   status: 200
 }
 
-export type postShopifyWebhookResponse400 = {
+export type postApiV1WebhooksShopifyResponse400 = {
   data: string
   status: 400
 }
     
-export type postShopifyWebhookResponseComposite = postShopifyWebhookResponse200 | postShopifyWebhookResponse400;
+export type postApiV1WebhooksShopifyResponseComposite = postApiV1WebhooksShopifyResponse200 | postApiV1WebhooksShopifyResponse400;
     
-export type postShopifyWebhookResponse = postShopifyWebhookResponseComposite & {
+export type postApiV1WebhooksShopifyResponse = postApiV1WebhooksShopifyResponseComposite & {
   headers: Headers;
 }
 
-export const getPostShopifyWebhookUrl = () => {
+export const getPostApiV1WebhooksShopifyUrl = () => {
 
 
   
 
-  return `/shopify/webhook`
+  return `/api/v1/webhooks/shopify`
 }
 
-export const postShopifyWebhook = async (bodyBody: BodyBody, options?: RequestInit): Promise<postShopifyWebhookResponse> => {
+export const postApiV1WebhooksShopify = async (bodyBody: BodyBody, options?: RequestInit): Promise<postApiV1WebhooksShopifyResponse> => {
   
-  return customFetch<postShopifyWebhookResponse>(getPostShopifyWebhookUrl(),
+  return customFetch<postApiV1WebhooksShopifyResponse>(getPostApiV1WebhooksShopifyUrl(),
   {      
     ...options,
     method: 'POST',
@@ -69,11 +69,11 @@ export const postShopifyWebhook = async (bodyBody: BodyBody, options?: RequestIn
 
 
 
-export const getPostShopifyWebhookMutationOptions = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postShopifyWebhook>>, TError,{data: BodyBody}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof postShopifyWebhook>>, TError,{data: BodyBody}, TContext> => {
+export const getPostApiV1WebhooksShopifyMutationOptions = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1WebhooksShopify>>, TError,{data: BodyBody}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiV1WebhooksShopify>>, TError,{data: BodyBody}, TContext> => {
 
-const mutationKey = ['postShopifyWebhook'];
+const mutationKey = ['postApiV1WebhooksShopify'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -83,10 +83,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postShopifyWebhook>>, {data: BodyBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1WebhooksShopify>>, {data: BodyBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postShopifyWebhook(data,requestOptions)
+          return  postApiV1WebhooksShopify(data,requestOptions)
         }
 
         
@@ -94,23 +94,23 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostShopifyWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof postShopifyWebhook>>>
-    export type PostShopifyWebhookMutationBody = BodyBody
-    export type PostShopifyWebhookMutationError = string
+    export type PostApiV1WebhooksShopifyMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1WebhooksShopify>>>
+    export type PostApiV1WebhooksShopifyMutationBody = BodyBody
+    export type PostApiV1WebhooksShopifyMutationError = string
 
     /**
  * @summary Handle Shopify webhooks
  */
-export const usePostShopifyWebhook = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postShopifyWebhook>>, TError,{data: BodyBody}, TContext>, request?: SecondParameter<typeof customFetch>}
+export const usePostApiV1WebhooksShopify = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1WebhooksShopify>>, TError,{data: BodyBody}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postShopifyWebhook>>,
+        Awaited<ReturnType<typeof postApiV1WebhooksShopify>>,
         TError,
         {data: BodyBody},
         TContext
       > => {
 
-      const mutationOptions = getPostShopifyWebhookMutationOptions(options);
+      const mutationOptions = getPostApiV1WebhooksShopifyMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }

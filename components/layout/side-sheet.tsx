@@ -103,7 +103,7 @@ export function NavSideSheet() {
                     <DropdownMenu key={collection.name}>
                       <DropdownMenuTrigger asChild>
                         <button
-                          className={`w-full flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${
+                          className={`w-full cursor-pointer flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${
                             collection.highlight
                               ? "text-red-600 hover:text-red-700"
                               : "text-foreground hover:text-foreground"

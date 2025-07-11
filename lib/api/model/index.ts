@@ -7,6 +7,9 @@
  */
 
 export * from './bodyBody';
+export * from './getApiV1AccountIdOrders200';
+export * from './getApiV1AccountIdOrdersParams';
+export * from './getApiV1AccountIdPoints200';
 export * from './getUserOrders200';
 export * from './getUserOrdersParams';
 export * from './getUserPoints200';
@@ -17,10 +20,17 @@ export * from './modelsOrder';
 export * from './modelsProduct';
 export * from './modelsReward';
 export * from './modelsUser';
+export * from './postApiV1AccountIdRewardsRedeem200';
+export * from './postApiV1AccountIdRewardsRedeemBody';
+export * from './postApiV1AuthSigninEmail200';
+export * from './postApiV1AuthSigninPhone200';
+export * from './postApiV1AuthSignout200';
+export * from './postApiV1AuthSignup201';
 export * from './postSigninEmail200';
 export * from './postSigninPhone200';
 export * from './postSignout200';
 export * from './postSignup201';
 export * from './postUserRewardsRedeem200';
 export * from './postUserRewardsRedeemBody';
+export * from './putApiV1AccountId200';
 export * from './putUser200';

@@ -30,33 +30,33 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
  * Receives and processes Stripe webhook events (charge.succeeded, payment_intent.succeeded, invoice.payment_succeeded).
  * @summary Handle Stripe webhooks
  */
-export type postStripeWebhookResponse200 = {
+export type postApiV1WebhooksStripeResponse200 = {
   data: string
   status: 200
 }
 
-export type postStripeWebhookResponse400 = {
+export type postApiV1WebhooksStripeResponse400 = {
   data: string
   status: 400
 }
     
-export type postStripeWebhookResponseComposite = postStripeWebhookResponse200 | postStripeWebhookResponse400;
+export type postApiV1WebhooksStripeResponseComposite = postApiV1WebhooksStripeResponse200 | postApiV1WebhooksStripeResponse400;
     
-export type postStripeWebhookResponse = postStripeWebhookResponseComposite & {
+export type postApiV1WebhooksStripeResponse = postApiV1WebhooksStripeResponseComposite & {
   headers: Headers;
 }
 
-export const getPostStripeWebhookUrl = () => {
+export const getPostApiV1WebhooksStripeUrl = () => {
 
 
   
 
-  return `/stripe/webhook`
+  return `/api/v1/webhooks/stripe`
 }
 
-export const postStripeWebhook = async (bodyBody: BodyBody, options?: RequestInit): Promise<postStripeWebhookResponse> => {
+export const postApiV1WebhooksStripe = async (bodyBody: BodyBody, options?: RequestInit): Promise<postApiV1WebhooksStripeResponse> => {
   
-  return customFetch<postStripeWebhookResponse>(getPostStripeWebhookUrl(),
+  return customFetch<postApiV1WebhooksStripeResponse>(getPostApiV1WebhooksStripeUrl(),
   {      
     ...options,
     method: 'POST',
@@ -69,11 +69,11 @@ export const postStripeWebhook = async (bodyBody: BodyBody, options?: RequestIni
 
 
 
-export const getPostStripeWebhookMutationOptions = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postStripeWebhook>>, TError,{data: BodyBody}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof postStripeWebhook>>, TError,{data: BodyBody}, TContext> => {
+export const getPostApiV1WebhooksStripeMutationOptions = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1WebhooksStripe>>, TError,{data: BodyBody}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiV1WebhooksStripe>>, TError,{data: BodyBody}, TContext> => {
 
-const mutationKey = ['postStripeWebhook'];
+const mutationKey = ['postApiV1WebhooksStripe'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -83,10 +83,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postStripeWebhook>>, {data: BodyBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1WebhooksStripe>>, {data: BodyBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postStripeWebhook(data,requestOptions)
+          return  postApiV1WebhooksStripe(data,requestOptions)
         }
 
         
@@ -94,23 +94,23 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostStripeWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof postStripeWebhook>>>
-    export type PostStripeWebhookMutationBody = BodyBody
-    export type PostStripeWebhookMutationError = string
+    export type PostApiV1WebhooksStripeMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1WebhooksStripe>>>
+    export type PostApiV1WebhooksStripeMutationBody = BodyBody
+    export type PostApiV1WebhooksStripeMutationError = string
 
     /**
  * @summary Handle Stripe webhooks
  */
-export const usePostStripeWebhook = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postStripeWebhook>>, TError,{data: BodyBody}, TContext>, request?: SecondParameter<typeof customFetch>}
+export const usePostApiV1WebhooksStripe = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1WebhooksStripe>>, TError,{data: BodyBody}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postStripeWebhook>>,
+        Awaited<ReturnType<typeof postApiV1WebhooksStripe>>,
         TError,
         {data: BodyBody},
         TContext
       > => {
 
-      const mutationOptions = getPostStripeWebhookMutationOptions(options);
+      const mutationOptions = getPostApiV1WebhooksStripeMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }

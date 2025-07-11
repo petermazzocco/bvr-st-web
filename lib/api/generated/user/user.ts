@@ -25,14 +25,14 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  GetUserOrders200,
-  GetUserOrdersParams,
-  GetUserPoints200,
+  GetApiV1AccountIdOrders200,
+  GetApiV1AccountIdOrdersParams,
+  GetApiV1AccountIdPoints200,
   ModelsReward,
   ModelsUser,
-  PostUserRewardsRedeem200,
-  PostUserRewardsRedeemBody,
-  PutUser200
+  PostApiV1AccountIdRewardsRedeem200,
+  PostApiV1AccountIdRewardsRedeemBody,
+  PutApiV1AccountId200
 } from '../../model';
 
 import { customFetch } from '../../mutator';
@@ -46,33 +46,33 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
  * Retrieves the profile information, orders, and rewards for the authenticated user.
  * @summary Get user details
  */
-export type getUserResponse200 = {
+export type getApiV1AccountIdResponse200 = {
   data: ModelsUser
   status: 200
 }
 
-export type getUserResponse401 = {
+export type getApiV1AccountIdResponse401 = {
   data: string
   status: 401
 }
     
-export type getUserResponseComposite = getUserResponse200 | getUserResponse401;
+export type getApiV1AccountIdResponseComposite = getApiV1AccountIdResponse200 | getApiV1AccountIdResponse401;
     
-export type getUserResponse = getUserResponseComposite & {
+export type getApiV1AccountIdResponse = getApiV1AccountIdResponseComposite & {
   headers: Headers;
 }
 
-export const getGetUserUrl = () => {
+export const getGetApiV1AccountIdUrl = (id: string,) => {
 
 
   
 
-  return `/user`
+  return `/api/v1/account/${id}`
 }
 
-export const getUser = async ( options?: RequestInit): Promise<getUserResponse> => {
+export const getApiV1AccountId = async (id: string, options?: RequestInit): Promise<getApiV1AccountIdResponse> => {
   
-  return customFetch<getUserResponse>(getGetUserUrl(),
+  return customFetch<getApiV1AccountIdResponse>(getGetApiV1AccountIdUrl(id),
   {      
     ...options,
     method: 'GET'
@@ -83,67 +83,67 @@ export const getUser = async ( options?: RequestInit): Promise<getUserResponse> 
 
 
 
-export const getGetUserQueryKey = () => {
-    return [`/user`] as const;
+export const getGetApiV1AccountIdQueryKey = (id: string,) => {
+    return [`/api/v1/account/${id}`] as const;
     }
 
     
-export const getGetUserQueryOptions = <TData = Awaited<ReturnType<typeof getUser>>, TError = string>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export const getGetApiV1AccountIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1AccountId>>, TError = string>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetUserQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1AccountIdQueryKey(id);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUser>>> = ({ signal }) => getUser({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1AccountId>>> = ({ signal }) => getApiV1AccountId(id, { signal, ...requestOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetUserQueryResult = NonNullable<Awaited<ReturnType<typeof getUser>>>
-export type GetUserQueryError = string
+export type GetApiV1AccountIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1AccountId>>>
+export type GetApiV1AccountIdQueryError = string
 
 
-export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError = string>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>> & Pick<
+export function useGetApiV1AccountId<TData = Awaited<ReturnType<typeof getApiV1AccountId>>, TError = string>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountId>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUser>>,
+          Awaited<ReturnType<typeof getApiV1AccountId>>,
           TError,
-          Awaited<ReturnType<typeof getUser>>
+          Awaited<ReturnType<typeof getApiV1AccountId>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>> & Pick<
+export function useGetApiV1AccountId<TData = Awaited<ReturnType<typeof getApiV1AccountId>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountId>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUser>>,
+          Awaited<ReturnType<typeof getApiV1AccountId>>,
           TError,
-          Awaited<ReturnType<typeof getUser>>
+          Awaited<ReturnType<typeof getApiV1AccountId>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export function useGetApiV1AccountId<TData = Awaited<ReturnType<typeof getApiV1AccountId>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get user details
  */
 
-export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export function useGetApiV1AccountId<TData = Awaited<ReturnType<typeof getApiV1AccountId>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetUserQueryOptions(options)
+  const queryOptions = getGetApiV1AccountIdQueryOptions(id,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -158,33 +158,34 @@ export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError =
  * Updates the profile information for the authenticated user.
  * @summary Update user details
  */
-export type putUserResponse200 = {
-  data: PutUser200
+export type putApiV1AccountIdResponse200 = {
+  data: PutApiV1AccountId200
   status: 200
 }
 
-export type putUserResponse400 = {
+export type putApiV1AccountIdResponse400 = {
   data: string
   status: 400
 }
     
-export type putUserResponseComposite = putUserResponse200 | putUserResponse400;
+export type putApiV1AccountIdResponseComposite = putApiV1AccountIdResponse200 | putApiV1AccountIdResponse400;
     
-export type putUserResponse = putUserResponseComposite & {
+export type putApiV1AccountIdResponse = putApiV1AccountIdResponseComposite & {
   headers: Headers;
 }
 
-export const getPutUserUrl = () => {
+export const getPutApiV1AccountIdUrl = (id: string,) => {
 
 
   
 
-  return `/user`
+  return `/api/v1/account/${id}`
 }
 
-export const putUser = async (modelsUser: ModelsUser, options?: RequestInit): Promise<putUserResponse> => {
+export const putApiV1AccountId = async (id: string,
+    modelsUser: ModelsUser, options?: RequestInit): Promise<putApiV1AccountIdResponse> => {
   
-  return customFetch<putUserResponse>(getPutUserUrl(),
+  return customFetch<putApiV1AccountIdResponse>(getPutApiV1AccountIdUrl(id),
   {      
     ...options,
     method: 'PUT',
@@ -197,11 +198,11 @@ export const putUser = async (modelsUser: ModelsUser, options?: RequestInit): Pr
 
 
 
-export const getPutUserMutationOptions = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{data: ModelsUser}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{data: ModelsUser}, TContext> => {
+export const getPutApiV1AccountIdMutationOptions = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiV1AccountId>>, TError,{id: string;data: ModelsUser}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof putApiV1AccountId>>, TError,{id: string;data: ModelsUser}, TContext> => {
 
-const mutationKey = ['putUser'];
+const mutationKey = ['putApiV1AccountId'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -211,10 +212,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putUser>>, {data: ModelsUser}> = (props) => {
-          const {data} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putApiV1AccountId>>, {id: string;data: ModelsUser}> = (props) => {
+          const {id,data} = props ?? {};
 
-          return  putUser(data,requestOptions)
+          return  putApiV1AccountId(id,data,requestOptions)
         }
 
         
@@ -222,23 +223,23 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PutUserMutationResult = NonNullable<Awaited<ReturnType<typeof putUser>>>
-    export type PutUserMutationBody = ModelsUser
-    export type PutUserMutationError = string
+    export type PutApiV1AccountIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiV1AccountId>>>
+    export type PutApiV1AccountIdMutationBody = ModelsUser
+    export type PutApiV1AccountIdMutationError = string
 
     /**
  * @summary Update user details
  */
-export const usePutUser = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{data: ModelsUser}, TContext>, request?: SecondParameter<typeof customFetch>}
+export const usePutApiV1AccountId = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiV1AccountId>>, TError,{id: string;data: ModelsUser}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof putUser>>,
+        Awaited<ReturnType<typeof putApiV1AccountId>>,
         TError,
-        {data: ModelsUser},
+        {id: string;data: ModelsUser},
         TContext
       > => {
 
-      const mutationOptions = getPutUserMutationOptions(options);
+      const mutationOptions = getPutApiV1AccountIdMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }
@@ -246,33 +247,33 @@ export const usePutUser = <TError = string,
  * Deletes the account of the authenticated user.
  * @summary Delete user account
  */
-export type deleteUserResponse204 = {
+export type deleteApiV1AccountIdResponse204 = {
   data: string
   status: 204
 }
 
-export type deleteUserResponse401 = {
+export type deleteApiV1AccountIdResponse401 = {
   data: string
   status: 401
 }
     
-export type deleteUserResponseComposite = deleteUserResponse204 | deleteUserResponse401;
+export type deleteApiV1AccountIdResponseComposite = deleteApiV1AccountIdResponse204 | deleteApiV1AccountIdResponse401;
     
-export type deleteUserResponse = deleteUserResponseComposite & {
+export type deleteApiV1AccountIdResponse = deleteApiV1AccountIdResponseComposite & {
   headers: Headers;
 }
 
-export const getDeleteUserUrl = () => {
+export const getDeleteApiV1AccountIdUrl = (id: string,) => {
 
 
   
 
-  return `/user`
+  return `/api/v1/account/${id}`
 }
 
-export const deleteUser = async ( options?: RequestInit): Promise<deleteUserResponse> => {
+export const deleteApiV1AccountId = async (id: string, options?: RequestInit): Promise<deleteApiV1AccountIdResponse> => {
   
-  return customFetch<deleteUserResponse>(getDeleteUserUrl(),
+  return customFetch<deleteApiV1AccountIdResponse>(getDeleteApiV1AccountIdUrl(id),
   {      
     ...options,
     method: 'DELETE'
@@ -284,11 +285,11 @@ export const deleteUser = async ( options?: RequestInit): Promise<deleteUserResp
 
 
 
-export const getDeleteUserMutationOptions = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteUser>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteUser>>, TError,void, TContext> => {
+export const getDeleteApiV1AccountIdMutationOptions = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1AccountId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1AccountId>>, TError,{id: string}, TContext> => {
 
-const mutationKey = ['deleteUser'];
+const mutationKey = ['deleteApiV1AccountId'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -298,10 +299,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteUser>>, void> = () => {
-          
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiV1AccountId>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
 
-          return  deleteUser(requestOptions)
+          return  deleteApiV1AccountId(id,requestOptions)
         }
 
         
@@ -309,23 +310,23 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteUserMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUser>>>
+    export type DeleteApiV1AccountIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiV1AccountId>>>
     
-    export type DeleteUserMutationError = string
+    export type DeleteApiV1AccountIdMutationError = string
 
     /**
  * @summary Delete user account
  */
-export const useDeleteUser = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteUser>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+export const useDeleteApiV1AccountId = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1AccountId>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deleteUser>>,
+        Awaited<ReturnType<typeof deleteApiV1AccountId>>,
         TError,
-        void,
+        {id: string},
         TContext
       > => {
 
-      const mutationOptions = getDeleteUserMutationOptions(options);
+      const mutationOptions = getDeleteApiV1AccountIdMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }
@@ -333,23 +334,24 @@ export const useDeleteUser = <TError = string,
  * Retrieves a paginated list of orders for the authenticated user.
  * @summary Get user orders
  */
-export type getUserOrdersResponse200 = {
-  data: GetUserOrders200
+export type getApiV1AccountIdOrdersResponse200 = {
+  data: GetApiV1AccountIdOrders200
   status: 200
 }
 
-export type getUserOrdersResponse401 = {
+export type getApiV1AccountIdOrdersResponse401 = {
   data: string
   status: 401
 }
     
-export type getUserOrdersResponseComposite = getUserOrdersResponse200 | getUserOrdersResponse401;
+export type getApiV1AccountIdOrdersResponseComposite = getApiV1AccountIdOrdersResponse200 | getApiV1AccountIdOrdersResponse401;
     
-export type getUserOrdersResponse = getUserOrdersResponseComposite & {
+export type getApiV1AccountIdOrdersResponse = getApiV1AccountIdOrdersResponseComposite & {
   headers: Headers;
 }
 
-export const getGetUserOrdersUrl = (params?: GetUserOrdersParams,) => {
+export const getGetApiV1AccountIdOrdersUrl = (id: string,
+    params?: GetApiV1AccountIdOrdersParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -361,12 +363,13 @@ export const getGetUserOrdersUrl = (params?: GetUserOrdersParams,) => {
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/user/orders?${stringifiedParams}` : `/user/orders`
+  return stringifiedParams.length > 0 ? `/api/v1/account/${id}/orders?${stringifiedParams}` : `/api/v1/account/${id}/orders`
 }
 
-export const getUserOrders = async (params?: GetUserOrdersParams, options?: RequestInit): Promise<getUserOrdersResponse> => {
+export const getApiV1AccountIdOrders = async (id: string,
+    params?: GetApiV1AccountIdOrdersParams, options?: RequestInit): Promise<getApiV1AccountIdOrdersResponse> => {
   
-  return customFetch<getUserOrdersResponse>(getGetUserOrdersUrl(params),
+  return customFetch<getApiV1AccountIdOrdersResponse>(getGetApiV1AccountIdOrdersUrl(id,params),
   {      
     ...options,
     method: 'GET'
@@ -377,67 +380,73 @@ export const getUserOrders = async (params?: GetUserOrdersParams, options?: Requ
 
 
 
-export const getGetUserOrdersQueryKey = (params?: GetUserOrdersParams,) => {
-    return [`/user/orders`, ...(params ? [params]: [])] as const;
+export const getGetApiV1AccountIdOrdersQueryKey = (id: string,
+    params?: GetApiV1AccountIdOrdersParams,) => {
+    return [`/api/v1/account/${id}/orders`, ...(params ? [params]: [])] as const;
     }
 
     
-export const getGetUserOrdersQueryOptions = <TData = Awaited<ReturnType<typeof getUserOrders>>, TError = string>(params?: GetUserOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export const getGetApiV1AccountIdOrdersQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError = string>(id: string,
+    params?: GetApiV1AccountIdOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetUserOrdersQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1AccountIdOrdersQueryKey(id,params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserOrders>>> = ({ signal }) => getUserOrders(params, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1AccountIdOrders>>> = ({ signal }) => getApiV1AccountIdOrders(id,params, { signal, ...requestOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserOrders>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetUserOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof getUserOrders>>>
-export type GetUserOrdersQueryError = string
+export type GetApiV1AccountIdOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1AccountIdOrders>>>
+export type GetApiV1AccountIdOrdersQueryError = string
 
 
-export function useGetUserOrders<TData = Awaited<ReturnType<typeof getUserOrders>>, TError = string>(
- params: undefined |  GetUserOrdersParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserOrders>>, TError, TData>> & Pick<
+export function useGetApiV1AccountIdOrders<TData = Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError = string>(
+ id: string,
+    params: undefined |  GetApiV1AccountIdOrdersParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUserOrders>>,
+          Awaited<ReturnType<typeof getApiV1AccountIdOrders>>,
           TError,
-          Awaited<ReturnType<typeof getUserOrders>>
+          Awaited<ReturnType<typeof getApiV1AccountIdOrders>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserOrders<TData = Awaited<ReturnType<typeof getUserOrders>>, TError = string>(
- params?: GetUserOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserOrders>>, TError, TData>> & Pick<
+export function useGetApiV1AccountIdOrders<TData = Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError = string>(
+ id: string,
+    params?: GetApiV1AccountIdOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUserOrders>>,
+          Awaited<ReturnType<typeof getApiV1AccountIdOrders>>,
           TError,
-          Awaited<ReturnType<typeof getUserOrders>>
+          Awaited<ReturnType<typeof getApiV1AccountIdOrders>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserOrders<TData = Awaited<ReturnType<typeof getUserOrders>>, TError = string>(
- params?: GetUserOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export function useGetApiV1AccountIdOrders<TData = Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError = string>(
+ id: string,
+    params?: GetApiV1AccountIdOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get user orders
  */
 
-export function useGetUserOrders<TData = Awaited<ReturnType<typeof getUserOrders>>, TError = string>(
- params?: GetUserOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export function useGetApiV1AccountIdOrders<TData = Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError = string>(
+ id: string,
+    params?: GetApiV1AccountIdOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetUserOrdersQueryOptions(params,options)
+  const queryOptions = getGetApiV1AccountIdOrdersQueryOptions(id,params,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -452,33 +461,33 @@ export function useGetUserOrders<TData = Awaited<ReturnType<typeof getUserOrders
  * Retrieves the current points balance for the authenticated user.
  * @summary Get user points
  */
-export type getUserPointsResponse200 = {
-  data: GetUserPoints200
+export type getApiV1AccountIdPointsResponse200 = {
+  data: GetApiV1AccountIdPoints200
   status: 200
 }
 
-export type getUserPointsResponse401 = {
+export type getApiV1AccountIdPointsResponse401 = {
   data: string
   status: 401
 }
     
-export type getUserPointsResponseComposite = getUserPointsResponse200 | getUserPointsResponse401;
+export type getApiV1AccountIdPointsResponseComposite = getApiV1AccountIdPointsResponse200 | getApiV1AccountIdPointsResponse401;
     
-export type getUserPointsResponse = getUserPointsResponseComposite & {
+export type getApiV1AccountIdPointsResponse = getApiV1AccountIdPointsResponseComposite & {
   headers: Headers;
 }
 
-export const getGetUserPointsUrl = () => {
+export const getGetApiV1AccountIdPointsUrl = (id: string,) => {
 
 
   
 
-  return `/user/points`
+  return `/api/v1/account/${id}/points`
 }
 
-export const getUserPoints = async ( options?: RequestInit): Promise<getUserPointsResponse> => {
+export const getApiV1AccountIdPoints = async (id: string, options?: RequestInit): Promise<getApiV1AccountIdPointsResponse> => {
   
-  return customFetch<getUserPointsResponse>(getGetUserPointsUrl(),
+  return customFetch<getApiV1AccountIdPointsResponse>(getGetApiV1AccountIdPointsUrl(id),
   {      
     ...options,
     method: 'GET'
@@ -489,67 +498,67 @@ export const getUserPoints = async ( options?: RequestInit): Promise<getUserPoin
 
 
 
-export const getGetUserPointsQueryKey = () => {
-    return [`/user/points`] as const;
+export const getGetApiV1AccountIdPointsQueryKey = (id: string,) => {
+    return [`/api/v1/account/${id}/points`] as const;
     }
 
     
-export const getGetUserPointsQueryOptions = <TData = Awaited<ReturnType<typeof getUserPoints>>, TError = string>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPoints>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export const getGetApiV1AccountIdPointsQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError = string>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetUserPointsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1AccountIdPointsQueryKey(id);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserPoints>>> = ({ signal }) => getUserPoints({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1AccountIdPoints>>> = ({ signal }) => getApiV1AccountIdPoints(id, { signal, ...requestOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserPoints>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetUserPointsQueryResult = NonNullable<Awaited<ReturnType<typeof getUserPoints>>>
-export type GetUserPointsQueryError = string
+export type GetApiV1AccountIdPointsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1AccountIdPoints>>>
+export type GetApiV1AccountIdPointsQueryError = string
 
 
-export function useGetUserPoints<TData = Awaited<ReturnType<typeof getUserPoints>>, TError = string>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPoints>>, TError, TData>> & Pick<
+export function useGetApiV1AccountIdPoints<TData = Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError = string>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUserPoints>>,
+          Awaited<ReturnType<typeof getApiV1AccountIdPoints>>,
           TError,
-          Awaited<ReturnType<typeof getUserPoints>>
+          Awaited<ReturnType<typeof getApiV1AccountIdPoints>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserPoints<TData = Awaited<ReturnType<typeof getUserPoints>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPoints>>, TError, TData>> & Pick<
+export function useGetApiV1AccountIdPoints<TData = Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUserPoints>>,
+          Awaited<ReturnType<typeof getApiV1AccountIdPoints>>,
           TError,
-          Awaited<ReturnType<typeof getUserPoints>>
+          Awaited<ReturnType<typeof getApiV1AccountIdPoints>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserPoints<TData = Awaited<ReturnType<typeof getUserPoints>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPoints>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export function useGetApiV1AccountIdPoints<TData = Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get user points
  */
 
-export function useGetUserPoints<TData = Awaited<ReturnType<typeof getUserPoints>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserPoints>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export function useGetApiV1AccountIdPoints<TData = Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdPoints>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetUserPointsQueryOptions(options)
+  const queryOptions = getGetApiV1AccountIdPointsQueryOptions(id,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -564,33 +573,33 @@ export function useGetUserPoints<TData = Awaited<ReturnType<typeof getUserPoints
  * Retrieves a list of rewards redeemed by the authenticated user.
  * @summary Get user rewards
  */
-export type getUserRewardsResponse200 = {
+export type getApiV1AccountIdRewardsResponse200 = {
   data: ModelsReward[]
   status: 200
 }
 
-export type getUserRewardsResponse401 = {
+export type getApiV1AccountIdRewardsResponse401 = {
   data: string
   status: 401
 }
     
-export type getUserRewardsResponseComposite = getUserRewardsResponse200 | getUserRewardsResponse401;
+export type getApiV1AccountIdRewardsResponseComposite = getApiV1AccountIdRewardsResponse200 | getApiV1AccountIdRewardsResponse401;
     
-export type getUserRewardsResponse = getUserRewardsResponseComposite & {
+export type getApiV1AccountIdRewardsResponse = getApiV1AccountIdRewardsResponseComposite & {
   headers: Headers;
 }
 
-export const getGetUserRewardsUrl = () => {
+export const getGetApiV1AccountIdRewardsUrl = (id: string,) => {
 
 
   
 
-  return `/user/rewards`
+  return `/api/v1/account/${id}/rewards`
 }
 
-export const getUserRewards = async ( options?: RequestInit): Promise<getUserRewardsResponse> => {
+export const getApiV1AccountIdRewards = async (id: string, options?: RequestInit): Promise<getApiV1AccountIdRewardsResponse> => {
   
-  return customFetch<getUserRewardsResponse>(getGetUserRewardsUrl(),
+  return customFetch<getApiV1AccountIdRewardsResponse>(getGetApiV1AccountIdRewardsUrl(id),
   {      
     ...options,
     method: 'GET'
@@ -601,67 +610,67 @@ export const getUserRewards = async ( options?: RequestInit): Promise<getUserRew
 
 
 
-export const getGetUserRewardsQueryKey = () => {
-    return [`/user/rewards`] as const;
+export const getGetApiV1AccountIdRewardsQueryKey = (id: string,) => {
+    return [`/api/v1/account/${id}/rewards`] as const;
     }
 
     
-export const getGetUserRewardsQueryOptions = <TData = Awaited<ReturnType<typeof getUserRewards>>, TError = string>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserRewards>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export const getGetApiV1AccountIdRewardsQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError = string>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetUserRewardsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1AccountIdRewardsQueryKey(id);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserRewards>>> = ({ signal }) => getUserRewards({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1AccountIdRewards>>> = ({ signal }) => getApiV1AccountIdRewards(id, { signal, ...requestOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserRewards>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetUserRewardsQueryResult = NonNullable<Awaited<ReturnType<typeof getUserRewards>>>
-export type GetUserRewardsQueryError = string
+export type GetApiV1AccountIdRewardsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1AccountIdRewards>>>
+export type GetApiV1AccountIdRewardsQueryError = string
 
 
-export function useGetUserRewards<TData = Awaited<ReturnType<typeof getUserRewards>>, TError = string>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserRewards>>, TError, TData>> & Pick<
+export function useGetApiV1AccountIdRewards<TData = Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError = string>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUserRewards>>,
+          Awaited<ReturnType<typeof getApiV1AccountIdRewards>>,
           TError,
-          Awaited<ReturnType<typeof getUserRewards>>
+          Awaited<ReturnType<typeof getApiV1AccountIdRewards>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserRewards<TData = Awaited<ReturnType<typeof getUserRewards>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserRewards>>, TError, TData>> & Pick<
+export function useGetApiV1AccountIdRewards<TData = Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUserRewards>>,
+          Awaited<ReturnType<typeof getApiV1AccountIdRewards>>,
           TError,
-          Awaited<ReturnType<typeof getUserRewards>>
+          Awaited<ReturnType<typeof getApiV1AccountIdRewards>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserRewards<TData = Awaited<ReturnType<typeof getUserRewards>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserRewards>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export function useGetApiV1AccountIdRewards<TData = Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get user rewards
  */
 
-export function useGetUserRewards<TData = Awaited<ReturnType<typeof getUserRewards>>, TError = string>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserRewards>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export function useGetApiV1AccountIdRewards<TData = Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError = string>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiV1AccountIdRewards>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetUserRewardsQueryOptions(options)
+  const queryOptions = getGetApiV1AccountIdRewardsQueryOptions(id,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -676,50 +685,51 @@ export function useGetUserRewards<TData = Awaited<ReturnType<typeof getUserRewar
  * Allows an authenticated user to redeem a reward using their points.
  * @summary Redeem a reward
  */
-export type postUserRewardsRedeemResponse200 = {
-  data: PostUserRewardsRedeem200
+export type postApiV1AccountIdRewardsRedeemResponse200 = {
+  data: PostApiV1AccountIdRewardsRedeem200
   status: 200
 }
 
-export type postUserRewardsRedeemResponse400 = {
+export type postApiV1AccountIdRewardsRedeemResponse400 = {
   data: string
   status: 400
 }
     
-export type postUserRewardsRedeemResponseComposite = postUserRewardsRedeemResponse200 | postUserRewardsRedeemResponse400;
+export type postApiV1AccountIdRewardsRedeemResponseComposite = postApiV1AccountIdRewardsRedeemResponse200 | postApiV1AccountIdRewardsRedeemResponse400;
     
-export type postUserRewardsRedeemResponse = postUserRewardsRedeemResponseComposite & {
+export type postApiV1AccountIdRewardsRedeemResponse = postApiV1AccountIdRewardsRedeemResponseComposite & {
   headers: Headers;
 }
 
-export const getPostUserRewardsRedeemUrl = () => {
+export const getPostApiV1AccountIdRewardsRedeemUrl = (id: string,) => {
 
 
   
 
-  return `/user/rewards/redeem`
+  return `/api/v1/account/${id}/rewards/redeem`
 }
 
-export const postUserRewardsRedeem = async (postUserRewardsRedeemBody: PostUserRewardsRedeemBody, options?: RequestInit): Promise<postUserRewardsRedeemResponse> => {
+export const postApiV1AccountIdRewardsRedeem = async (id: string,
+    postApiV1AccountIdRewardsRedeemBody: PostApiV1AccountIdRewardsRedeemBody, options?: RequestInit): Promise<postApiV1AccountIdRewardsRedeemResponse> => {
   
-  return customFetch<postUserRewardsRedeemResponse>(getPostUserRewardsRedeemUrl(),
+  return customFetch<postApiV1AccountIdRewardsRedeemResponse>(getPostApiV1AccountIdRewardsRedeemUrl(id),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      postUserRewardsRedeemBody,)
+      postApiV1AccountIdRewardsRedeemBody,)
   }
 );}
 
 
 
 
-export const getPostUserRewardsRedeemMutationOptions = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postUserRewardsRedeem>>, TError,{data: PostUserRewardsRedeemBody}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof postUserRewardsRedeem>>, TError,{data: PostUserRewardsRedeemBody}, TContext> => {
+export const getPostApiV1AccountIdRewardsRedeemMutationOptions = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1AccountIdRewardsRedeem>>, TError,{id: string;data: PostApiV1AccountIdRewardsRedeemBody}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiV1AccountIdRewardsRedeem>>, TError,{id: string;data: PostApiV1AccountIdRewardsRedeemBody}, TContext> => {
 
-const mutationKey = ['postUserRewardsRedeem'];
+const mutationKey = ['postApiV1AccountIdRewardsRedeem'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -729,10 +739,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postUserRewardsRedeem>>, {data: PostUserRewardsRedeemBody}> = (props) => {
-          const {data} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1AccountIdRewardsRedeem>>, {id: string;data: PostApiV1AccountIdRewardsRedeemBody}> = (props) => {
+          const {id,data} = props ?? {};
 
-          return  postUserRewardsRedeem(data,requestOptions)
+          return  postApiV1AccountIdRewardsRedeem(id,data,requestOptions)
         }
 
         
@@ -740,23 +750,23 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostUserRewardsRedeemMutationResult = NonNullable<Awaited<ReturnType<typeof postUserRewardsRedeem>>>
-    export type PostUserRewardsRedeemMutationBody = PostUserRewardsRedeemBody
-    export type PostUserRewardsRedeemMutationError = string
+    export type PostApiV1AccountIdRewardsRedeemMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1AccountIdRewardsRedeem>>>
+    export type PostApiV1AccountIdRewardsRedeemMutationBody = PostApiV1AccountIdRewardsRedeemBody
+    export type PostApiV1AccountIdRewardsRedeemMutationError = string
 
     /**
  * @summary Redeem a reward
  */
-export const usePostUserRewardsRedeem = <TError = string,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postUserRewardsRedeem>>, TError,{data: PostUserRewardsRedeemBody}, TContext>, request?: SecondParameter<typeof customFetch>}
+export const usePostApiV1AccountIdRewardsRedeem = <TError = string,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1AccountIdRewardsRedeem>>, TError,{id: string;data: PostApiV1AccountIdRewardsRedeemBody}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postUserRewardsRedeem>>,
+        Awaited<ReturnType<typeof postApiV1AccountIdRewardsRedeem>>,
         TError,
-        {data: PostUserRewardsRedeemBody},
+        {id: string;data: PostApiV1AccountIdRewardsRedeemBody},
         TContext
       > => {
 
-      const mutationOptions = getPostUserRewardsRedeemMutationOptions(options);
+      const mutationOptions = getPostApiV1AccountIdRewardsRedeemMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }
