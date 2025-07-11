@@ -1,4 +1,7 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getUserIdFromToken } from "@/lib/utils";
 import {
   Pagination,
   PaginationContent,
@@ -11,20 +14,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { OrderCard } from "@/components/cards/order-card";
 import { UserCard } from "@/components/cards/user-card";
-import { useParams } from "next/navigation";
 import {
   useUserServiceGetApiV1AccountById,
   useUserServiceGetApiV1AccountByIdOrders,
 } from "@/lib/queries";
 
 export default function Page() {
-  const params = useParams();
-  const id = params.id as string;
+  const [userId, setUserId] = useState<string | null>(null);
+  const router = useRouter();
 
-  const { data: user } = useUserServiceGetApiV1AccountById({ id: id });
+  useEffect(() => {
+    const id = getUserIdFromToken();
+    if (!id) {
+      // No valid token, redirect to sign in
+      router.push("/account/signin");
+      return;
+    }
+    setUserId(id);
+  }, [router]);
+
+  const { data: user } = useUserServiceGetApiV1AccountById({ id: userId! });
 
   const { data: orders } = useUserServiceGetApiV1AccountByIdOrders({
-    id: id,
+    id: userId!,
   });
 
   return (

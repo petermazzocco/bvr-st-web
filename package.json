@@ -23,6 +23,7 @@
     "@tanstack/react-query": "^5.82.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
     "openapi-fetch": "^0.14.0",
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@7nohe/openapi-react-query-codegen": "^1.6.2",
     "@tailwindcss/postcss": "^4",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

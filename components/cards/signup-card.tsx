@@ -16,6 +16,8 @@ import { Label } from "@/components/ui/label";
 import { PhoneInput } from "../utils/phone-input";
 import { useAuthenticationServicePostApiV1AuthSignup } from "@/lib/queries";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { setAuthToken } from "@/lib/utils";
 
 export function SignUpCard() {
   const [name, setName] = useState("");
@@ -27,12 +29,22 @@ export function SignUpCard() {
   const [zipCode, setZipCode] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
 
   const { mutate: signUpMutation, isPending: isSigningUp } =
     useAuthenticationServicePostApiV1AuthSignup({
       onError: (error) => {
         console.error(error);
-        toast.error("Signup failed");
+        toast.error("An error occurred, please try again!");
+      },
+      onSuccess: (data) => {
+        if (data.token) {
+          setAuthToken(data.token);
+        }
+        if (data.callbackUrl) {
+          router.push(data.callbackUrl);
+        }
+        toast.success("Signup successful");
       },
     });
 

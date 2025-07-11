@@ -2,7 +2,7 @@
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { AuthenticationService, ShopifyService, StripeService, UserService } from "../requests/services.gen";
-import { handlers_SignUpEmailCreds, handlers_SignUpPhoneCreds, models_User } from "../requests/types.gen";
+import { models_User } from "../requests/types.gen";
 import * as Common from "./common";
 export const useUserServiceGetApiV1AccountById = <TData = Common.UserServiceGetApiV1AccountByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
   id: string;
@@ -26,14 +26,14 @@ export const useUserServicePostApiV1AccountByIdRewardsRedeem = <TData = Common.U
   requestBody: { [key: string]: string; };
 }, TContext>({ mutationFn: ({ id, requestBody }) => UserService.postApiV1AccountByIdRewardsRedeem({ id, requestBody }) as unknown as Promise<TData>, ...options });
 export const useAuthenticationServicePostApiV1AuthSigninEmail = <TData = Common.AuthenticationServicePostApiV1AuthSigninEmailMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody: handlers_SignUpEmailCreds;
+  requestBody: { callbackUrl?: string; email?: string; password?: string; };
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody: handlers_SignUpEmailCreds;
+  requestBody: { callbackUrl?: string; email?: string; password?: string; };
 }, TContext>({ mutationFn: ({ requestBody }) => AuthenticationService.postApiV1AuthSigninEmail({ requestBody }) as unknown as Promise<TData>, ...options });
 export const useAuthenticationServicePostApiV1AuthSigninPhone = <TData = Common.AuthenticationServicePostApiV1AuthSigninPhoneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody: handlers_SignUpPhoneCreds;
+  requestBody: { callbackUrl?: string; password?: string; phone?: string; };
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody: handlers_SignUpPhoneCreds;
+  requestBody: { callbackUrl?: string; password?: string; phone?: string; };
 }, TContext>({ mutationFn: ({ requestBody }) => AuthenticationService.postApiV1AuthSigninPhone({ requestBody }) as unknown as Promise<TData>, ...options });
 export const useAuthenticationServicePostApiV1AuthSignout = <TData = Common.AuthenticationServicePostApiV1AuthSignoutMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, void, TContext>, "mutationFn">) => useMutation<TData, TError, void, TContext>({ mutationFn: () => AuthenticationService.postApiV1AuthSignout() as unknown as Promise<TData>, ...options });
 export const useAuthenticationServicePostApiV1AuthSignup = <TData = Common.AuthenticationServicePostApiV1AuthSignupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {

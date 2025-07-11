@@ -184,7 +184,7 @@ export class AuthenticationService {
      * Sign in with email
      * Authenticates a user using their email and password, returning a JWT.
      * @param data The data for the request.
-     * @param data.requestBody User email and password
+     * @param data.requestBody User email, password, and callback URL
      * @returns string token and callback URL
      * @throws ApiError
      */
@@ -206,7 +206,7 @@ export class AuthenticationService {
      * Sign in with phone
      * Authenticates a user using their phone number and password, returning a JWT.
      * @param data The data for the request.
-     * @param data.requestBody User phone and password
+     * @param data.requestBody User phone, password, and callback URL
      * @returns string token and callback URL
      * @throws ApiError
      */

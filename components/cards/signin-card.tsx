@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,27 +20,73 @@ import {
   useAuthenticationServicePostApiV1AuthSigninEmail,
   useAuthenticationServicePostApiV1AuthSigninPhone,
 } from "@/lib/queries";
+import { setAuthToken } from "@/lib/utils";
 
 export function SignInCard() {
   const [authMethod, setAuthMethod] = useState("email");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const { mutate: signInEmailMutation, isPending: isSigningInWithEmail } =
-    useAuthenticationServicePostApiV1AuthSigninEmail();
+    useAuthenticationServicePostApiV1AuthSigninEmail({
+      onSuccess: (data) => {
+        if (data.token) {
+          setAuthToken(data.token);
 
+          // Decode JWT to get user info (optional)
+          try {
+            const payload = JSON.parse(atob(data.token.split(".")[1]));
+            console.log("User ID:", payload.userid);
+            // Store user info in context/state if needed
+          } catch (e) {
+            console.error("Error decoding token:", e);
+          }
+        }
+        if (data.callback) {
+          router.push(data.callback);
+        }
+      },
+    });
   const { mutate: signInPhoneMutation, isPending: isSigningInWithPhone } =
-    useAuthenticationServicePostApiV1AuthSigninPhone();
+    useAuthenticationServicePostApiV1AuthSigninPhone({
+      onSuccess: (data) => {
+        // Handle successful sign in
+        if (data.token) {
+          setAuthToken(data.token);
+        }
+        if (data.callbackUrl) {
+          router.push(data.callbackUrl);
+        }
+      },
+      onError: (error) => {
+        // Handle sign in error
+        console.error("Phone sign in failed:", error);
+        // You might want to show a toast notification here
+      },
+    });
 
   // Handle email/phone form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (authMethod === "email") {
-      signInEmailMutation({ requestBody: { email, password } });
+      signInEmailMutation({
+        requestBody: {
+          email,
+          password,
+          callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
+        },
+      });
     } else if (authMethod === "phone") {
-      signInPhoneMutation({ requestBody: { phone, password } });
+      signInPhoneMutation({
+        requestBody: {
+          phone,
+          password,
+          callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
+        },
+      });
     }
   };
 

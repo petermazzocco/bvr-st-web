@@ -1,6 +1,35 @@
 import { clsx, type ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
+import Cookies from "js-cookie";
+
+export const setAuthToken = (token: string) => {
+  Cookies.set("authToken", token, {
+    expires: 1, // 1 day
+    secure: true,
+    sameSite: "strict",
+  });
+};
+
+export const getAuthToken = () => {
+  return Cookies.get("authToken");
+};
+
+export const removeAuthToken = () => {
+  Cookies.remove("authToken");
+};
+export const getUserIdFromToken = (): string | null => {
+  try {
+    const token = localStorage.getItem("authToken");
+    if (!token) return null;
+
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.userid || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
 
 export const createUrl = (
   pathname: string,

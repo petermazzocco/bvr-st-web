@@ -19,7 +19,7 @@ export function Navbar({ collections }: { collections: Collection[] }) {
       <div className="flex items-center justify-end gap-4">
         <Search />
         <BellIcon className="h-4" />
-        <Link href="/account/signin">
+        <Link href="/signin">
           <UserIcon className="h-4" />
         </Link>
         <CartSheet />
