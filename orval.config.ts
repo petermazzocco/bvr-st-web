@@ -52,7 +52,7 @@ export const customFetch = <T>(
   }
 
   return fetch(
-    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1"}${url}`,
+    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}${url}`,
     config,
   ).then((response) => {
     if (!response.ok) {

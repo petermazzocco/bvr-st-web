@@ -1,7 +1,7 @@
 import { SignInCard } from "@/components/cards/signin-card";
 import Image from "next/image";
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className="flex min-h-screen w-full">
       <div className="hidden md:flex flex-col items-center justify-center w-1/2 py-2">
