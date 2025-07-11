@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,9 +16,9 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PhoneInput } from "../utils/phone-input";
 import {
-  usePostApiV1AuthSigninEmail,
-  usePostApiV1AuthSigninPhone,
-} from "@/lib/api/generated/authentication/authentication";
+  useAuthenticationServicePostApiV1AuthSigninEmail,
+  useAuthenticationServicePostApiV1AuthSigninPhone,
+} from "@/lib/queries";
 
 export function SignInCard() {
   const [authMethod, setAuthMethod] = useState("email");
@@ -28,39 +27,19 @@ export function SignInCard() {
   const [password, setPassword] = useState("");
 
   const { mutate: signInEmailMutation, isPending: isSigningInWithEmail } =
-    usePostApiV1AuthSigninEmail({
-      mutation: {
-        onSuccess: (data) => {
-          console.log("Email sign-in successful:", data);
-        },
-        onError: (error) => {
-          console.error("Email sign-in failed:", error);
-          toast.error("An error occurred signing in.");
-        },
-      },
-    });
+    useAuthenticationServicePostApiV1AuthSigninEmail();
 
   const { mutate: signInPhoneMutation, isPending: isSigningInWithPhone } =
-    usePostApiV1AuthSigninPhone({
-      mutation: {
-        onSuccess: (data) => {
-          console.log("Phone sign-in successful:", data);
-        },
-        onError: (error) => {
-          console.error("Phone sign-in failed:", error);
-          toast.error("An error occurred signing in.");
-        },
-      },
-    });
+    useAuthenticationServicePostApiV1AuthSigninPhone();
 
   // Handle email/phone form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (authMethod === "email") {
-      signInEmailMutation({ data: { email, password } });
+      signInEmailMutation({ requestBody: { email, password } });
     } else if (authMethod === "phone") {
-      signInPhoneMutation({ data: { phone, password } });
+      signInPhoneMutation({ requestBody: { phone, password } });
     }
   };
 

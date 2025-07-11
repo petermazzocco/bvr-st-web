@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserIcon, MapPin } from "lucide-react";
-import { ModelsUser } from "@/lib/api/model/modelsUser";
+import { models_User } from "@/lib/requests";
 
-export function UserCard({ user }: { user: ModelsUser | undefined }) {
+export function UserCard({ user }: { user: models_User | undefined }) {
   if (!user) return null;
   return (
     <Card>
