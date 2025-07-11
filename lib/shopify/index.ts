@@ -147,7 +147,7 @@ const reshapeCollection = (
 
   return {
     ...collection,
-    path: `/search/${collection.handle}`,
+    path: `/collections/${collection.handle}`,
   };
 };
 
@@ -350,7 +350,7 @@ export async function getCollections(): Promise<Collection[]> {
         title: "All",
         description: "All products",
       },
-      path: "/search",
+      path: "/collections",
       updatedAt: new Date().toISOString(),
     },
     // Filter out the `hidden` collections.

@@ -12,40 +12,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
-
-const collections = [
-  { name: "New Arrivals", href: "#" },
-  {
-    name: "Clothing",
-    href: "#",
-    subCollections: [
-      { name: "T-Shirts", href: "/collections/t-shirts" },
-      { name: "Hoodies", href: "/collections/hoodies" },
-      { name: "Pants", href: "/collections/pants" },
-    ],
-  },
-  {
-    name: "Accessories",
-    href: "#",
-    subCollections: [
-      { name: "Hats", href: "#" },
-      { name: "Bags", href: "#" },
-      { name: "Belts", href: "#" },
-    ],
-  },
-  {
-    name: "Auctions",
-    href: "#",
-    subCollections: [{ name: "BVRSTR x Labubu", href: "#" }],
-  },
-  { name: "Sale", href: "#", highlight: true },
-];
+import { Collection } from "@/lib/shopify/types";
 
 const helpLinks = [
   { name: "Returns & Exchanges", href: "#", icon: RotateCcw },
@@ -54,24 +27,20 @@ const helpLinks = [
   { name: "Contact Us", href: "#", icon: Mail },
 ];
 
-export function NavSideSheet() {
+export function NavSideSheet({
+  collections,
+}: {
+  collections: Collection[] | undefined;
+}) {
   const [parentOpen, setParentOpen] = useState(false);
-
-  const handleCollectionClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    collection: (typeof collections)[number],
-  ) => {
-    // If it has subcollections, prevent default link behavior
-    if ("subCollections" in collection) {
-      e.preventDefault();
-    } else {
-      // Close sheet when clicking on direct links
-      setParentOpen(false);
-    }
-  };
 
   const handleSubItemClick = () => {
     // Close sheet when clicking on sub-items
+    setParentOpen(false);
+  };
+
+  const handleDirectLinkClick = () => {
+    // Close sheet when clicking on direct links
     setParentOpen(false);
   };
 
@@ -85,9 +54,9 @@ export function NavSideSheet() {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="w-60 p-0 bg-background border-r shadow-lg"
+        className="w-1/3 p-0 bg-background border-r shadow-lg"
       >
-        <div className="flex h-full w-60 flex-col">
+        <div className="flex h-full w-full flex-col">
           <SheetHeader className="p-6 pb-4">
             <SheetTitle className="text-left text-xl font-bold">
               Collections
@@ -97,66 +66,56 @@ export function NavSideSheet() {
           {/* Collections Section */}
           <div className="flex-1 px-2">
             <nav className="space-y-1">
-              {collections.map((collection) => {
-                if ("subCollections" in collection) {
-                  return (
-                    <DropdownMenu key={collection.name}>
-                      <DropdownMenuTrigger asChild>
-                        <button
-                          className={`w-full cursor-pointer flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${
-                            collection.highlight
-                              ? "text-red-600 hover:text-red-700"
-                              : "text-foreground hover:text-foreground"
-                          }`}
+              <Accordion type="multiple" className="w-full">
+                {collections?.map((collection, index) => {
+                  if (collection.path.startsWith("/collections/")) {
+                    return (
+                      <AccordionItem
+                        key={collection.handle}
+                        value={`item-${index}`}
+                        className="border-none"
+                      >
+                        <AccordionTrigger
+                          className={`hover:no-underline rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
                         >
                           <div className="flex items-center gap-3">
-                            <span>{collection.name}</span>
+                            <span>{collection.title}</span>
                           </div>
-                          <ChevronRight className="h-4 w-4 opacity-50" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="start"
-                        className="w-56"
-                        side="right"
-                        sideOffset={8}
-                      >
-                        {collection?.subCollections?.map((item) => (
-                          <DropdownMenuItem key={item.name} asChild>
+                        </AccordionTrigger>
+                        <AccordionContent className="pb-2 pt-0">
+                          <div className="ml-6 space-y-1">
                             <a
-                              href={item.href}
-                              className="flex items-center gap-2 cursor-pointer"
+                              key={collection.handle}
+                              href={collection.path}
+                              className="flex justify-between items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                               onClick={handleSubItemClick}
                             >
-                              <span>{item.name}</span>
+                              <span>View All</span>{" "}
+                              <ChevronRight className="h-4 w-4 shrink-0 opacity-50" />
                             </a>
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  );
-                }
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  }
 
-                // Regular collection item without sub-collections
-                return (
-                  <div key={collection.name}>
-                    <a
-                      href={collection.href}
-                      className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${
-                        collection.highlight
-                          ? "text-red-600 hover:text-red-700"
-                          : "text-foreground hover:text-foreground"
-                      }`}
-                      onClick={(e) => handleCollectionClick(e, collection)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span>{collection.name}</span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 opacity-50" />
-                    </a>
-                  </div>
-                );
-              })}
+                  // Regular collection item without sub-collections
+                  return (
+                    <div key={collection.handle}>
+                      <a
+                        href={collection.path}
+                        className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
+                        onClick={handleDirectLinkClick}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span>{collection.title}</span>
+                        </div>
+                        <ChevronRight className="h-4 w-4 opacity-50" />
+                      </a>
+                    </div>
+                  );
+                })}
+              </Accordion>
             </nav>
           </div>
 

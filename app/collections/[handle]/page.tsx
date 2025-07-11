@@ -79,7 +79,7 @@ export default async function Page(props: {
                     className="relative aspect-square overflow-hidden rounded-md"
                   >
                     {product.images[0] && (
-                      <Link href={`/product/${product.handle}`}>
+                      <Link href={`/products/${product.handle}`}>
                         <ProductProvider>
                           <Gallery
                             images={[
