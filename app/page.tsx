@@ -14,7 +14,7 @@ const HERO_QUERY = `*[_type == "hero"][0]{
 }`;
 
 export const metadata = {
-  title: "Shop | BVR STR",
+  title: "BVR STR CO",
   description: "Shop BVR STR and support Oregon State University.",
   openGraph: {
     type: "website",
