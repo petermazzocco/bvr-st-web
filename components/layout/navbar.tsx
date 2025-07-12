@@ -1,9 +1,10 @@
 "use client";
-import { BellIcon, UserIcon } from "lucide-react";
+import { UserIcon } from "lucide-react";
 import { NavSideSheet } from "./side-sheet";
 import Link from "next/link";
 import { Search } from "./search";
 import { CartSheet } from "../cart/cart-sheet";
+import { NotificationDropdown } from "./notification";
 import { Collection } from "@/lib/shopify/types";
 import { getAuthToken } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -32,7 +33,7 @@ export function Navbar({ collections }: { collections: Collection[] }) {
       </div>
       <div className="flex items-center justify-end gap-4">
         <Search />
-        <BellIcon className="h-4" />
+        <NotificationDropdown />
         <Link href={isClient && token != undefined ? "/account" : "/signin"}>
           <UserIcon className="h-4" />
         </Link>

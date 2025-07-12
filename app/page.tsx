@@ -37,27 +37,30 @@ export default async function Page() {
   const imageUrl = hero.image ? urlFor(hero.image).url() : "/labubu-bg.jpg";
 
   return (
-    <div
-      className="flex min-h-screen flex-col items-center justify-end bg-cover bg-center"
-      style={{
-        backgroundImage: `url('${imageUrl}')`,
-      }}
-    >
-      <div className="mb-44 flex flex-col items-center justify-center gap-4">
-        <h1 className="text-center text-4xl font-bold text-foreground">
-          {hero.heading}
-        </h1>
-        <Button
-          variant="outline"
-          size="lg"
-          asChild
-          className="flex items-center text-xl justify-center gap-2"
-        >
-          <Link href={hero.buttonRoute}>
-            {hero.buttonText} <ArrowRight className="h-4 w-4" />
-          </Link>
-        </Button>
-      </div>
-    </div>
+    <>
+      {/* HERO SECTION */}
+      <section
+        className="flex min-h-screen flex-col items-center justify-end bg-cover bg-center"
+        style={{
+          backgroundImage: `url('${imageUrl}')`,
+        }}
+      >
+        <div className="mb-44 flex flex-col items-center justify-center gap-4">
+          <h1 className="text-center text-4xl font-bold text-foreground">
+            {hero.heading}
+          </h1>
+          <Button
+            variant="outline"
+            size="lg"
+            asChild
+            className="flex items-center text-xl justify-center gap-2"
+          >
+            <Link href={hero.buttonRoute}>
+              {hero.buttonText} <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+    </>
   );
 }
