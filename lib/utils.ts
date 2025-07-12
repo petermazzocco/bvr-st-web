@@ -12,15 +12,17 @@ export const setAuthToken = (token: string) => {
 };
 
 export const getAuthToken = () => {
-  return Cookies.get("authToken");
+  const token = Cookies.get("authToken");
+  return token;
 };
 
 export const removeAuthToken = () => {
   Cookies.remove("authToken");
 };
+
 export const getUserIdFromToken = (): string | null => {
   try {
-    const token = localStorage.getItem("authToken");
+    const token = Cookies.get("authToken");
     if (!token) return null;
 
     const payload = JSON.parse(atob(token.split(".")[1]));

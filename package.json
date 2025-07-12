@@ -6,8 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "generate:api": "openapi-rq -i http://localhost:8080/swagger/openapi.json -o lib -c axios"
+    "lint": "next lint"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
@@ -26,8 +25,7 @@
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
-    "openapi-fetch": "^0.14.0",
-    "openapi-react-query": "^0.5.0",
+    "next-client-cookies": "^2.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-phone-number-input": "^3.4.12",
@@ -35,14 +33,13 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
-    "@7nohe/openapi-react-query-codegen": "^1.6.2",
     "@tailwindcss/postcss": "^4",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "openapi-typescript": "^7.8.0",
-    "swagger-typescript-api": "^13.2.7",
+    "eslint": "9.31.0",
+    "eslint-config-next": "15.3.5",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"

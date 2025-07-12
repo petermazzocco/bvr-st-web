@@ -1,4 +1,4 @@
-import { getProduct, getProductRecommendations } from "@/lib/shopify";
+import { getProductRecommendations } from "@/lib/shopify";
 import Link from "next/link";
 
 export async function RelatedProducts({ id }: { id: string }) {

@@ -40,12 +40,6 @@ export function SignInCard() {
           data.password,
           data.callbackUrl,
         );
-        if (response.token) {
-          setAuthToken(response.token);
-        }
-        if (response.callbackUrl) {
-          router.push(response.callbackUrl);
-        }
         return response;
       },
     });
@@ -62,12 +56,6 @@ export function SignInCard() {
           data.password,
           data.callbackUrl,
         );
-        if (response.token) {
-          setAuthToken(response.token);
-        }
-        if (response.callbackUrl) {
-          router.push(response.callbackUrl);
-        }
         return response;
       },
     });
@@ -84,7 +72,6 @@ export function SignInCard() {
         },
         {
           onSuccess: (response) => {
-            console.log(response);
             if (response.token) {
               setAuthToken(response.token);
             }
@@ -181,7 +168,9 @@ export function SignInCard() {
               className="w-full"
               disabled={isSigningInWithEmail || isSigningInWithPhone}
             >
-              Sign In
+              {isSigningInWithEmail || isSigningInWithPhone
+                ? "Signing In..."
+                : "Sign In"}
             </Button>
           </div>
         </form>

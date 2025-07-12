@@ -11,27 +11,24 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Input } from "@/components/ui/input";
-import { OrderCard } from "@/components/cards/order-card";
 import { UserCard } from "@/components/cards/user-card";
 import { getAuthToken } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { getUserDetails } from "@/server/user/actions";
+import { getUserDetails, getUserOrders } from "@/server/user/actions";
+import { OrderCard } from "@/components/cards/order-card";
+import { Input } from "@/components/ui/input";
 
 export default function Page() {
   const [userId, setUserId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const pageSize = 10;
   const router = useRouter();
 
   useEffect(() => {
     const id = getUserIdFromToken();
-    if (!id) {
-      // No valid token, redirect to sign in
-      router.push("/account/signin");
-      return;
-    }
     setUserId(id);
   }, [router]);
-  console.log(userId);
 
   const authToken = getAuthToken();
 
@@ -41,43 +38,203 @@ export default function Page() {
     enabled: !!userId,
   });
 
+  const { data: orders, isLoading: ordersLoading } = useQuery({
+    queryKey: ["userOrders", userId, currentPage, pageSize],
+    queryFn: () => getUserOrders(authToken, userId!, currentPage, pageSize),
+    enabled: !!userId,
+  });
+
+  // Filter orders based on search term (client-side filtering)
+  const filteredOrders =
+    orders?.filter(
+      (order) =>
+        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.tracking.toLowerCase().includes(searchTerm.toLowerCase()),
+    ) || [];
+
+  // Calculate total pages (this assumes your server returns all orders for the page)
+  // You might want to modify your server function to return total count for better pagination
+  const totalPages = Math.ceil(filteredOrders.length / pageSize);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
     <div className="min-h-screen">
-      <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
-        {/* Header with User Info */}
-        <UserCard user={user} />
+      <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6 flex flex-col justify-between min-h-screen">
+        <div>
+          {/* Header with User Info */}
+          <UserCard user={user} />
 
-        {/* Orders Section */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Order History</h2>
-            <Input className="w-1/3" placeholder="Search Orders" />
+          {/* Orders Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Order History</h2>
+              <Input
+                type="text"
+                placeholder="Search orders..."
+                value={searchTerm}
+                className="w-1/3"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                disabled={ordersLoading || orders?.length === 0}
+              />
+            </div>
+
+            <div className="space-y-4">
+              {ordersLoading ? (
+                <div className="flex justify-center items-center h-32">
+                  <div className="text-center">Loading orders...</div>
+                </div>
+              ) : filteredOrders && filteredOrders.length > 0 ? (
+                filteredOrders.map((order) => (
+                  <OrderCard key={order.id} order={order} />
+                ))
+              ) : (
+                <div className="flex justify-center items-center h-32">
+                  <div className="text-center">
+                    {searchTerm
+                      ? "No orders found matching your search"
+                      : "No orders found"}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-
-          {/* <div className="space-y-4">
-            {orders?.map((order) => (
-              <OrderCard key={order.id} order={order} />
-            ))}
-          </div> */}
         </div>
 
         {/* Pagination */}
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        {filteredOrders && filteredOrders.length > 0 && totalPages > 1 && (
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePrevious();
+                  }}
+                  className={
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }
+                />
+              </PaginationItem>
+
+              {/* First page */}
+              {currentPage > 2 && (
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(1);
+                    }}
+                  >
+                    1
+                  </PaginationLink>
+                </PaginationItem>
+              )}
+
+              {/* Ellipsis before current page */}
+              {currentPage > 3 && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+
+              {/* Previous page */}
+              {currentPage > 1 && (
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(currentPage - 1);
+                    }}
+                  >
+                    {currentPage - 1}
+                  </PaginationLink>
+                </PaginationItem>
+              )}
+
+              {/* Current page */}
+              <PaginationItem>
+                <PaginationLink
+                  href="#"
+                  isActive
+                  onClick={(e) => e.preventDefault()}
+                >
+                  {currentPage}
+                </PaginationLink>
+              </PaginationItem>
+
+              {/* Next page */}
+              {currentPage < totalPages && (
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(currentPage + 1);
+                    }}
+                  >
+                    {currentPage + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              )}
+
+              {/* Ellipsis after current page */}
+              {currentPage < totalPages - 2 && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+
+              {/* Last page */}
+              {currentPage < totalPages - 1 && (
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(totalPages);
+                    }}
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              )}
+
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNext();
+                  }}
+                  className={
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
       </div>
     </div>
   );
