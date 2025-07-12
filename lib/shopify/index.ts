@@ -60,10 +60,24 @@ const domain = process.env.SHOPIFY_STORE_DOMAIN
 const endpoint = `${domain}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
 const key = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!;
 
+/**
+ * Utility type to extract variables from a GraphQL operation type
+ */
 type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
   : never;
 
+/**
+ * Generic function for making GraphQL requests to the Shopify Storefront API
+ * @param config - Configuration object for the request
+ * @param config.cache - Cache strategy for the request (default: "no-store")
+ * @param config.headers - Additional headers to include in the request
+ * @param config.query - GraphQL query string
+ * @param config.tags - Next.js cache tags for revalidation
+ * @param config.variables - GraphQL variables for the query
+ * @returns Promise containing the response status and parsed body
+ * @throws Formatted error object if the request fails or GraphQL errors occur
+ */
 export async function shopifyFetch<T>({
   cache = "no-store",
   headers,
@@ -120,10 +134,21 @@ export async function shopifyFetch<T>({
   }
 }
 
+/**
+ * Utility function to flatten GraphQL connection structure by extracting nodes from edges
+ * @param array - GraphQL connection object with edges and nodes structure
+ * @returns Flattened array of node objects
+ */
 const removeEdgesAndNodes = <T>(array: Connection<T>): T[] => {
   return array.edges.map((edge) => edge?.node);
 };
 
+/**
+ * Transforms Shopify cart data into application cart format
+ * Ensures totalTaxAmount exists and flattens line items
+ * @param cart - Raw Shopify cart object
+ * @returns Reshaped cart object with flattened structure
+ */
 const reshapeCart = (cart: ShopifyCart): Cart => {
   if (!cart.cost?.totalTaxAmount) {
     cart.cost.totalTaxAmount = {
@@ -138,6 +163,12 @@ const reshapeCart = (cart: ShopifyCart): Cart => {
   };
 };
 
+/**
+ * Transforms Shopify collection data into application collection format
+ * Adds a path property for routing
+ * @param collection - Raw Shopify collection object
+ * @returns Reshaped collection object with path, or undefined if collection is null
+ */
 const reshapeCollection = (
   collection: ShopifyCollection,
 ): Collection | undefined => {
@@ -151,6 +182,12 @@ const reshapeCollection = (
   };
 };
 
+/**
+ * Transforms an array of Shopify collections into application collection format
+ * Filters out null/undefined collections
+ * @param collections - Array of raw Shopify collection objects
+ * @returns Array of reshaped collection objects
+ */
 const reshapeCollections = (collections: ShopifyCollection[]) => {
   const reshapedCollections = [];
 
@@ -167,6 +204,12 @@ const reshapeCollections = (collections: ShopifyCollection[]) => {
   return reshapedCollections;
 };
 
+/**
+ * Transforms product images from GraphQL connection format and ensures alt text
+ * @param images - GraphQL connection of image objects
+ * @param productTitle - Product title used for fallback alt text
+ * @returns Flattened array of images with guaranteed alt text
+ */
 const reshapeImages = (images: Connection<Image>, productTitle: string) => {
   const flattened = removeEdgesAndNodes(images);
 
@@ -179,6 +222,13 @@ const reshapeImages = (images: Connection<Image>, productTitle: string) => {
   });
 };
 
+/**
+ * Transforms Shopify product data into application product format
+ * Optionally filters out products marked as hidden
+ * @param product - Raw Shopify product object
+ * @param filterHiddenProducts - Whether to filter out hidden products (default: true)
+ * @returns Reshaped product object with flattened images and variants, or undefined if filtered out
+ */
 const reshapeProduct = (
   product: ShopifyProduct,
   filterHiddenProducts: boolean = true,
@@ -199,6 +249,12 @@ const reshapeProduct = (
   };
 };
 
+/**
+ * Transforms an array of Shopify products into application product format
+ * Filters out null/undefined products and hidden products
+ * @param products - Array of raw Shopify product objects
+ * @returns Array of reshaped product objects
+ */
 const reshapeProducts = (products: ShopifyProduct[]) => {
   const reshapedProducts = [];
 
@@ -215,6 +271,10 @@ const reshapeProducts = (products: ShopifyProduct[]) => {
   return reshapedProducts;
 };
 
+/**
+ * Creates a new empty shopping cart in Shopify
+ * @returns Promise containing the newly created cart object
+ */
 export async function createCart(): Promise<Cart> {
   const res = await shopifyFetch<ShopifyCreateCartOperation>({
     query: createCartMutation,
@@ -224,6 +284,12 @@ export async function createCart(): Promise<Cart> {
   return reshapeCart(res.body.data.cartCreate.cart);
 }
 
+/**
+ * Adds items to an existing shopping cart
+ * @param cartId - Unique identifier of the cart to add items to
+ * @param lines - Array of items to add, each with merchandiseId and quantity
+ * @returns Promise containing the updated cart object
+ */
 export async function addToCart(
   cartId: string,
   lines: { merchandiseId: string; quantity: number }[],
@@ -239,6 +305,12 @@ export async function addToCart(
   return reshapeCart(res.body.data.cartLinesAdd.cart);
 }
 
+/**
+ * Removes specific line items from a shopping cart
+ * @param cartId - Unique identifier of the cart to remove items from
+ * @param lineIds - Array of line item IDs to remove
+ * @returns Promise containing the updated cart object
+ */
 export async function removeFromCart(
   cartId: string,
   lineIds: string[],
@@ -255,6 +327,12 @@ export async function removeFromCart(
   return reshapeCart(res.body.data.cartLinesRemove.cart);
 }
 
+/**
+ * Updates quantities of existing items in a shopping cart
+ * @param cartId - Unique identifier of the cart to update
+ * @param lines - Array of line items with updated quantities
+ * @returns Promise containing the updated cart object
+ */
 export async function updateCart(
   cartId: string,
   lines: { id: string; merchandiseId: string; quantity: number }[],
@@ -271,6 +349,11 @@ export async function updateCart(
   return reshapeCart(res.body.data.cartLinesUpdate.cart);
 }
 
+/**
+ * Retrieves a shopping cart by its ID
+ * @param cartId - Unique identifier of the cart to retrieve (optional)
+ * @returns Promise containing the cart object, or undefined if cart doesn't exist
+ */
 export async function getCart(
   cartId: string | undefined,
 ): Promise<Cart | undefined> {
@@ -292,6 +375,11 @@ export async function getCart(
   return reshapeCart(res.body.data.cart);
 }
 
+/**
+ * Retrieves a collection by its handle/slug
+ * @param handle - URL handle/slug of the collection
+ * @returns Promise containing the collection object, or undefined if not found
+ */
 export async function getCollection(
   handle: string,
 ): Promise<Collection | undefined> {
@@ -306,6 +394,14 @@ export async function getCollection(
   return reshapeCollection(res.body.data.collection);
 }
 
+/**
+ * Retrieves products from a specific collection with optional sorting
+ * @param config - Configuration object for the query
+ * @param config.collection - Handle/slug of the collection
+ * @param config.reverse - Whether to reverse the sort order (optional)
+ * @param config.sortKey - Field to sort by (optional)
+ * @returns Promise containing array of products in the collection
+ */
 export async function getCollectionProducts({
   collection,
   reverse,
@@ -335,6 +431,11 @@ export async function getCollectionProducts({
   );
 }
 
+/**
+ * Retrieves all collections from the store
+ * Includes a special "All" collection and filters out hidden collections
+ * @returns Promise containing array of all visible collections
+ */
 export async function getCollections(): Promise<Collection[]> {
   const res = await shopifyFetch<ShopifyCollectionsOperation>({
     query: getCollectionsQuery,
@@ -363,6 +464,12 @@ export async function getCollections(): Promise<Collection[]> {
   return collections;
 }
 
+/**
+ * Retrieves a navigation menu by its handle
+ * Transforms Shopify menu URLs to application-friendly paths
+ * @param handle - Handle/identifier of the menu to retrieve
+ * @returns Promise containing array of menu items with title and path
+ */
 export async function getMenu(handle: string): Promise<Menu[]> {
   const res = await shopifyFetch<ShopifyMenuOperation>({
     query: getMenuQuery,
@@ -383,6 +490,11 @@ export async function getMenu(handle: string): Promise<Menu[]> {
   );
 }
 
+/**
+ * Retrieves a single page by its handle/slug
+ * @param handle - URL handle/slug of the page
+ * @returns Promise containing the page object
+ */
 export async function getPage(handle: string): Promise<Page> {
   const res = await shopifyFetch<ShopifyPageOperation>({
     query: getPageQuery,
@@ -393,6 +505,10 @@ export async function getPage(handle: string): Promise<Page> {
   return res.body.data.pageByHandle;
 }
 
+/**
+ * Retrieves all pages from the store
+ * @returns Promise containing array of all pages
+ */
 export async function getPages(): Promise<Page[]> {
   const res = await shopifyFetch<ShopifyPagesOperation>({
     query: getPagesQuery,
@@ -402,6 +518,11 @@ export async function getPages(): Promise<Page[]> {
   return removeEdgesAndNodes(res.body.data.pages);
 }
 
+/**
+ * Retrieves a single product by its handle/slug
+ * @param handle - URL handle/slug of the product
+ * @returns Promise containing the product object, or undefined if not found
+ */
 export async function getProduct(handle: string): Promise<Product | undefined> {
   const res = await shopifyFetch<ShopifyProductOperation>({
     query: getProductQuery,
@@ -414,6 +535,11 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
   return reshapeProduct(res.body.data.product, false);
 }
 
+/**
+ * Retrieves product recommendations based on a given product
+ * @param productId - Shopify product ID to get recommendations for
+ * @returns Promise containing array of recommended products
+ */
 export async function getProductRecommendations(
   productId: string,
 ): Promise<Product[]> {
@@ -428,6 +554,14 @@ export async function getProductRecommendations(
   return reshapeProducts(res.body.data.productRecommendations);
 }
 
+/**
+ * Searches for products with optional filtering and sorting
+ * @param config - Configuration object for the search
+ * @param config.query - Search query string (optional)
+ * @param config.reverse - Whether to reverse the sort order (optional)
+ * @param config.sortKey - Field to sort by (optional)
+ * @returns Promise containing array of matching products
+ */
 export async function getProducts({
   query,
   reverse,
@@ -450,7 +584,12 @@ export async function getProducts({
   return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
 }
 
-// This is called from `app/api/revalidate.ts` so providers can control revalidation logic.
+/**
+ * Handles Shopify webhook revalidation requests
+ * Called from API route to revalidate Next.js cache when Shopify data changes
+ * @param req - Next.js request object containing webhook data
+ * @returns Next.js response with revalidation status
+ */
 export async function revalidate(req: NextRequest): Promise<NextResponse> {
   // We always need to respond with a 200 status code to Shopify,
   // otherwise it will continue to retry the request.

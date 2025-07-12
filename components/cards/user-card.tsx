@@ -26,7 +26,7 @@ export function UserCard({ user }: { user: User | undefined }) {
 
   return (
     <Card className="w-full border-none">
-      <CardContent>
+      <CardContent className="p-0">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
           <div className="flex-1 space-y-2">
             <h1 className="text-2xl font-bold">{user.name}</h1>
