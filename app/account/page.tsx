@@ -14,10 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { OrderCard } from "@/components/cards/order-card";
 import { UserCard } from "@/components/cards/user-card";
-import {
-  useUserServiceGetApiV1AccountById,
-  useUserServiceGetApiV1AccountByIdOrders,
-} from "@/lib/queries";
+import { getAuthToken } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { getUserDetails } from "@/server/user/actions";
 
 export default function Page() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -32,11 +31,14 @@ export default function Page() {
     }
     setUserId(id);
   }, [router]);
+  console.log(userId);
 
-  const { data: user } = useUserServiceGetApiV1AccountById({ id: userId! });
+  const authToken = getAuthToken();
 
-  const { data: orders } = useUserServiceGetApiV1AccountByIdOrders({
-    id: userId!,
+  const { data: user } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => getUserDetails(authToken, userId!),
+    enabled: !!userId,
   });
 
   return (
@@ -52,11 +54,11 @@ export default function Page() {
             <Input className="w-1/3" placeholder="Search Orders" />
           </div>
 
-          <div className="space-y-4">
-            {orders?.data?.map((order) => (
+          {/* <div className="space-y-4">
+            {orders?.map((order) => (
               <OrderCard key={order.id} order={order} />
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Pagination */}

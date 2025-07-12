@@ -16,11 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PhoneInput } from "../utils/phone-input";
-import {
-  useAuthenticationServicePostApiV1AuthSigninEmail,
-  useAuthenticationServicePostApiV1AuthSigninPhone,
-} from "@/lib/queries";
+import { toast } from "sonner";
 import { setAuthToken } from "@/lib/utils";
+import { signInWithEmail, signInWithPhone } from "@/server/user/actions";
+import { useMutation } from "@tanstack/react-query";
 
 export function SignInCard() {
   const [authMethod, setAuthMethod] = useState("email");
@@ -30,63 +29,97 @@ export function SignInCard() {
   const router = useRouter();
 
   const { mutate: signInEmailMutation, isPending: isSigningInWithEmail } =
-    useAuthenticationServicePostApiV1AuthSigninEmail({
-      onSuccess: (data) => {
-        if (data.token) {
-          setAuthToken(data.token);
-
-          // Decode JWT to get user info (optional)
-          try {
-            const payload = JSON.parse(atob(data.token.split(".")[1]));
-            console.log("User ID:", payload.userid);
-            // Store user info in context/state if needed
-          } catch (e) {
-            console.error("Error decoding token:", e);
-          }
+    useMutation({
+      mutationFn: async (data: {
+        email: string;
+        password: string;
+        callbackUrl: string;
+      }) => {
+        const response = await signInWithEmail(
+          data.email,
+          data.password,
+          data.callbackUrl,
+        );
+        if (response.token) {
+          setAuthToken(response.token);
         }
-        if (data.callback) {
-          router.push(data.callback);
+        if (response.callbackUrl) {
+          router.push(response.callbackUrl);
         }
+        return response;
       },
     });
+
   const { mutate: signInPhoneMutation, isPending: isSigningInWithPhone } =
-    useAuthenticationServicePostApiV1AuthSigninPhone({
-      onSuccess: (data) => {
-        // Handle successful sign in
-        if (data.token) {
-          setAuthToken(data.token);
+    useMutation({
+      mutationFn: async (data: {
+        phone: string;
+        password: string;
+        callbackUrl: string;
+      }) => {
+        const response = await signInWithPhone(
+          data.phone,
+          data.password,
+          data.callbackUrl,
+        );
+        if (response.token) {
+          setAuthToken(response.token);
         }
-        if (data.callbackUrl) {
-          router.push(data.callbackUrl);
+        if (response.callbackUrl) {
+          router.push(response.callbackUrl);
         }
-      },
-      onError: (error) => {
-        // Handle sign in error
-        console.error("Phone sign in failed:", error);
-        // You might want to show a toast notification here
+        return response;
       },
     });
 
-  // Handle email/phone form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (authMethod === "email") {
-      signInEmailMutation({
-        requestBody: {
+      signInEmailMutation(
+        {
           email,
           password,
           callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
         },
-      });
+        {
+          onSuccess: (response) => {
+            console.log(response);
+            if (response.token) {
+              setAuthToken(response.token);
+            }
+            if (response.callbackUrl) {
+              router.push(response.callbackUrl);
+            }
+          },
+          onError: (error) => {
+            toast.error("Error signing in with email");
+            console.error("Error signing in with email:", error);
+          },
+        },
+      );
     } else if (authMethod === "phone") {
-      signInPhoneMutation({
-        requestBody: {
+      signInPhoneMutation(
+        {
           phone,
           password,
           callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
         },
-      });
+        {
+          onSuccess: (response) => {
+            if (response.token) {
+              setAuthToken(response.token);
+            }
+            if (response.callbackUrl) {
+              router.push(response.callbackUrl);
+            }
+          },
+          onError: (error) => {
+            toast.error("Error signing in with phone");
+            console.error("Error signing in with phone:", error);
+          },
+        },
+      );
     }
   };
 
