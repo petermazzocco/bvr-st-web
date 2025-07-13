@@ -17,6 +17,9 @@ COPY package*.json ./
 # Install ALL dependencies
 RUN npm ci
 
+# Force rebuild native dependencies and specifically rebuild lightningcss
+RUN npm rebuild lightningcss
+
 # Copy source code
 COPY . .
 
