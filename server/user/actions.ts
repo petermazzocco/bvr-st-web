@@ -170,6 +170,34 @@ export const getUserOrders = async (
 };
 
 /**
+ * Retrieves an integer of points for a specific user
+ * @param authToken - Bearer token for authentication (optional)
+ * @param userId - Unique identifier for the user
+ * @returns Promise containing integer of user points
+ * @throws Error if network request fails or user is not found
+ */
+export const getUserPoints = async (
+  authToken: string | undefined,
+  userId: string,
+) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/points`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`, // Example header
+      },
+    },
+  );
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const body: number = await response.json();
+  return body;
+};
+
+/**
  * Changes a user's password after verifying the current password
  * @param authToken - Bearer token for authentication (optional)
  * @param userId - Unique identifier for the user
@@ -230,73 +258,6 @@ export const deleteUser = async (
   if (!response.ok) {
     const errorText = await response.text();
     throw new Error(errorText || "Failed to delete user");
-  }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
-};
-
-/**
- * Retrieves all available rewards for a specific user
- * @param authToken - Bearer token for authentication (optional)
- * @param userId - Unique identifier for the user
- * @returns Promise containing user rewards information
- * @throws Error if network request fails or user is not found
- */
-export const getUserRewards = async (
-  authToken: string | undefined,
-  userId: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/rewards`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to fetch user rewards");
-  }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
-};
-
-/**
- * Redeems a specific reward for a user
- * @param authToken - Bearer token for authentication (optional)
- * @param userId - Unique identifier for the user
- * @param rewardId - Unique identifier for the reward to redeem
- * @returns Promise containing redemption confirmation message and status
- * @throws Error if redemption fails, reward is unavailable, or user is not eligible
- */
-export const redeemUserReward = async (
-  authToken: string | undefined,
-  userId: string,
-  rewardId: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/rewards/redeem`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ rewardId: rewardId }),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to redeem reward");
   }
   const body: {
     message: string;
