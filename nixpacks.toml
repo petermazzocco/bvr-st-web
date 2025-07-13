@@ -1,0 +1,8 @@
+[variables]
+NIXPACKS_NO_MUSL = "1"
+
+[phases.build]
+cmd = "bun run build"
+
+[phases.start]
+cmd = "bun run start"
