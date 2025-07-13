@@ -12,14 +12,12 @@ import {
   Sheet,
   SheetContent,
   SheetHeader,
-  SheetTitle,
 } from "@/components/ui/sheet";
 import {
   createCartAndSetCookie,
   redirectToCheckout,
 } from "@/server/cart/actions";
 import { useCart } from "@/components/cart/cart-context";
-import CloseCartButton from "@/components/cart/close-cart-button";
 import { EditItemQuantityButton } from "@/components/cart/edit-item-quan-button";
 import { OpenCartButton } from "@/components/cart/open-cart-button";
 import { ShoppingCart } from "lucide-react";
@@ -61,7 +59,7 @@ export function CartSheet() {
       {/* Move the trigger button OUTSIDE the Sheet component */}
       <Button
         aria-label="Open cart"
-        onClick={(e) => {
+        onClick={() => {
           openCart();
         }}
         variant="ghost"

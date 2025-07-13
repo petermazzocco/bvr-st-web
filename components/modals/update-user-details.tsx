@@ -102,7 +102,7 @@ export function UpdateUserModal({
           <DialogTitle>Update User Details</DialogTitle>
           <DialogDescription>
             Make changes to your profile information here. Click save when
-            you're done.
+            you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

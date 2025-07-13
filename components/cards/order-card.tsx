@@ -2,9 +2,9 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, Package } from "lucide-react";
 import Image from "next/image";
-import { models_Order } from "@/lib/requests";
+import { Order } from "@/lib/types";
 
-export function OrderCard({ order }: { order: models_Order | undefined }) {
+export function OrderCard({ order }: { order: Order | undefined }) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Delivered":
