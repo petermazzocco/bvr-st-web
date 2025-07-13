@@ -1,21 +1,20 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
 # Set working directory
 WORKDIR /app
 
 # Install dependencies needed for native modules
-RUN apk add --no-cache \
-    libc6-compat \
+RUN apt-get update && apt-get install -y \
     python3 \
     make \
     g++ \
-    && ln -sf python3 /usr/bin/python
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy package files
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies for build)
+# Install ALL dependencies
 RUN npm ci
 
 # Copy source code
@@ -25,13 +24,10 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:20-alpine AS production
+FROM node:20-slim AS production
 
 # Set working directory
 WORKDIR /app
-
-# Install runtime dependencies
-RUN apk add --no-cache libc6-compat
 
 # Copy package files
 COPY package*.json ./
