@@ -4,21 +4,11 @@ FROM node:20-slim AS builder
 # Set working directory
 WORKDIR /app
 
-# Install dependencies needed for native modules
-RUN apt-get update && apt-get install -y \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
-
 # Copy package files
 COPY package*.json ./
 
 # Install ALL dependencies
 RUN npm ci
-
-# Force rebuild native dependencies and specifically rebuild lightningcss
-RUN npm rebuild lightningcss
 
 # Copy source code
 COPY . .
