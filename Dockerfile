@@ -1,4 +1,4 @@
-# Use Node.js 20 (to satisfy Sanity requirements)
+# Use Node.js 20 (to satisfy Sanity requirementss)
 FROM node:20-alpine
 
 # Set working directory
