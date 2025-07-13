@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserDetails, getUserOrders } from "@/server/user/actions";
 import { OrderCard } from "@/components/cards/order-card";
 import { Input } from "@/components/ui/input";
+import { ErrorCard } from "@/components/cards/error-card";
 
 export default function Page() {
   const [userId, setUserId] = useState<string | null>(null);
