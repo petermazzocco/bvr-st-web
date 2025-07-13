@@ -19,8 +19,6 @@ export function Navbar({ collections }: { collections: Collection[] }) {
     setToken(token);
   }, []);
 
-  console.log(token);
-
   return (
     <nav className="grid grid-cols-3 items-center p-2 border-b w-full bg-background">
       <div className="flex items-center">

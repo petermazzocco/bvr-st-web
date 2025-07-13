@@ -50,7 +50,7 @@ export default async function Page() {
             {hero.heading}
           </h1>
           <Button
-            variant="outline"
+            variant="secondary"
             size="lg"
             asChild
             className="flex items-center text-xl justify-center gap-2"

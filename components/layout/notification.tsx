@@ -51,8 +51,6 @@ export function NotificationDropdown() {
     enabled: !!userId,
   });
 
-  console.log(notifications);
-
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
