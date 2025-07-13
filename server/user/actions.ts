@@ -1,6 +1,6 @@
 "use server";
 
-import { Order, UpdateUser, User } from "@/lib/types";
+import { Order, UpdateUser, User, UserSignUp } from "@/lib/types";
 import Cookies from "js-cookie";
 
 /**
@@ -27,7 +27,8 @@ export const signInWithEmail = async (
     },
   );
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
   const body: { token: string; callbackUrl: string } = await response.json();
   return body;
@@ -57,7 +58,8 @@ export const signInWithPhone = async (
     },
   );
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
   const body: { token: string; callbackUrl: string } = await response.json();
   return body;
@@ -76,6 +78,31 @@ export const signOut = async () => {
     console.error("Sign out error:", error);
     return { success: false, error };
   }
+};
+
+/**
+ * Signs up a new user
+ * @param user - A user sign up object containing phone, password, and callback URL
+ * @returns Promise containing authentication token and callback URL
+ * @throws Error if network request fails or credentials are invalid
+ */
+export const signUp = async (user: UserSignUp) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    },
+  );
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+  const body: { token: string } = await response.json();
+  return body;
 };
 
 /**
@@ -100,7 +127,8 @@ export const getUserDetails = async (
     },
   );
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
   const body: User = await response.json();
   return body;
@@ -131,7 +159,8 @@ export const updateUserDetails = async (
     },
   );
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
   const body: User = await response.json();
   return body;
@@ -163,7 +192,8 @@ export const getUserOrders = async (
     },
   );
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
   const body: Order[] = await response.json();
   return body;
@@ -191,7 +221,8 @@ export const getUserPoints = async (
     },
   );
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
   const body: number = await response.json();
   return body;
@@ -225,7 +256,35 @@ export const changeUserPassword = async (
   );
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || "Failed to change password");
+    throw new Error(errorText);
+  }
+  const body: {
+    message: string;
+    success: boolean;
+  } = await response.json();
+  return body;
+};
+
+/**
+ * User has forgotten their password and needs to reset it. This is different from the changePassword function.
+ * @param email - Email address of the user
+ * @returns Promise containing success message and status
+ * @throws Error if email is incorrect or network request fails
+ */
+export const forgotUserPassword = async (email: string) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    },
+  );
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
   }
   const body: {
     message: string;
@@ -257,7 +316,7 @@ export const deleteUser = async (
   );
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || "Failed to delete user");
+    throw new Error(errorText);
   }
   const body: {
     message: string;

@@ -130,3 +130,20 @@ export interface UpdateUser {
   /** User's email address */
   email: string;
 }
+
+/**
+ * Represents the data needed to sign a new user up.
+ * Contains only the fields that are required for user registration
+ */
+export interface UserSignUp {
+  /** User's full name */
+  name: string;
+  /** User's phone number */
+  phone: string;
+  /** User's physical address information */
+  address: Address;
+  /** User's email address */
+  email: string;
+  /** User's password */
+  password: string;
+}

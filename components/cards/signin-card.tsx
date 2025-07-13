@@ -80,7 +80,7 @@ export function SignInCard() {
             }
           },
           onError: (error) => {
-            toast.error("Error signing in with email");
+            toast.error(error.message);
             console.error("Error signing in with email:", error);
           },
         },

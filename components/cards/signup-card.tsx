@@ -14,16 +14,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PhoneInput } from "../utils/phone-input";
-import { useAuthenticationServicePostApiV1AuthSignup } from "@/lib/queries";
+import { signUp } from "@/server/user/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { setAuthToken } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
+import { UserSignUp } from "@/lib/types";
 
 export function SignUpCard() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [apt, setApt] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
@@ -31,22 +34,23 @@ export function SignUpCard() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
 
-  const { mutate: signUpMutation, isPending: isSigningUp } =
-    useAuthenticationServicePostApiV1AuthSignup({
-      onError: (error) => {
-        console.error(error);
-        toast.error("An error occurred, please try again!");
-      },
-      onSuccess: (data) => {
-        if (data.token) {
-          setAuthToken(data.token);
-        }
-        if (data.callbackUrl) {
-          router.push(data.callbackUrl);
-        }
-        toast.success("Signup successful");
-      },
-    });
+  const { mutate: signUpMutation, isPending: isSigningUp } = useMutation({
+    mutationFn: async (data: UserSignUp) => {
+      const response = await signUp(data);
+      return response;
+    },
+    onSuccess: (response) => {
+      if (response.token) {
+        setAuthToken(response.token);
+      }
+      router.push("/account");
+      toast.success("Account created successfully");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("An error occurred, please try again!");
+    },
+  });
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
@@ -57,7 +61,7 @@ export function SignUpCard() {
       return;
     }
 
-    const userData = {
+    const userData: UserSignUp = {
       name,
       email,
       phone,
@@ -65,13 +69,20 @@ export function SignUpCard() {
         street: address,
         city,
         state,
+        apt,
         zip: zipCode,
       },
       password,
     };
 
     // Choose signup method based on whether email or phone is primary
-    signUpMutation({ requestBody: userData });
+    signUpMutation(userData, {
+      onSuccess: (response) => {
+        if (response.token) {
+          setAuthToken(response.token);
+        }
+      },
+    });
   };
 
   return (
@@ -127,6 +138,19 @@ export function SignUpCard() {
                 required
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
+              />
+            </div>
+
+            {/* Apt Fields */}
+            <div className="grid gap-2">
+              <Label htmlFor="apt">Apt/Unit/Building (optional)</Label>
+              <Input
+                id="address"
+                type="text"
+                placeholder="#130"
+                required
+                value={apt}
+                onChange={(e) => setApt(e.target.value)}
               />
             </div>
 
