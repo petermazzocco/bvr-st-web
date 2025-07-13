@@ -1,8 +1,11 @@
 [variables]
 NIXPACKS_NO_MUSL = "1"
 
+[phases.install]
+cmd = "npm ci && npm rebuild"
+
 [phases.build]
-cmd = "bun run build"
+cmd = "npm run build"
 
 [phases.start]
-cmd = "bun run start"
+cmd = "npm run start"
