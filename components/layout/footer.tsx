@@ -27,7 +27,7 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="/privacy"
+                    href="/legal/privacy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Privacy Policy
@@ -35,7 +35,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/terms"
+                    href="/legal/terms"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Terms of Service
@@ -43,7 +43,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/cookies"
+                    href="/legal/cookies"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Cookie Policy
@@ -51,10 +51,10 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/disclaimer"
+                    href="/legal/return-policy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Disclaimer
+                    Return Policy
                   </Link>
                 </li>
               </ul>
@@ -105,23 +105,17 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="#"
+                    href="https://www.bsky.app/profile/bvrstrco.com"
+                    target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Facebook
+                    Bluesky
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Twitter
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
+                    href="https://www.instagram.com/bvrstrco"
+                    target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Instagram
@@ -129,10 +123,20 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="https://www.linkedin.com/in/bvrstrco"
+                    target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     LinkedIn
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="https://www.twitter.com/bvrstrco"
+                    target="_blank"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Twitter
                   </Link>
                 </li>
               </ul>

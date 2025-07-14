@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +15,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PhoneInput } from "../utils/phone-input";
 import { toast } from "sonner";
@@ -21,12 +30,42 @@ import { setAuthToken } from "@/lib/utils";
 import { signInWithEmail, signInWithPhone } from "@/server/user/actions";
 import { useMutation } from "@tanstack/react-query";
 
+const signInSchema = z
+  .object({
+    authMethod: z.enum(["email", "phone"]),
+    email: z.string().email("Invalid email address").optional(),
+    phone: z.string().optional(),
+    password: z.string().min(1, "Password is required"),
+  })
+  .refine(
+    (data) => {
+      if (data.authMethod === "email") {
+        return data.email && data.email.length > 0;
+      } else {
+        return data.phone && data.phone.length > 0;
+      }
+    },
+    {
+      message: "Email or phone is required",
+      path: ["email"],
+    },
+  );
+
+type SignInFormValues = z.infer<typeof signInSchema>;
+
 export function SignInCard() {
-  const [authMethod, setAuthMethod] = useState("email");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
   const router = useRouter();
+
+  const form = useForm<SignInFormValues>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      authMethod: "email",
+      email: "",
+      phone: "",
+      password: "",
+    },
+  });
+
 
   const { mutate: signInEmailMutation, isPending: isSigningInWithEmail } =
     useMutation({
@@ -60,14 +99,12 @@ export function SignInCard() {
       },
     });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (authMethod === "email") {
+  const onSubmit = (data: SignInFormValues) => {
+    if (data.authMethod === "email" && data.email) {
       signInEmailMutation(
         {
-          email,
-          password,
+          email: data.email,
+          password: data.password,
           callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
         },
         {
@@ -85,11 +122,11 @@ export function SignInCard() {
           },
         },
       );
-    } else if (authMethod === "phone") {
+    } else if (data.authMethod === "phone" && data.phone) {
       signInPhoneMutation(
         {
-          phone,
-          password,
+          phone: data.phone,
+          password: data.password,
           callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
         },
         {
@@ -119,50 +156,78 @@ export function SignInCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Email/Phone Form */}
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4">
-            <Tabs
-              value={authMethod}
-              onValueChange={setAuthMethod}
-              className="w-full"
-            >
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="email">Email</TabsTrigger>
-                <TabsTrigger value="phone">Phone</TabsTrigger>
-              </TabsList>
-              <TabsContent value="email" className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </TabsContent>
-              <TabsContent value="phone" className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <PhoneInput
-                  value={phone}
-                  setValue={(value) => setPhone(value)}
-                />
-              </TabsContent>
-            </Tabs>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="authMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <Tabs
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="w-full"
+                  >
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="email">Email</TabsTrigger>
+                      <TabsTrigger value="phone">Phone</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="email" className="space-y-2">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email Address</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="email"
+                                placeholder="m@example.com"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </TabsContent>
+                    <TabsContent value="phone" className="space-y-2">
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number</FormLabel>
+                            <FormControl>
+                              <PhoneInput
+                                value={field.value || ""}
+                                setValue={field.onChange}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </TabsContent>
+                  </Tabs>
+                </FormItem>
+              )}
+            />
 
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button
               type="submit"
               className="w-full"
@@ -172,12 +237,12 @@ export function SignInCard() {
                 ? "Signing In..."
                 : "Sign In"}
             </Button>
-          </div>
-        </form>
+          </form>
+        </Form>
 
         <div className="mt-4 text-center text-sm">
           {"Don't have an account? "}
-          <Link href="/account/signup" className="underline">
+          <Link href="/signup" className="underline">
             Sign up
           </Link>
           {" | "}

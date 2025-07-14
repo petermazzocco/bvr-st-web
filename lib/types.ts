@@ -16,10 +16,16 @@ export interface User {
   password: string;
   /** Current reward points balance */
   points: number;
-  /** Array of rewards owned by the user */
-  rewards: Reward[];
   /** Array of orders placed by the user */
   orders: Order[];
+  /** User's marketing opt-in status */
+  optInMarketing: boolean;
+  /** User's rewards opt-in status */
+  optInRewards: boolean;
+  /** Stripe customer ID for payment processing */
+  stripeCustomerID: string;
+  /** User's membership status */
+  isMember: boolean;
   /** ISO timestamp when the user account was created */
   createdAt: string;
   /** ISO timestamp when the user account was last updated */
@@ -42,36 +48,6 @@ export interface Address {
   city: string;
   /** State or province */
   state: string;
-}
-
-/**
- * Represents a reward that can be earned and redeemed by users
- */
-export interface Reward {
-  /** Unique identifier for the reward */
-  id: string;
-  /** Display name of the reward */
-  name: string;
-  /** Detailed description of the reward */
-  description: string;
-  /** Unique redemption code for the reward */
-  code: string;
-  /** URL or path to the reward's image */
-  image: string;
-  /** ISO timestamp when the reward expires */
-  validTil: string;
-  /** Number of points required to redeem this reward */
-  pointsCost: number;
-  /** Whether this reward has been redeemed by the user */
-  redeemed: boolean;
-  /** ISO timestamp when the reward was redeemed */
-  redeemedAt: string;
-  /** ISO timestamp when the reward was created */
-  createdAt: string;
-  /** ISO timestamp when the reward was last updated */
-  updatedAt: string;
-  /** ISO timestamp when the reward was deleted (if applicable) */
-  deletedAt?: string;
 }
 
 /**

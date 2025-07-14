@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,13 +12,31 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { forgotUserPassword } from "@/server/user/actions";
 
+const forgotPasswordSchema = z.object({
+  email: z.email("Invalid email address"),
+});
+
+type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+
 export function ForgotPasswordCard() {
-  const [email, setEmail] = useState("");
+  const form = useForm<ForgotPasswordFormValues>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
 
   const { mutate: forgotPasswordMutation, isPending } = useMutation({
     mutationFn: async (email: string) => {
@@ -25,15 +45,13 @@ export function ForgotPasswordCard() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    forgotPasswordMutation(email, {
+  const onSubmit = (data: ForgotPasswordFormValues) => {
+    forgotPasswordMutation(data.email, {
       onSuccess: (response) => {
         toast.success(
           response.message || "Password reset email sent successfully",
         );
-        setEmail("");
+        form.reset();
       },
       onError: (error) => {
         toast.error(error.message || "Failed to send password reset email");
@@ -52,24 +70,30 @@ export function ForgotPasswordCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="m@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Sending..." : "Send Reset Link"}
             </Button>
-          </div>
-        </form>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

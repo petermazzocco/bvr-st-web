@@ -324,3 +324,44 @@ export const deleteUser = async (
   } = await response.json();
   return body;
 };
+
+/**
+ * Contact form submission
+ * @param name - Name of the user submitting the form
+ * @param email - Email of the user submitting the form
+ * @param subject - Subject of the message
+ * @param message - Message submitted by the user
+ * @returns Message containing confirmation of submission
+ * @throws Error if submission fails
+ */
+export const contactSubmission = async (
+  name: string,
+  email: string,
+  subject: string,
+  message: string,
+) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/contact`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        subject,
+        message,
+      }),
+    },
+  );
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+  const body: {
+    message: string;
+    success: boolean;
+  } = await response.json();
+  return body;
+};

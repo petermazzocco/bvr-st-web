@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, ChevronRight, RotateCcw, FileText, Mail } from "lucide-react";
+import { Menu, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,10 +21,10 @@ import { Separator } from "@/components/ui/separator";
 import { Collection } from "@/lib/shopify/types";
 
 const helpLinks = [
-  { name: "Returns & Exchanges", href: "#", icon: RotateCcw },
-  { name: "Terms of Service", href: "#", icon: FileText },
-  { name: "Privacy Policy", href: "#", icon: FileText },
-  { name: "Contact Us", href: "#", icon: Mail },
+  { name: "Returns & Exchanges", href: "/legal/return-policy" },
+  { name: "Terms of Service", href: "legal/terms" },
+  { name: "Privacy Policy", href: "legal/privacy" },
+  { name: "Contact Us", href: "/contact" },
 ];
 
 export function NavSideSheet({
@@ -128,7 +128,6 @@ export function NavSideSheet({
             </h3>
             <nav className="space-y-1">
               {helpLinks.map((link) => {
-                const Icon = link.icon;
                 return (
                   <a
                     key={link.name}
@@ -136,7 +135,6 @@ export function NavSideSheet({
                     className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     onClick={() => setParentOpen(false)}
                   >
-                    <Icon className="h-4 w-4" />
                     <span>{link.name}</span>
                   </a>
                 );

@@ -1,5 +1,8 @@
 "use client";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,13 +14,33 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { UpdateUser } from "@/lib/types";
 import { updateUserDetails } from "@/server/user/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Edit } from "lucide-react";
 import { toast } from "sonner";
 import { getAuthToken } from "@/lib/utils";
+
+const updateUserSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.email("Invalid email address"),
+  phone: z.string().min(1, "Phone number is required"),
+  street: z.string().min(1, "Street address is required"),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  apt: z.string().optional(),
+  zip: z.string().min(1, "ZIP code is required"),
+});
+
+type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
 
 interface UpdateUserModalProps {
   user: UpdateUser;
@@ -31,20 +54,22 @@ export function UpdateUserModal({
   trigger,
 }: UpdateUserModalProps) {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    street: user.address.street,
-    city: user.address.city,
-    state: user.address.state,
-    apt: user.address.apt,
-    zip: user.address.zip,
-  });
-
   const queryClient = useQueryClient();
-
   const authToken = getAuthToken();
+
+  const form = useForm<UpdateUserFormValues>({
+    resolver: zodResolver(updateUserSchema),
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      street: user.address.street,
+      city: user.address.city,
+      state: user.address.state,
+      apt: user.address.apt || "",
+      zip: user.address.zip,
+    },
+  });
 
   const updateUserMutation = useMutation({
     mutationFn: (data: UpdateUser) =>
@@ -61,30 +86,21 @@ export function UpdateUserModal({
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = (data: UpdateUserFormValues) => {
     const updateData: UpdateUser = {
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
       address: {
-        street: formData.street,
-        apt: formData.apt,
-        city: formData.city,
-        state: formData.state,
-        zip: formData.zip,
+        street: data.street,
+        apt: data.apt,
+        city: data.city,
+        state: data.state,
+        zip: data.zip,
       },
     };
 
     updateUserMutation.mutate(updateData);
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
   };
 
   return (
@@ -105,96 +121,161 @@ export function UpdateUserModal({
             you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="col-span-3"
-                required
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">Name</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">Email</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input type="email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">Phone</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="street"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">Street</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="apt"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">Apt/Unit</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input placeholder="Optional" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">City</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">State</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="zip"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">ZIP</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right">
-                Email
-              </Label>
-              <Input
-                id="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className="col-span-3"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="street" className="text-right">
-                Street
-              </Label>
-              <Input
-                id="street"
-                value={formData.street}
-                onChange={(e) => handleInputChange("street", e.target.value)}
-                className="col-span-3"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="city" className="text-right">
-                City
-              </Label>
-              <Input
-                id="city"
-                value={formData.city}
-                onChange={(e) => handleInputChange("city", e.target.value)}
-                className="col-span-3"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="state" className="text-right">
-                State
-              </Label>
-              <Input
-                id="state"
-                value={formData.state}
-                onChange={(e) => handleInputChange("state", e.target.value)}
-                className="col-span-3"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="zip" className="text-right">
-                ZIP
-              </Label>
-              <Input
-                id="zip"
-                value={formData.zip}
-                onChange={(e) => handleInputChange("zip", e.target.value)}
-                className="col-span-3"
-                required
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={updateUserMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={updateUserMutation.isPending}>
-              {updateUserMutation.isPending ? "Saving..." : "Save changes"}
-            </Button>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={updateUserMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={updateUserMutation.isPending}>
+                {updateUserMutation.isPending ? "Saving..." : "Save changes"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
