@@ -32,7 +32,9 @@ export function UserCard({ user }: { user: User | undefined }) {
             <h1 className="text-2xl font-bold">{user.name}</h1>
             <div className="flex items-center gap-2 text-muted-foreground">
               <UserIcon className="w-4 h-4" />
-              <span>Member since {user?.createdAt}</span>
+              {user.isMember
+                ? "Member since " + user.createdAt
+                : "Not a member"}
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4" />

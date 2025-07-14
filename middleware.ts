@@ -4,6 +4,14 @@ export function middleware(request: NextRequest) {
   // Get token from cookies
   const token = request.cookies.get("authToken")?.value;
 
+  // Allow membership page to handle Stripe checkout callbacks without authentication
+  if (request.nextUrl.pathname === "/membership") {
+    const stripeCheckout = request.nextUrl.searchParams.get("stripe_checkout");
+    if (stripeCheckout === "success") {
+      return NextResponse.next();
+    }
+  }
+
   // If no token exists, redirect to login page
   if (!token) {
     // You can redirect to any signin page you want
@@ -32,5 +40,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/auctions/:path*", "/account/:path*"],
+  matcher: ["/auctions/:path*", "/account/:path*", "/membership"],
 };
