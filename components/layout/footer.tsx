@@ -27,7 +27,7 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="/legal/privacy"
+                    href="/legal/privacy-policy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Privacy Policy
@@ -35,7 +35,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/legal/terms"
+                    href="/legal/terms-of-service"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Terms of Service
@@ -43,7 +43,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/legal/cookies"
+                    href="/legal/cookies-policy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Cookie Policy
