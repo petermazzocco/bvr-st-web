@@ -52,7 +52,7 @@ export default async function RootLayout({
       </body>
       <Script
         src="https://umami.bvrstrco.com/script.js"
-        data-website-id="70688abc-b1a1-41d5-9579-1792b411ddfe"
+        data-website-id="58e0fb69-5e77-4c91-b2af-f0dac2eddf69"
         defer
       />
     </html>
