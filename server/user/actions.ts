@@ -3,35 +3,72 @@
 import { Order, UpdateUser, User, UserSignUp } from "@/lib/types";
 import Cookies from "js-cookie";
 
+// Common result type for consistent error handling
+export type ApiResult<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+
 /**
  * Signs in a user using email and password
  * @param email - User's email address
  * @param password - User's password
  * @param callbackUrl - URL to redirect to after successful sign in
- * @returns Promise containing authentication token and callback URL
- * @throws Error if network request fails or credentials are invalid
+ * @returns Promise containing authentication token and callback URL or error
  */
 export const signInWithEmail = async (
   email: string,
   password: string,
   callbackUrl: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/email`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+): Promise<ApiResult<{ token: string; callbackUrl: string }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, callbackUrl }),
       },
-      body: JSON.stringify({ email, password, callbackUrl }),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Invalid credentials")) {
+        return {
+          success: false,
+          error: "Invalid email or password. Please try again.",
+        };
+      }
+
+      if (errorText.includes("User not found")) {
+        return {
+          success: false,
+          error: "No account found with this email address.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Sign in failed. Please try again.",
+      };
+    }
+
+    const body: { token: string; callbackUrl: string } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Sign in error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: { token: string; callbackUrl: string } = await response.json();
-  return body;
 };
 
 /**
@@ -39,99 +76,194 @@ export const signInWithEmail = async (
  * @param phone - User's phone number
  * @param password - User's password
  * @param callback - URL to redirect to after successful sign in
- * @returns Promise containing authentication token and callback URL
- * @throws Error if network request fails or credentials are invalid
+ * @returns Promise containing authentication token and callback URL or error
  */
 export const signInWithPhone = async (
   phone: string,
   password: string,
   callback: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/phone`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+): Promise<ApiResult<{ token: string; callbackUrl: string }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/phone`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phone, password, callback }),
       },
-      body: JSON.stringify({ phone, password, callback }),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Invalid credentials")) {
+        return {
+          success: false,
+          error: "Invalid phone number or password. Please try again.",
+        };
+      }
+
+      if (errorText.includes("User not found")) {
+        return {
+          success: false,
+          error: "No account found with this phone number.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Sign in failed. Please try again.",
+      };
+    }
+
+    const body: { token: string; callbackUrl: string } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Sign in error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: { token: string; callbackUrl: string } = await response.json();
-  return body;
 };
 
 /**
  * Signs out the current user by removing the authentication token cookie
  * @returns Promise containing success status and optional error information
  */
-export const signOut = async () => {
+export const signOut = async (): Promise<ApiResult<{}>> => {
   try {
     // Remove the auth token cookie
     Cookies.remove("authToken");
-    return { success: true };
+    return { success: true, data: {} };
   } catch (error) {
     console.error("Sign out error:", error);
-    return { success: false, error };
+    return {
+      success: false,
+      error: "Failed to sign out. Please try again.",
+    };
   }
 };
 
 /**
  * Signs up a new user
  * @param user - A user sign up object containing phone, password, and callback URL
- * @returns Promise containing authentication token and callback URL
- * @throws Error if network request fails or credentials are invalid
+ * @returns Promise containing authentication token or error
  */
-export const signUp = async (user: UserSignUp) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+export const signUp = async (
+  user: UserSignUp,
+): Promise<ApiResult<{ token: string }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
       },
-      body: JSON.stringify(user),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("User already exists")) {
+        return {
+          success: false,
+          error: "An account with this phone number already exists.",
+        };
+      }
+
+      if (errorText.includes("Invalid phone")) {
+        return {
+          success: false,
+          error: "Please enter a valid phone number.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Sign up failed. Please try again.",
+      };
+    }
+
+    const body: { token: string } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Sign up error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: { token: string } = await response.json();
-  return body;
 };
 
 /**
  * Retrieves detailed information for a specific user
  * @param authToken - Bearer token for authentication (optional)
  * @param userId - Unique identifier for the user
- * @returns Promise containing user details
- * @throws Error if network request fails or user is not found
+ * @returns Promise containing user details or error
  */
 export const getUserDetails = async (
   authToken: string | undefined,
   userId: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`, // Example header
+): Promise<ApiResult<User>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
       },
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Unauthorized")) {
+        return {
+          success: false,
+          error: "You are not authorized to access this information.",
+        };
+      }
+
+      if (errorText.includes("User not found")) {
+        return {
+          success: false,
+          error: "User not found.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to retrieve user details. Please try again.",
+      };
+    }
+
+    const body: User = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get user details error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: User = await response.json();
-  return body;
 };
 
 /**
@@ -139,31 +271,61 @@ export const getUserDetails = async (
  * @param authToken - Bearer token for authentication (optional)
  * @param userId - Unique identifier for the user to update
  * @param user - Updated user information object
- * @returns Promise containing updated user details
- * @throws Error if network request fails or update is unauthorized
+ * @returns Promise containing updated user details or error
  */
 export const updateUserDetails = async (
   authToken: string | undefined,
   userId: string,
   user: UpdateUser,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+): Promise<ApiResult<User>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(user),
       },
-      body: JSON.stringify(user),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Unauthorized")) {
+        return {
+          success: false,
+          error: "You are not authorized to update this user.",
+        };
+      }
+
+      if (errorText.includes("Validation error")) {
+        return {
+          success: false,
+          error: "Invalid user information provided.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to update user details. Please try again.",
+      };
+    }
+
+    const body: User = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Update user details error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: User = await response.json();
-  return body;
 };
 
 /**
@@ -172,60 +334,120 @@ export const updateUserDetails = async (
  * @param userId - Unique identifier for the user
  * @param page - Page number for pagination (default: 1)
  * @param limit - Number of orders per page (default: 10)
- * @returns Promise containing array of user orders
- * @throws Error if network request fails or user is not found
+ * @returns Promise containing array of user orders or error
  */
 export const getUserOrders = async (
   authToken: string | undefined,
   userId: string,
   page = 1,
   limit = 10,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/orders?page=${page}&pageSize=${limit}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`, // Example header
+): Promise<ApiResult<Order[]>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/orders?page=${page}&pageSize=${limit}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
       },
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Unauthorized")) {
+        return {
+          success: false,
+          error: "You are not authorized to access these orders.",
+        };
+      }
+
+      if (errorText.includes("User not found")) {
+        return {
+          success: false,
+          error: "User not found.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to retrieve orders. Please try again.",
+      };
+    }
+
+    const body: Order[] = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get user orders error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: Order[] = await response.json();
-  return body;
 };
 
 /**
  * Retrieves an integer of points for a specific user
  * @param authToken - Bearer token for authentication (optional)
  * @param userId - Unique identifier for the user
- * @returns Promise containing integer of user points
- * @throws Error if network request fails or user is not found
+ * @returns Promise containing integer of user points or error
  */
 export const getUserPoints = async (
   authToken: string | undefined,
   userId: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/points`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`, // Example header
+): Promise<ApiResult<number>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/points`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
       },
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Unauthorized")) {
+        return {
+          success: false,
+          error: "You are not authorized to access this information.",
+        };
+      }
+
+      if (errorText.includes("User not found")) {
+        return {
+          success: false,
+          error: "User not found.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to retrieve user points. Please try again.",
+      };
+    }
+
+    const body: number = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get user points error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: number = await response.json();
-  return body;
 };
 
 /**
@@ -234,63 +456,126 @@ export const getUserPoints = async (
  * @param userId - Unique identifier for the user
  * @param currentPassword - User's current password for verification
  * @param newPassword - New password to set
- * @returns Promise containing success message and status
- * @throws Error if current password is incorrect or network request fails
+ * @returns Promise containing success message and status or error
  */
 export const changeUserPassword = async (
   authToken: string | undefined,
   userId: string,
   currentPassword: string,
   newPassword: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/change-password`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+): Promise<ApiResult<{ message: string; success: boolean }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/change-password`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
       },
-      body: JSON.stringify({ currentPassword, newPassword }),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Invalid current password")) {
+        return {
+          success: false,
+          error: "Current password is incorrect.",
+        };
+      }
+
+      if (errorText.includes("Password too weak")) {
+        return {
+          success: false,
+          error: "New password is too weak. Please choose a stronger password.",
+        };
+      }
+
+      if (errorText.includes("Unauthorized")) {
+        return {
+          success: false,
+          error: "You are not authorized to change this password.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to change password. Please try again.",
+      };
+    }
+
+    const body: { message: string; success: boolean } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Change password error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
 };
 
 /**
  * User has forgotten their password and needs to reset it. This is different from the changePassword function.
  * @param email - Email address of the user
- * @returns Promise containing success message and status
- * @throws Error if email is incorrect or network request fails
+ * @returns Promise containing success message and status or error
  */
-export const requestForgotPassword = async (email: string) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+export const requestForgotPassword = async (
+  email: string,
+): Promise<ApiResult<{ message: string; success: boolean }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
       },
-      body: JSON.stringify({ email }),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("User not found")) {
+        return {
+          success: false,
+          error: "No account found with this email address.",
+        };
+      }
+
+      if (errorText.includes("Too many requests")) {
+        return {
+          success: false,
+          error: "Too many password reset requests. Please try again later.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Password reset request failed. Please try again.",
+      };
+    }
+
+    const body: { message: string; success: boolean } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
 };
 
 /**
@@ -298,65 +583,128 @@ export const requestForgotPassword = async (email: string) => {
  * @param email - Email address of the user
  * @param code - One-time password sent to the user's email
  * @param newPassword - New password to be set for the user
- * @returns Promise containing success message of password change and status
- * @throws Error if email is incorrect or network request fails
+ * @returns Promise containing success message of password change and status or error
  */
 export const confirmForgotPassword = async (
   email: string,
   code: string,
   newPassword: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password/confirm`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+): Promise<ApiResult<{ message: string; success: boolean }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password/confirm`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, code, newPassword }),
       },
-      body: JSON.stringify({ email, code, newPassword }),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("verification code has already been used")) {
+        return {
+          success: false,
+          error:
+            "This verification code has already been used. Please request a new one.",
+        };
+      }
+
+      if (errorText.includes("Invalid verification code")) {
+        return {
+          success: false,
+          error: "Invalid verification code. Please try again.",
+        };
+      }
+
+      if (errorText.includes("expired")) {
+        return {
+          success: false,
+          error:
+            "This verification code has expired. Please request a new one.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Password reset confirmation failed. Please try again.",
+      };
+    }
+
+    const body: { message: string; success: boolean } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Confirm forgot password error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
 };
 
 /**
  * Permanently deletes a user account
  * @param authToken - Bearer token for authentication (optional)
  * @param userId - Unique identifier for the user to delete
- * @returns Promise containing deletion confirmation message and status
- * @throws Error if deletion fails or user is not authorized
+ * @returns Promise containing deletion confirmation message and status or error
  */
 export const deleteUser = async (
   authToken: string | undefined,
   userId: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+): Promise<ApiResult<{ message: string; success: boolean }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
       },
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Unauthorized")) {
+        return {
+          success: false,
+          error: "You are not authorized to delete this account.",
+        };
+      }
+
+      if (errorText.includes("User not found")) {
+        return {
+          success: false,
+          error: "User not found.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to delete account. Please try again.",
+      };
+    }
+
+    const body: { message: string; success: boolean } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Delete user error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
 };
 
 /**
@@ -365,102 +713,195 @@ export const deleteUser = async (
  * @param email - Email of the user submitting the form
  * @param subject - Subject of the message
  * @param message - Message submitted by the user
- * @returns Message containing confirmation of submission
- * @throws Error if submission fails
+ * @returns Message containing confirmation of submission or error
  */
 export const contactSubmission = async (
   name: string,
   email: string,
   subject: string,
   message: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/contact`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+): Promise<ApiResult<{ message: string; success: boolean }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/contact`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          subject,
+          message,
+        }),
       },
-      body: JSON.stringify({
-        name,
-        email,
-        subject,
-        message,
-      }),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Invalid email")) {
+        return {
+          success: false,
+          error: "Please enter a valid email address.",
+        };
+      }
+
+      if (errorText.includes("Message too long")) {
+        return {
+          success: false,
+          error: "Message is too long. Please keep it under 1000 characters.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to send message. Please try again.",
+      };
+    }
+
+    const body: { message: string; success: boolean } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Contact submission error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
 };
 
 /**
  * Verify user email
  * @param userId - ID of the user to verify
  * @param code - Verification code
- * @param email - Email of the user to verify
  * @param authToken - Authentication token
- * @returns Message containing confirmation of verification
- * @throws Error if verification fails
+ * @returns Message containing confirmation of verification or error
  */
 export const verifyUserEmail = async (
   userId: string,
   code: string,
   authToken: string,
-) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+): Promise<ApiResult<{ message: string; success: boolean }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ code }),
       },
-      body: JSON.stringify({ code }),
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("verification code has already been used")) {
+        return {
+          success: false,
+          error:
+            "This verification code has already been used. Please request a new one.",
+        };
+      }
+
+      if (errorText.includes("Invalid verification code")) {
+        return {
+          success: false,
+          error: "Invalid verification code. Please try again.",
+        };
+      }
+
+      if (errorText.includes("expired")) {
+        return {
+          success: false,
+          error:
+            "This verification code has expired. Please request a new one.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Email verification failed. Please try again.",
+      };
+    }
+
+    const body: { message: string; success: boolean } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Email verification error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
 };
 
 /**
  * Resend OTP code to user's email
- * @returns Message containing confirmation of verification
- * @throws Error if request fails
+ * @returns Message containing confirmation of verification or error
  */
-export const resendOTPCode = async (userId: string, authToken: string) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email/resend`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+export const resendOTPCode = async (
+  userId: string,
+  authToken: string,
+): Promise<ApiResult<{ message: string; success: boolean }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email/resend`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
       },
-    },
-  );
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Too many requests")) {
+        return {
+          success: false,
+          error:
+            "Too many OTP requests. Please wait before requesting another code.",
+        };
+      }
+
+      if (errorText.includes("Unauthorized")) {
+        return {
+          success: false,
+          error: "You are not authorized to request an OTP code.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to send OTP code. Please try again.",
+      };
+    }
+
+    const body: { message: string; success: boolean } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Resend OTP error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
   }
-  const body: {
-    message: string;
-    success: boolean;
-  } = await response.json();
-  return body;
 };
 
 /**

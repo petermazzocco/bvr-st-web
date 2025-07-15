@@ -26,7 +26,7 @@ import {
 import { toast } from "sonner";
 import { setAuthToken } from "@/lib/utils";
 import { signInWithEmail } from "@/server/user/actions";
-import { useMutation } from "@tanstack/react-query";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 
 const signInSchema = z
   .object({
@@ -61,43 +61,33 @@ export function SignInCard() {
   });
 
   const { mutate: signInEmailMutation, isPending: isSigningInWithEmail } =
-    useMutation({
-      mutationFn: async (data: {
-        email: string;
-        password: string;
-        callbackUrl: string;
-      }) => {
-        const response = await signInWithEmail(
-          data.email,
-          data.password,
-          data.callbackUrl,
-        );
-        return response;
-      },
-    });
-
-  const onSubmit = (data: SignInFormValues) => {
-    signInEmailMutation(
+    useApiMutation(
+      (data: { email: string; password: string; callbackUrl: string }) =>
+        signInWithEmail(data.email, data.password, data.callbackUrl),
       {
-        email: data.email!,
-        password: data.password,
-        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
-      },
-      {
-        onSuccess: (response) => {
-          if (response.token) {
-            setAuthToken(response.token);
+        onSuccess: (data) => {
+          // data is guaranteed to be defined here and is the actual response data
+          if (data?.token) {
+            setAuthToken(data.token);
           }
-          if (response.callbackUrl) {
-            router.push(response.callbackUrl);
+          if (data?.callbackUrl) {
+            router.push(data.callbackUrl);
           }
         },
         onError: (error) => {
-          toast.error(error.message);
+          toast.error(error);
           console.error("Error signing in with email:", error);
         },
       },
     );
+
+  const onSubmit = (data: SignInFormValues) => {
+    // Simply call the mutation - all success/error handling is done in useApiMutation
+    signInEmailMutation({
+      email: data.email!,
+      password: data.password,
+      callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
+    });
   };
 
   return (

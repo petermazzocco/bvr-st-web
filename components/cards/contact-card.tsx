@@ -24,8 +24,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
 import { contactSubmission } from "@/server/user/actions";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -47,21 +47,23 @@ export function ContactCard() {
     },
   });
 
-  const contactMutation = useMutation({
-    mutationFn: (data: ContactFormValues) => 
+  const { mutate: contactMutation, isPending } = useApiMutation(
+    (data: ContactFormValues) =>
       contactSubmission(data.name, data.email, data.subject, data.message),
-    onSuccess: () => {
-      toast.success("Message sent successfully!");
-      form.reset();
+    {
+      onSuccess: () => {
+        toast.success("Message sent successfully!");
+        form.reset();
+      },
+      onError: (error) => {
+        toast.error("Failed to send message. Please try again.");
+        console.error("Error submitting contact form:", error);
+      },
     },
-    onError: (error) => {
-      toast.error("Failed to send message. Please try again.");
-      console.error("Error submitting contact form:", error);
-    },
-  });
+  );
 
   const onSubmit = (data: ContactFormValues) => {
-    contactMutation.mutate(data);
+    contactMutation(data);
   };
 
   return (
@@ -149,8 +151,12 @@ export function ContactCard() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={contactMutation.isPending}>
-              {contactMutation.isPending ? "Sending..." : "Send Message"}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isPending}
+            >
+              {isPending ? "Sending..." : "Send Message"}
             </Button>
           </form>
         </Form>

@@ -222,7 +222,7 @@ export function CartProvider({
       updateCartItem,
       addCartItem,
     }),
-    [optimisticCart],
+    [optimisticCart, addCartItem, updateCartItem],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

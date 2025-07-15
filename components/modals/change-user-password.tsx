@@ -23,8 +23,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { changeUserPassword } from "@/server/user/actions";
-import { useMutation } from "@tanstack/react-query";
 import { Lock, Eye, EyeOff } from "lucide-react";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 import { toast } from "sonner";
 import { getAuthToken } from "@/lib/utils";
 
@@ -67,27 +67,29 @@ export function ChangePasswordModal({
 
   const authToken = getAuthToken();
 
-  const changePasswordMutation = useMutation({
-    mutationFn: ({
+  const { mutate: changePasswordMutation, isPending } = useApiMutation(
+    ({
       currentPassword,
       newPassword,
     }: {
       currentPassword: string;
       newPassword: string;
     }) => changeUserPassword(authToken, userId, currentPassword, newPassword),
-    onSuccess: () => {
-      toast.success("Password changed successfully!");
-      setOpen(false);
-      form.reset();
+    {
+      onSuccess: () => {
+        toast.success("Password changed successfully!");
+        setOpen(false);
+        form.reset();
+      },
+      onError: (error: string) => {
+        toast.error(error || "Failed to change password");
+        console.error("Change password error:", error);
+      },
     },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to change password");
-      console.error("Change password error:", error);
-    },
-  });
+  );
 
   const onSubmit = (data: ChangePasswordFormValues) => {
-    changePasswordMutation.mutate({
+    changePasswordMutation({
       currentPassword: data.currentPassword,
       newPassword: data.newPassword,
     });
@@ -271,12 +273,12 @@ export function ChangePasswordModal({
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
-                disabled={changePasswordMutation.isPending}
+                disabled={isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={changePasswordMutation.isPending}>
-                {changePasswordMutation.isPending
+              <Button type="submit" disabled={isPending}>
+                {isPending
                   ? "Changing..."
                   : "Change Password"}
               </Button>

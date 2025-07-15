@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/form";
 import { UpdateUser } from "@/lib/types";
 import { updateUserDetails } from "@/server/user/actions";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 import { Edit } from "lucide-react";
 import { toast } from "sonner";
 import { getAuthToken } from "@/lib/utils";
@@ -71,20 +72,21 @@ export function UpdateUserModal({
     },
   });
 
-  const updateUserMutation = useMutation({
-    mutationFn: (data: UpdateUser) =>
-      updateUserDetails(authToken, userId, data),
-    onSuccess: () => {
-      toast.success("User details updated successfully!");
-      setOpen(false);
-      // Invalidate and refetch user data
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+  const { mutate: updateUserMutation, isPending } = useApiMutation(
+    (data: UpdateUser) => updateUserDetails(authToken, userId, data),
+    {
+      onSuccess: () => {
+        toast.success("User details updated successfully!");
+        setOpen(false);
+        // Invalidate and refetch user data
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+      },
+      onError: (error) => {
+        toast.error("Failed to update user details");
+        console.error("Update error:", error);
+      },
     },
-    onError: (error) => {
-      toast.error("Failed to update user details");
-      console.error("Update error:", error);
-    },
-  });
+  );
 
   const onSubmit = (data: UpdateUserFormValues) => {
     const updateData: UpdateUser = {
@@ -100,7 +102,7 @@ export function UpdateUserModal({
       },
     };
 
-    updateUserMutation.mutate(updateData);
+    updateUserMutation(updateData);
   };
 
   return (
@@ -266,12 +268,12 @@ export function UpdateUserModal({
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
-                disabled={updateUserMutation.isPending}
+                disabled={isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={updateUserMutation.isPending}>
-                {updateUserMutation.isPending ? "Saving..." : "Save changes"}
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Saving..." : "Save changes"}
               </Button>
             </DialogFooter>
           </form>

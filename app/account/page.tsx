@@ -46,7 +46,7 @@ export default function Page() {
 
   // Filter orders based on search term (client-side filtering)
   const filteredOrders =
-    orders?.filter(
+    orders?.data?.filter(
       (order) =>
         order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -90,7 +90,7 @@ export default function Page() {
                 value={searchTerm}
                 className="w-1/3"
                 onChange={(e) => setSearchTerm(e.target.value)}
-                disabled={ordersLoading || orders?.length === 0}
+                disabled={ordersLoading || orders?.data?.length === 0}
               />
             </div>
 

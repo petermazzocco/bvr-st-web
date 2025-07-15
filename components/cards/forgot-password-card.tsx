@@ -28,19 +28,18 @@ import {
   InputOTPSeparator,
 } from "@/components/ui/input-otp";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
 import {
   requestForgotPassword,
   confirmForgotPassword,
   isOTPExpired,
 } from "@/server/user/actions";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const emailSchema = z.object({
   email: z.email("Invalid email address"),
 });
-
 
 const resetPasswordSchema = z
   .object({
@@ -73,7 +72,6 @@ export function ForgotPasswordCard() {
     },
   });
 
-
   const resetForm = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
@@ -94,74 +92,70 @@ export function ForgotPasswordCard() {
   }, [step, resetForm]);
 
   const { mutate: requestPasswordReset, isPending: isRequestingReset } =
-    useMutation({
-      mutationFn: async (email: string) => {
-        const response = await requestForgotPassword(email);
-        return response;
+    useApiMutation(
+      (email: string) => requestForgotPassword(email),
+      {
+        onSuccess: (response) => {
+          toast.success(
+            response?.message || "Password reset code sent to your email",
+          );
+          // Clear OTP state before transitioning
+          setOtpValue("");
+          setStep("otp");
+        },
+        onError: (error) => {
+          toast.error(error || "Failed to send password reset email");
+          console.error("Error sending password reset email:", error);
+        },
       },
-      onSuccess: (response) => {
-        toast.success(
-          response.message || "Password reset code sent to your email",
-        );
-        // Clear OTP state before transitioning
-        setOtpValue("");
-        setStep("otp");
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to send password reset email");
-        console.error("Error sending password reset email:", error);
-      },
-    });
+    );
 
-  const { mutate: handleVerifyOTP, isPending: isVerifyingOTP } = useMutation({
-    mutationFn: async (code: string) => {
+  const { mutate: handleVerifyOTP, isPending: isVerifyingOTP } = useApiMutation(
+    async (code: string) => {
       const isExpired = await isOTPExpired(code, undefined, email);
       if (isExpired) {
         throw new Error("OTP has expired or is invalid");
       }
-      return { message: "OTP verified successfully", valid: true };
+      return { success: true, data: { message: "OTP verified successfully", valid: true } };
     },
-    onSuccess: (response) => {
-      toast.success(response.message || "OTP verified successfully");
-      setStep("reset");
+    {
+      onSuccess: (response) => {
+        toast.success(response.message || "OTP verified successfully");
+        setStep("reset");
+      },
+      onError: (error) => {
+        toast.error(error || "Failed to verify OTP");
+        console.error("Error verifying OTP:", error);
+      },
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to verify OTP");
-      console.error("Error verifying OTP:", error);
-    },
-  });
+  );
 
   const { mutate: confirmPasswordReset, isPending: isConfirmingReset } =
-    useMutation({
-      mutationFn: async (data: {
+    useApiMutation(
+      (data: {
         email: string;
         code: string;
         newPassword: string;
-      }) => {
-        const response = await confirmForgotPassword(
-          data.email,
-          data.code,
-          data.newPassword,
-        );
-        return response;
+      }) => confirmForgotPassword(data.email, data.code, data.newPassword),
+      {
+        onSuccess: (response) => {
+          toast.success(response?.message || "Password reset successfully");
+          router.push("/account");
+          // Reset all forms and state
+          setStep("email");
+          emailForm.reset({ email: "" });
+          setOtpValue("");
+          resetForm.reset({ newPassword: "", confirmPassword: "" });
+          setEmail("");
+          setShowPassword(false);
+          setShowConfirmPassword(false);
+        },
+        onError: (error) => {
+          toast.error(error || "Failed to reset password");
+          console.error("Error resetting password:", error);
+        },
       },
-      onSuccess: (response) => {
-        toast.success(response.message || "Password reset successfully");
-        router.push("/account");
-        // Reset all forms and state
-        setStep("email");
-        emailForm.reset({ email: "" });
-        setOtpValue("");
-        resetForm.reset({ newPassword: "", confirmPassword: "" });
-        setEmail("");
-        setShowPassword(false);
-        setShowConfirmPassword(false);
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to reset password");
-        console.error("Error resetting password:", error);
-      },
-    });
+    );
 
   const onEmailSubmit = (data: EmailFormValues) => {
     setEmail(data.email);

@@ -11,8 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useMutation } from "@tanstack/react-query";
 import { createCheckoutSession } from "@/server/stripe/actions";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 import { getAuthToken, getUserIdFromToken } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -28,8 +28,8 @@ export function MembershipCard() {
     setAuthToken(token);
   }, []);
 
-  const { mutate: createCheckout, isPending } = useMutation({
-    mutationFn: async () => {
+  const { mutate: createCheckout, isPending } = useApiMutation(
+    async () => {
       if (!userId || !authToken) {
         throw new Error("User authentication required");
       }
@@ -37,28 +37,31 @@ export function MembershipCard() {
       const successURL = `${window.location.origin}/membership?stripe_checkout=success&user_id=${userId}&session_id={CHECKOUT_SESSION_ID}`;
       const cancelURL = `${window.location.origin}/membership`;
 
-      return await createCheckoutSession(
+      const result = await createCheckoutSession(
         userId,
         successURL,
         cancelURL,
         authToken,
       );
+      return { success: true, data: result };
     },
-    onSuccess: (data) => {
-      // Redirect to Stripe checkout
-      window.location.href = data.url;
+    {
+      onSuccess: (data) => {
+        // Redirect to Stripe checkout
+        window.location.href = data.url;
+      },
+      onError: (error) => {
+        toast.error(error || "Failed to create checkout session");
+      },
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to create checkout session");
-    },
-  });
+  );
 
   const handleStartMembership = () => {
     if (!userId || !authToken) {
       toast.error("Please sign in to continue");
       return;
     }
-    createCheckout();
+    createCheckout(undefined);
   };
 
   return (

@@ -59,7 +59,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
       updateOption,
       updateImage,
     }),
-    [state],
+    [state, updateOption, updateImage],
   );
 
   return (

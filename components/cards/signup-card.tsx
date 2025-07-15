@@ -29,8 +29,8 @@ import { PhoneInput } from "../utils/phone-input";
 import { signUp } from "@/server/user/actions";
 import { toast } from "sonner";
 import { setAuthToken } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
 import { UserSignUp } from "@/lib/types";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 import { Eye, EyeOff } from "lucide-react";
 
 const signUpSchema = z
@@ -82,25 +82,24 @@ export function SignUpCard() {
     },
   });
 
-  const { mutate: signUpMutation, isPending: isSigningUp } = useMutation({
-    mutationFn: async (data: UserSignUp) => {
-      const response = await signUp(data);
-      return response;
+  const { mutate: signUpMutation, isPending: isSigningUp } = useApiMutation(
+    (data: UserSignUp) => signUp(data),
+    {
+      onSuccess: (response) => {
+        if (response?.token) {
+          setAuthToken(response.token);
+        }
+        router.push(`/signup/verify-email?token=${response?.token}`);
+        toast.success(
+          "Account created successfully! Please check your email for a verification code.",
+        );
+      },
+      onError: (error) => {
+        console.error(error);
+        toast.error("An error occurred, please try again!");
+      },
     },
-    onSuccess: (response) => {
-      if (response.token) {
-        setAuthToken(response.token);
-      }
-      router.push(`/signup/verify-email?token=${response.token}`);
-      toast.success(
-        "Account created successfully! Please check your email for a verification code.",
-      );
-    },
-    onError: (error) => {
-      console.error(error);
-      toast.error("An error occurred, please try again!");
-    },
-  });
+  );
 
   const onSubmit = (data: SignUpFormValues) => {
     const userData: UserSignUp = {
@@ -314,7 +313,9 @@ export function SignUpCard() {
                         variant="ghost"
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
                       >
                         {showConfirmPassword ? (
                           <EyeOff className="h-4 w-4" />
@@ -334,7 +335,9 @@ export function SignUpCard() {
               <ul className="list-disc list-inside mt-1 space-y-1">
                 <li
                   className={
-                    watchedFields.password && watchedFields.password.length >= 8 ? "text-green-600" : ""
+                    watchedFields.password && watchedFields.password.length >= 8
+                      ? "text-green-600"
+                      : ""
                   }
                 >
                   At least 8 characters long

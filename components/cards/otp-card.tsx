@@ -29,8 +29,8 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { verifyUserEmail } from "@/server/user/actions";
-import { useMutation } from "@tanstack/react-query";
 import { getUserIdFromToken, getAuthToken } from "@/lib/utils";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 
 const otpSchema = z.object({
   code: z
@@ -53,12 +53,18 @@ export function OTPCard() {
     },
   });
 
-  const { mutate: verifyOTP, isPending: isVerifyingOTP } = useMutation({
-    mutationFn: async (data: { code: string }) => {
-      const response = await verifyUserEmail(userId!, data.code, token!);
-      return response;
+  const { mutate: verifyOTP, isPending: isVerifyingOTP } = useApiMutation(
+    (data: { code: string }) => verifyUserEmail(userId!, data.code, token!),
+    {
+      onSuccess: () => {
+        router.push("/account");
+      },
+      onError: (error) => {
+        toast.error(error);
+        console.error("Error verifying OTP:", error);
+      },
     },
-  });
+  );
 
   if (!token || !userId) {
     router.push("/signin");
@@ -66,15 +72,7 @@ export function OTPCard() {
   }
 
   const onSubmit = (data: { code: string }) => {
-    verifyOTP(data, {
-      onSuccess: () => {
-        router.push("/account");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-        console.error("Error verifying OTP:", error);
-      },
-    });
+    verifyOTP(data);
   };
 
   return (

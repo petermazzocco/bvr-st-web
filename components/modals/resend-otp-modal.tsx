@@ -25,8 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { resendOTPCode } from "@/server/user/actions";
-import { useMutation } from "@tanstack/react-query";
 import { getUserIdFromToken, getAuthToken } from "@/lib/utils";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 import { OTPCard } from "@/components/cards/otp-card";
 
 const resendOTPSchema = z.object({
@@ -48,28 +48,29 @@ export function ResendOTPModal({ email }: { email: string }) {
     },
   });
 
-  const { mutate: resendOTP, isPending: isResending } = useMutation({
-    mutationFn: async () => {
+  const { mutate: resendOTP, isPending: isResending } = useApiMutation(
+    async () => {
       if (!token || !userId) {
         throw new Error("Authentication required");
       }
       const response = await resendOTPCode(userId, token);
       return response;
     },
-  });
-
-  const onSubmit = () => {
-    resendOTP(undefined, {
+    {
       onSuccess: (response) => {
-        toast.success(response.message || "OTP code resent successfully");
+        toast.success(response?.message || "OTP code resent successfully");
         setShowOTPCard(true);
         form.reset();
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to resend OTP code");
+        toast.error(error || "Failed to resend OTP code");
         console.error("Error resending OTP:", error);
       },
-    });
+    },
+  );
+
+  const onSubmit = () => {
+    resendOTP(undefined);
   };
 
   const handleOpenChange = (newOpen: boolean) => {

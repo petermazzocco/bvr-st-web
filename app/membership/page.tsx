@@ -4,8 +4,8 @@ import { MembershipCard } from "@/components/cards/membership-card";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
 import { updateUserAfterCheckout } from "@/server/stripe/actions";
+import { useApiMutation } from "@/hooks/use-api-mutation";
 import { getAuthToken, getUserIdFromToken } from "@/lib/utils";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -26,8 +26,8 @@ export default function MembershipPage() {
     setAuthToken(token);
   }, []);
 
-  const { mutate: updateUser, isPending } = useMutation({
-    mutationFn: async ({
+  const { mutate: updateUser, isPending } = useApiMutation(
+    async ({
       userId,
       sessionId,
       authToken,
@@ -36,20 +36,23 @@ export default function MembershipPage() {
       sessionId: string;
       authToken: string;
     }) => {
-      return await updateUserAfterCheckout(userId, sessionId, authToken);
+      const result = await updateUserAfterCheckout(userId, sessionId, authToken);
+      return { success: true, data: result };
     },
-    onSuccess: (data) => {
-      setShowSuccessMessage(true);
-      toast.success(
-        `Success! ${data.pointsAdded} points added to your account.`,
-      );
-      // Remove query params from URL
-      window.history.replaceState({}, document.title, window.location.pathname);
+    {
+      onSuccess: (data) => {
+        setShowSuccessMessage(true);
+        toast.success(
+          `Success! ${data.pointsAdded} points added to your account.`,
+        );
+        // Remove query params from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      },
+      onError: (error) => {
+        toast.error(error || "Failed to update user after checkout");
+      },
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to update user after checkout");
-    },
-  });
+  );
 
   useEffect(() => {
     const stripeCheckout = searchParams.get("stripe_checkout");
