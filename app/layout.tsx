@@ -51,8 +51,8 @@ export default async function RootLayout({
         </ReactQueryProvider>
       </body>
       <Script
-        src="https://cloud.umami.is/script.js"
-        data-website-id="df2b136c-2907-4d0b-8528-914650498630"
+        src="https://umami.bvrstrco.com/script.js"
+        data-website-id="70688abc-b1a1-41d5-9579-1792b411ddfe"
         defer
       />
     </html>
