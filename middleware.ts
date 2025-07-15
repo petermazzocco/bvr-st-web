@@ -21,24 +21,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(signinUrl);
   }
 
-  // Optional: Validate the token structure (similar to your getUserIdFromToken function)
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    // You can add additional checks here if needed
-    if (!payload.userid) {
-      const signinUrl = new URL("/signin", request.url);
-      return NextResponse.redirect(signinUrl);
-    }
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    const signinUrl = new URL("/signin", request.url);
-    return NextResponse.redirect(signinUrl);
-  }
-
   // If token exists and is valid, allow the request to continue
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/auctions/:path*", "/account/:path*", "/membership"],
+  matcher: ["/account/:path*", "/membership"],
 };

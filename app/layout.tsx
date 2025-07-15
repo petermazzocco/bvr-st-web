@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { getCart } from "@/lib/shopify";
 import { CartProvider } from "@/components/cart/cart-context";
 import { getCollections } from "@/lib/shopify";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "BVR STR CO",
@@ -49,6 +50,11 @@ export default async function RootLayout({
           </CartProvider>
         </ReactQueryProvider>
       </body>
+      <Script
+        src="https://cloud.umami.is/script.js"
+        data-website-id="df2b136c-2907-4d0b-8528-914650498630"
+        defer
+      />
     </html>
   );
 }

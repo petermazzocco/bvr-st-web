@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { User } from "@/lib/types";
 import { UpdateUserModal } from "../modals/update-user-details";
 import { ChangePasswordModal } from "../modals/change-user-password";
+import Link from "next/link";
 
 export function UserCard({ user }: { user: User | undefined }) {
   const router = useRouter();
@@ -32,9 +33,13 @@ export function UserCard({ user }: { user: User | undefined }) {
             <h1 className="text-2xl font-bold">{user.name}</h1>
             <div className="flex items-center gap-2 text-muted-foreground">
               <UserIcon className="w-4 h-4" />
-              {user.isMember
-                ? "Member since " + user.createdAt
-                : "Not a member"}
+              {user.isMember ? (
+                "Member since " + new Date(user.createdAt).toLocaleDateString()
+              ) : (
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/membership">Become A Member</Link>
+                </Button>
+              )}
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4" />
