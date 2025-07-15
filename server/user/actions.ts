@@ -365,3 +365,101 @@ export const contactSubmission = async (
   } = await response.json();
   return body;
 };
+
+/**
+ * Verify user email
+ * @param userId - ID of the user to verify
+ * @param code - Verification code
+ * @param email - Email of the user to verify
+ * @param authToken - Authentication token
+ * @returns Message containing confirmation of verification
+ * @throws Error if verification fails
+ */
+export const verifyUserEmail = async (
+  userId: string,
+  code: string,
+  authToken: string,
+) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ code }),
+    },
+  );
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+  const body: {
+    message: string;
+    success: boolean;
+  } = await response.json();
+  return body;
+};
+
+/**
+ * Resend OTP code to user's email
+ * @returns Message containing confirmation of verification
+ * @throws Error if request fails
+ */
+export const resendOTPCode = async (userId: string, authToken: string) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email/resend`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+  const body: {
+    message: string;
+    success: boolean;
+  } = await response.json();
+  return body;
+};
+
+/**
+ * Checks if the given OTP token is expired
+ * @param otpToken - OTP token to check
+ * @param userID - User ID associated with the OTP token
+ * @returns True if OTP is expired, false otherwise
+ */
+export async function isOTPExpired(
+  otpToken: string,
+  userID: string,
+): Promise<boolean> {
+  try {
+    // Make API call to verify OTP status
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/verify-otp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userID, otpToken }),
+      },
+    );
+
+    if (!response.ok) {
+      return true; // Treat failed requests as expired
+    }
+
+    const data = await response.json();
+    return data.expired || false;
+  } catch (error) {
+    console.error("Error checking OTP expiration:", error);
+    return true; // Treat errors as expired for security
+  }
+}

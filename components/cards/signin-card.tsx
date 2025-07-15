@@ -23,26 +23,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PhoneInput } from "../utils/phone-input";
 import { toast } from "sonner";
 import { setAuthToken } from "@/lib/utils";
-import { signInWithEmail, signInWithPhone } from "@/server/user/actions";
+import { signInWithEmail } from "@/server/user/actions";
 import { useMutation } from "@tanstack/react-query";
 
 const signInSchema = z
   .object({
     authMethod: z.enum(["email", "phone"]),
-    email: z.string().email("Invalid email address").optional(),
-    phone: z.string().optional(),
+    email: z.email("Invalid email address").optional(),
     password: z.string().min(1, "Password is required"),
   })
   .refine(
     (data) => {
       if (data.authMethod === "email") {
         return data.email && data.email.length > 0;
-      } else {
-        return data.phone && data.phone.length > 0;
       }
     },
     {
@@ -61,11 +56,9 @@ export function SignInCard() {
     defaultValues: {
       authMethod: "email",
       email: "",
-      phone: "",
       password: "",
     },
   });
-
 
   const { mutate: signInEmailMutation, isPending: isSigningInWithEmail } =
     useMutation({
@@ -83,68 +76,28 @@ export function SignInCard() {
       },
     });
 
-  const { mutate: signInPhoneMutation, isPending: isSigningInWithPhone } =
-    useMutation({
-      mutationFn: async (data: {
-        phone: string;
-        password: string;
-        callbackUrl: string;
-      }) => {
-        const response = await signInWithPhone(
-          data.phone,
-          data.password,
-          data.callbackUrl,
-        );
-        return response;
-      },
-    });
-
   const onSubmit = (data: SignInFormValues) => {
-    if (data.authMethod === "email" && data.email) {
-      signInEmailMutation(
-        {
-          email: data.email,
-          password: data.password,
-          callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
+    signInEmailMutation(
+      {
+        email: data.email!,
+        password: data.password,
+        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
+      },
+      {
+        onSuccess: (response) => {
+          if (response.token) {
+            setAuthToken(response.token);
+          }
+          if (response.callbackUrl) {
+            router.push(response.callbackUrl);
+          }
         },
-        {
-          onSuccess: (response) => {
-            if (response.token) {
-              setAuthToken(response.token);
-            }
-            if (response.callbackUrl) {
-              router.push(response.callbackUrl);
-            }
-          },
-          onError: (error) => {
-            toast.error(error.message);
-            console.error("Error signing in with email:", error);
-          },
+        onError: (error) => {
+          toast.error(error.message);
+          console.error("Error signing in with email:", error);
         },
-      );
-    } else if (data.authMethod === "phone" && data.phone) {
-      signInPhoneMutation(
-        {
-          phone: data.phone,
-          password: data.password,
-          callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
-        },
-        {
-          onSuccess: (response) => {
-            if (response.token) {
-              setAuthToken(response.token);
-            }
-            if (response.callbackUrl) {
-              router.push(response.callbackUrl);
-            }
-          },
-          onError: (error) => {
-            toast.error("Error signing in with phone");
-            console.error("Error signing in with phone:", error);
-          },
-        },
-      );
-    }
+      },
+    );
   };
 
   return (
@@ -160,56 +113,18 @@ export function SignInCard() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="authMethod"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <Tabs
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="w-full"
-                  >
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="email">Email</TabsTrigger>
-                      <TabsTrigger value="phone">Phone</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="email" className="space-y-2">
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email Address</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="email"
-                                placeholder="m@example.com"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-                    <TabsContent value="phone" className="space-y-2">
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Phone Number</FormLabel>
-                            <FormControl>
-                              <PhoneInput
-                                value={field.value || ""}
-                                setValue={field.onChange}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-                  </Tabs>
+                  <FormLabel>Email Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="m@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -231,11 +146,9 @@ export function SignInCard() {
             <Button
               type="submit"
               className="w-full"
-              disabled={isSigningInWithEmail || isSigningInWithPhone}
+              disabled={isSigningInWithEmail}
             >
-              {isSigningInWithEmail || isSigningInWithPhone
-                ? "Signing In..."
-                : "Sign In"}
+              {isSigningInWithEmail ? "Signing In..." : "Sign In"}
             </Button>
           </form>
         </Form>

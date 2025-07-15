@@ -26,6 +26,8 @@ export interface User {
   stripeCustomerID: string;
   /** User's membership status */
   isMember: boolean;
+  /** User's email verification status */
+  emailVerified: boolean;
   /** ISO timestamp when the user account was created */
   createdAt: string;
   /** ISO timestamp when the user account was last updated */
@@ -121,5 +123,5 @@ export interface UserSignUp {
   /** User's email address */
   email: string;
   /** User's password */
-  password: string;
+  password: string | undefined;
 }

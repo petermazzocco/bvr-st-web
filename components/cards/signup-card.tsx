@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
@@ -30,18 +31,19 @@ import { toast } from "sonner";
 import { setAuthToken } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { UserSignUp } from "@/lib/types";
+import { Eye, EyeOff } from "lucide-react";
 
 const signUpSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
     email: z.email("Invalid email address"),
-    phone: z.string().min(1, "Phone number is required"),
+    phone: z.string().optional(),
     address: z.string().min(1, "Street address is required"),
     apt: z.string().optional(),
     city: z.string().min(1, "City is required"),
     state: z.string().min(1, "State is required"),
     zipCode: z.string().min(1, "ZIP code is required"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
     termsAccepted: z.boolean().refine((val) => val === true, {
       message: "You must accept the terms and conditions",
@@ -58,6 +60,8 @@ type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignUpCard() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
@@ -87,8 +91,10 @@ export function SignUpCard() {
       if (response.token) {
         setAuthToken(response.token);
       }
-      router.push("/account");
-      toast.success("Account created successfully");
+      router.push(`/signup/verify-email?token=${response.token}`);
+      toast.success(
+        "Account created successfully! Please check your email for a verification code.",
+      );
     },
     onError: (error) => {
       console.error(error);
@@ -100,7 +106,7 @@ export function SignUpCard() {
     const userData: UserSignUp = {
       name: data.name,
       email: data.email,
-      phone: data.phone,
+      phone: data.phone || "",
       address: {
         street: data.address,
         city: data.city,
@@ -118,7 +124,6 @@ export function SignUpCard() {
   const isFormValid =
     watchedFields.name &&
     watchedFields.email &&
-    watchedFields.phone &&
     watchedFields.address &&
     watchedFields.city &&
     watchedFields.state &&
@@ -177,7 +182,10 @@ export function SignUpCard() {
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <PhoneInput value={field.value} setValue={field.onChange} />
+                    <PhoneInput
+                      value={field.value || ""}
+                      setValue={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -262,7 +270,26 @@ export function SignUpCard() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" {...field} />
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        className="pr-10"
+                        {...field}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -276,12 +303,54 @@ export function SignUpCard() {
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input type="password" {...field} />
+                    <div className="relative">
+                      <Input
+                        type={showConfirmPassword ? "text" : "password"}
+                        className="pr-10"
+                        {...field}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <div className="text-sm text-muted-foreground">
+              <p>Password requirements:</p>
+              <ul className="list-disc list-inside mt-1 space-y-1">
+                <li
+                  className={
+                    watchedFields.password && watchedFields.password.length >= 8 ? "text-green-600" : ""
+                  }
+                >
+                  At least 8 characters long
+                </li>
+                <li
+                  className={
+                    watchedFields.password === watchedFields.confirmPassword &&
+                    watchedFields.confirmPassword
+                      ? "text-green-600"
+                      : ""
+                  }
+                >
+                  Passwords match
+                </li>
+              </ul>
+            </div>
 
             <FormField
               control={form.control}

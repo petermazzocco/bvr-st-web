@@ -90,7 +90,7 @@ export function ForgotPasswordCard() {
               )}
             />
             <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Sending..." : "Send Reset Link"}
+              {isPending ? "Sending..." : "Send New Password"}
             </Button>
           </form>
         </Form>
