@@ -44,8 +44,10 @@ export function VariantSelector({
 
   return options.map((option) => (
     <form key={option.id}>
-      <dl className="mb-8">
-        <dt className="mb-4 text-sm uppercase tracking-wide">{option.name}</dt>
+      <dl className="mb-4">
+        <dt className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+          {option.name}
+        </dt>
         <dd className="flex flex-wrap gap-1">
           {option.values.map((value) => {
             const optionNameLowerCase = option.name.toLowerCase();
@@ -83,13 +85,13 @@ export function VariantSelector({
                 disabled={!isAvailableForSale}
                 title={`${option.name} ${value}${!isAvailableForSale ? " (Out of Stock)" : ""}`}
                 className={clsx(
-                  "flex h-16 w-16 min-w-[48px] items-center justify-center rounded-md border border-border/20 bg-background py-1 text-sm text-foreground",
+                  "flex h-16   w-16 min-w-[48px] items-center justify-center rounded-sm border border-border/20 bg-background py-1 text-sm text-foreground",
                   {
-                    "cursor-default text-background ring-2 ring-border":
+                    "cursor-default text-background ring-2 ring-foreground ":
                       isActive,
-                    "ring-1 ring-transparent transition duration-300 ease-in-out hover:ring-border":
+                    "ring-1 ring-muted transition duration-300 ease-in-out hover:ring-foreground ":
                       !isActive && isAvailableForSale,
-                    "relative z-10 cursor-not-allowed overflow-hidden bg-foreground text-foreground ring-1 ring-foreground before:absolute before:inset-x-0 before:-z-10 before:h-px before:-rotate-45 before:bg-foreground before:transition-transform dark:bg-neutral-900 dark:text-neutral-400 dark:ring-neutral-700 before:dark:bg-neutral-700":
+                    "relative z-10 cursor-not-allowed overflow-hidden  text-foreground ring-1 ring-accent before:absolute before:inset-x-0 before:-z-10 before:h-px before:-rotate-45 before:bg-foreground before:transition-transform":
                       !isAvailableForSale,
                   },
                 )}

@@ -71,20 +71,18 @@ export default async function Page(props: {
     },
   };
   return (
-    <ProductProvider>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productJsonLd),
-        }}
-      />
-      <div className="mx-auto max-w-screen-2xl px-4">
-        <div className="flex flex-col rounded-lg bg-background p-2 md:p-12 lg:flex-row lg:gap-8">
-          <div className="h-full w-full basis-full lg:basis-4/6">
+    <>
+      <ProductProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(productJsonLd),
+          }}
+        />
+        <div className="min-h-screen flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2 h-full">
             <Suspense
-              fallback={
-                <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
-              }
+              fallback={<div className="w-full h-full overflow-hidden" />}
             >
               <Gallery
                 images={product.images.slice(0, 5).map((image: Image) => ({
@@ -94,17 +92,20 @@ export default async function Page(props: {
               />
             </Suspense>
           </div>
-
-          <div className="basis-full lg:basis-2/6">
-            <Suspense fallback={null}>
-              <ProductDescription product={product} />
-            </Suspense>
+          <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8">
+            <div className="w-full md:max-w-md lg:max-w-lg">
+              <Suspense fallback={null}>
+                <ProductDescription product={product} />
+              </Suspense>
+            </div>
           </div>
         </div>
-        <Suspense fallback={null}>
-          <RelatedProducts id={product.id} />
-        </Suspense>
-      </div>
-    </ProductProvider>
+        <div className="mx-auto max-w-screen-2xl px-4">
+          <Suspense fallback={null}>
+            <RelatedProducts id={product.id} />
+          </Suspense>
+        </div>
+      </ProductProvider>
+    </>
   );
 }

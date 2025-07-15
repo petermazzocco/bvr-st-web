@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Gallery } from "@/components/product/product-gallery";
 import { ProductProvider } from "@/components/product/product-provider";
+import { ProductImageHover } from "@/components/product/product-image-hover";
 import { getCollection, getCollectionProducts } from "@/lib/shopify";
 import { Suspense } from "react";
 import Link from "next/link";
@@ -72,26 +72,39 @@ export default async function Page(props: {
                 <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
               }
             >
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-10 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
                 {products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="relative aspect-square overflow-hidden rounded-md"
-                  >
-                    {product.images[0] && (
+                  <div key={product.id} className="group">
+                    <div className="relative aspect-square overflow-hidden rounded-md">
+                      {product.images[0] && (
+                        <Link href={`/products/${product.handle}`}>
+                          <ProductProvider>
+                            <ProductImageHover images={product.images} />
+                          </ProductProvider>
+                        </Link>
+                      )}
+                    </div>
+                    <div className="mt-3 space-y-1">
                       <Link href={`/products/${product.handle}`}>
-                        <ProductProvider>
-                          <Gallery
-                            images={[
-                              {
-                                src: product.images[0].url,
-                                altText: product.images[0].altText,
-                              },
-                            ]}
-                          />
-                        </ProductProvider>
+                        <h3 className="text-sm font-medium text-gray-900 hover:text-gray-700">
+                          {product.title}
+                        </h3>
                       </Link>
-                    )}
+                      {product.variants?.[0]?.selectedOptions?.find(
+                        (option) => option.name.toLowerCase() === "color",
+                      ) && (
+                        <p className="text-xs text-gray-500">
+                          {
+                            product.variants[0].selectedOptions.find(
+                              (option) => option.name.toLowerCase() === "color",
+                            )?.value
+                          }
+                        </p>
+                      )}
+                      <p className="text-sm font-semibold text-gray-900">
+                        ${product.priceRange.minVariantPrice.amount}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

@@ -8,11 +8,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader } from "@/components/ui/sheet";
 import {
   createCartAndSetCookie,
   redirectToCheckout,
@@ -76,7 +72,7 @@ export function CartSheet() {
       >
         <SheetContent
           side="right"
-          className="flex h-full w-full flex-col border-l border-neutral-200 bg-background p-6 text-foreground backdrop-blur-xl dark:border-neutral-700 dark:bg-black/80 dark:text-foreground md:w-[490px]"
+          className="flex h-full w-full flex-col border-l bg-background p-6 text-foreground backdrop-blur-xl  md:w-[490px]"
         >
           <SheetHeader className="flex flex-row items-center justify-between"></SheetHeader>
 
@@ -87,7 +83,7 @@ export function CartSheet() {
             </div>
           ) : (
             <div className="flex h-full flex-col justify-between overflow-hidden p-1">
-              <ul className="flex-grow overflow-auto py-4">
+              <ul className="flex-grow overflow-auto py-2">
                 {cart.lines
                   .sort((a, b) =>
                     a.merchandise.product.title.localeCompare(
@@ -113,15 +109,12 @@ export function CartSheet() {
                     );
 
                     return (
-                      <li
-                        key={i}
-                        className="flex w-full flex-col border-b border-neutral-300 dark:border-neutral-700"
-                      >
-                        <div className="relative flex w-full flex-col justify-between px-1 py-4">
+                      <li key={i} className="flex w-full flex-col border-b ">
+                        <div className="relative flex w-full flex-col justify-between items-center px-1 py-4">
                           <div className="flex flex-row">
-                            <div className="relative h-44 w-44 overflow-hidden">
+                            <div className="relative h-24 w-24 overflow-hidden">
                               <Image
-                                className="h-full w-full object-cover"
+                                className="h-full w-full object-contain"
                                 width={200}
                                 height={200}
                                 alt={
@@ -141,19 +134,19 @@ export function CartSheet() {
                                   {item.merchandise.product.title}
                                 </span>
                                 {item.merchandise.title !== DEFAULT_OPTION ? (
-                                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                  <p className="text-sm text-foreground">
                                     {item.merchandise.title}
                                   </p>
                                 ) : null}
                               </div>
                             </Link>
+                          </div>
+                          <div className="flex h-fit w-full flex-row items-center justify-between">
                             <Price
-                              className="flex justify-end space-y-2 text-right text-sm text-primary"
+                              className="flex space-y-2 text-right text-sm text-foreground"
                               amount={item.cost.totalAmount.amount}
                               currencyCode={item.cost.totalAmount.currencyCode}
                             />
-                          </div>
-                          <div className="flex h-16 w-full flex-row items-center justify-between">
                             <div className="ml-auto flex h-9 flex-row items-center rounded-md">
                               <EditItemQuantityButton
                                 item={item}
@@ -177,23 +170,23 @@ export function CartSheet() {
                     );
                   })}
               </ul>
-              <div className="py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 dark:border-neutral-700">
+              <div className="py-4 text-sm ">
+                <div className="mb-3 flex text-xs items-center justify-between">
                   <p>Taxes</p>
                   <Price
-                    className="text-right text-base text-foreground dark:text-foreground"
+                    className="text-right  text-foreground text-xs"
                     amount={cart.cost.totalTaxAmount.amount}
                     currencyCode={cart.cost.totalTaxAmount.currencyCode}
                   />
                 </div>
-                <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
+                <div className="mb-3 flex text-xs items-center justify-between ">
                   <p>Shipping</p>
                   <p className="text-right">Calculated at checkout</p>
                 </div>
-                <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
+                <div className="mb-3 flex items-center justify-between  pb-1 pt-1">
                   <p>Total</p>
                   <Price
-                    className="text-right text-base text-foreground dark:text-foreground"
+                    className="text-right text-base text-foreground"
                     amount={cart.cost.totalAmount.amount}
                     currencyCode={cart.cost.totalAmount.currencyCode}
                   />
