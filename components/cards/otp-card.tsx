@@ -161,7 +161,8 @@ export function OTPCard() {
         <p className="text-xs text-muted-foreground">
           The verification code will expire in 30 minutes. Please verify your
           code within this time frame. Also, check your spam folder for any
-          verification messages. If you haven&apos;t received one, please contact us.
+          verification messages. If you haven&apos;t received one, please
+          contact us.
         </p>
       </CardFooter>
     </Card>

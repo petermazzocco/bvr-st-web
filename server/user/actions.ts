@@ -271,7 +271,7 @@ export const changeUserPassword = async (
  * @returns Promise containing success message and status
  * @throws Error if email is incorrect or network request fails
  */
-export const forgotUserPassword = async (email: string) => {
+export const requestForgotPassword = async (email: string) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password`,
     {
@@ -280,6 +280,40 @@ export const forgotUserPassword = async (email: string) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email }),
+    },
+  );
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+  const body: {
+    message: string;
+    success: boolean;
+  } = await response.json();
+  return body;
+};
+
+/**
+ * Accepts a otp to confirm the user received the email
+ * @param email - Email address of the user
+ * @param code - One-time password sent to the user's email
+ * @param newPassword - New password to be set for the user
+ * @returns Promise containing success message of password change and status
+ * @throws Error if email is incorrect or network request fails
+ */
+export const confirmForgotPassword = async (
+  email: string,
+  code: string,
+  newPassword: string,
+) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password/confirm`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, code, newPassword }),
     },
   );
   if (!response.ok) {
@@ -433,13 +467,32 @@ export const resendOTPCode = async (userId: string, authToken: string) => {
  * Checks if the given OTP token is expired
  * @param otpToken - OTP token to check
  * @param userID - User ID associated with the OTP token
+ * @param email - Email address associated with the OTP token
  * @returns True if OTP is expired, false otherwise
  */
 export async function isOTPExpired(
   otpToken: string,
-  userID: string,
+  userID?: string,
+  email?: string,
 ): Promise<boolean> {
   try {
+    // Ensure at least one identifier is provided
+    if (!userID && !email) {
+      console.error("Either userID or email must be provided");
+      return true;
+    }
+
+    // Build request body based on available parameters
+    const requestBody: { code: string; user_id?: string; email?: string } = {
+      code: otpToken,
+    };
+
+    if (userID) {
+      requestBody.user_id = userID;
+    } else if (email) {
+      requestBody.email = email;
+    }
+
     // Make API call to verify OTP status
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/verify-otp`,
@@ -448,7 +501,7 @@ export async function isOTPExpired(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userID, otpToken }),
+        body: JSON.stringify(requestBody),
       },
     );
 
@@ -457,7 +510,7 @@ export async function isOTPExpired(
     }
 
     const data = await response.json();
-    return data.expired || false;
+    return !data.valid; // Return true if OTP is NOT valid (expired/used/canceled)
   } catch (error) {
     console.error("Error checking OTP expiration:", error);
     return true; // Treat errors as expired for security
