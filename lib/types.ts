@@ -13,7 +13,7 @@ export interface User {
   /** User's email address */
   email: string;
   /** User's encrypted password */
-  password: string;
+  password?: string;
   /** Current reward points balance */
   points: number;
   /** Array of orders placed by the user */
@@ -28,6 +28,8 @@ export interface User {
   isMember: boolean;
   /** User's email verification status */
   emailVerified: boolean;
+  /** User's OAuth provider */
+  oauthProvider?: string;
   /** ISO timestamp when the user account was created */
   createdAt: string;
   /** ISO timestamp when the user account was last updated */

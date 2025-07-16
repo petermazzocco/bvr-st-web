@@ -33,6 +33,8 @@ import { UserSignUp } from "@/lib/types";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-context";
+import { GoogleSignInButton } from "@/components/utils/signup-oauth-button";
+import { Separator } from "@/components/ui/separator";
 
 const signUpSchema = z
   .object({
@@ -143,6 +145,15 @@ export function SignUpCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <GoogleSignInButton className="w-full" />
+        <div className="relative my-4">
+          <Separator />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="bg-background px-2 text-muted-foreground text-sm">
+              Or continue with email
+            </span>
+          </div>
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField

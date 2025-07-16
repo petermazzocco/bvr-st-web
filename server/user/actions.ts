@@ -957,3 +957,171 @@ export async function isOTPExpired(
     return true; // Treat errors as expired for security
   }
 }
+
+/**
+ * Initiates OAuth sign-in by redirecting to the OAuth provider
+ * @param provider - OAuth provider name (e.g., 'google')
+ * @param callbackUrl - URL to redirect to after successful OAuth authentication
+ * @returns Promise containing redirect URL or error
+ */
+export const signInWithOAuth = async (
+  provider: string,
+  callbackUrl?: string,
+): Promise<ApiResult<{ redirectUrl: string }>> => {
+  try {
+    // Validate provider
+    const supportedProviders = ["google"]; // Add more providers as needed
+    if (!supportedProviders.includes(provider.toLowerCase())) {
+      return {
+        success: false,
+        error: `Unsupported OAuth provider: ${provider}`,
+      };
+    }
+
+    // Build the OAuth initiation URL - make sure provider is lowercase
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/${provider.toLowerCase()}`;
+    const url = new URL(baseUrl);
+
+    // Add frontend callback URL as query parameter
+    const frontendCallback = callbackUrl
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback?redirect=${encodeURIComponent(callbackUrl)}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`;
+
+    url.searchParams.append("callback", frontendCallback);
+
+    console.log("OAuth URL being constructed:", url.toString()); // Debug log
+
+    return {
+      success: true,
+      data: { redirectUrl: url.toString() },
+    };
+  } catch (error) {
+    console.error("OAuth initiation error:", error);
+    return {
+      success: false,
+      error: "Failed to initiate OAuth sign-in. Please try again.",
+    };
+  }
+};
+
+/**
+ * Handles OAuth callback and extracts token from URL parameters
+ * This would typically be called on your OAuth callback page
+ * @param searchParams - URL search parameters from the OAuth callback
+ * @returns Promise containing authentication token or error
+ */
+export const handleOAuthCallback = async (
+  searchParams: URLSearchParams,
+): Promise<ApiResult<{ token: string }>> => {
+  try {
+    // Check for error in callback
+    const error = searchParams.get("error");
+    if (error) {
+      const errorDescription =
+        searchParams.get("error_description") || "OAuth authentication failed";
+      return {
+        success: false,
+        error: decodeURIComponent(errorDescription),
+      };
+    }
+
+    // Extract token from URL parameters
+    // Note: Your backend should handle the actual OAuth flow and redirect with the token
+    const token = searchParams.get("token");
+    if (!token) {
+      return {
+        success: false,
+        error: "No authentication token received from OAuth provider.",
+      };
+    }
+
+    return {
+      success: true,
+      data: { token },
+    };
+  } catch (error) {
+    console.error("OAuth callback error:", error);
+    return {
+      success: false,
+      error: "Failed to process OAuth callback. Please try again.",
+    };
+  }
+};
+
+/**
+ * Alternative approach: Handle OAuth callback by making a request to your backend
+ * Use this if your backend doesn't redirect with the token in URL params
+ * @param provider - OAuth provider name
+ * @param code - Authorization code from OAuth provider
+ * @param state - State parameter from OAuth provider (optional)
+ * @returns Promise containing authentication token or error
+ */
+export const exchangeOAuthCode = async (
+  provider: string,
+  code: string,
+  state?: string,
+): Promise<ApiResult<{ token: string }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/${provider}/callback`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code,
+          state: state || undefined,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      // Handle specific OAuth errors
+      if (errorText.includes("account_exists_with_password")) {
+        const errorData = JSON.parse(errorText);
+        return {
+          success: false,
+          error:
+            errorData.message ||
+            "An account with this email already exists. Please sign in with your email and password instead.",
+        };
+      }
+
+      if (errorText.includes("Invalid authorization code")) {
+        return {
+          success: false,
+          error: "Invalid authorization code. Please try signing in again.",
+        };
+      }
+
+      if (errorText.includes("OAuth provider error")) {
+        return {
+          success: false,
+          error:
+            "Authentication failed with the OAuth provider. Please try again.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "OAuth authentication failed. Please try again.",
+      };
+    }
+
+    const body: { token: string } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("OAuth code exchange error:", error);
+    return {
+      success: false,
+      error:
+        "An unexpected error occurred during OAuth authentication. Please try again.",
+    };
+  }
+};
