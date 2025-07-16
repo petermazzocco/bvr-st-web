@@ -41,6 +41,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Check if user is authenticated and trying to access public auth routes
+  const isPublicRoute = PUBLIC_ROUTES.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  if (isPublicRoute && authToken) {
+    // User is authenticated but trying to access signin/signup, redirect to account
+    const accountUrl = new URL("/account", request.url);
+    return NextResponse.redirect(accountUrl);
+  }
+
   // Handle /signup/verify-email route
   if (pathname === "/signup/verify-email") {
     const otpToken = searchParams.get("token");

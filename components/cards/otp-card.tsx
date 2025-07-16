@@ -31,6 +31,7 @@ import { toast } from "sonner";
 import { verifyUserEmail } from "@/server/user/actions";
 import { useAuth, useAuthToken, useUserId } from "@/components/auth/auth-context";
 import { useApiMutation } from "@/hooks/use-api-mutation";
+import { getAuthToken, getUserIdFromToken } from "@/lib/utils";
 
 const otpSchema = z.object({
   code: z
@@ -43,7 +44,7 @@ type OTPFormValues = z.infer<typeof otpSchema>;
 
 export function OTPCard() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, refreshAuth } = useAuth();
   const token = useAuthToken();
   const userId = useUserId();
 
@@ -58,6 +59,7 @@ export function OTPCard() {
     (data: { code: string }) => verifyUserEmail(userId!, data.code, token!),
     {
       onSuccess: () => {
+        refreshAuth();
         router.push("/account");
       },
       onError: (error) => {
@@ -67,7 +69,10 @@ export function OTPCard() {
     },
   );
 
-  if (!isAuthenticated) {
+  const tokenFromStorage = getAuthToken();
+  const userIdFromStorage = getUserIdFromToken();
+  
+  if (!tokenFromStorage || !userIdFromStorage) {
     router.push("/signin");
     return null;
   }
