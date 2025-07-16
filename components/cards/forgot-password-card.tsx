@@ -92,23 +92,20 @@ export function ForgotPasswordCard() {
   }, [step, resetForm]);
 
   const { mutate: requestPasswordReset, isPending: isRequestingReset } =
-    useApiMutation(
-      (email: string) => requestForgotPassword(email),
-      {
-        onSuccess: (response) => {
-          toast.success(
-            response?.message || "Password reset code sent to your email",
-          );
-          // Clear OTP state before transitioning
-          setOtpValue("");
-          setStep("otp");
-        },
-        onError: (error) => {
-          toast.error(error || "Failed to send password reset email");
-          console.error("Error sending password reset email:", error);
-        },
+    useApiMutation((email: string) => requestForgotPassword(email), {
+      onSuccess: (response) => {
+        toast.success(
+          response?.message || "Password reset code sent to your email",
+        );
+        // Clear OTP state before transitioning
+        setOtpValue("");
+        setStep("otp");
       },
-    );
+      onError: (error) => {
+        toast.error(error || "Failed to send password reset email");
+        console.error("Error sending password reset email:", error);
+      },
+    });
 
   const { mutate: handleVerifyOTP, isPending: isVerifyingOTP } = useApiMutation(
     async (code: string) => {
@@ -116,7 +113,10 @@ export function ForgotPasswordCard() {
       if (isExpired) {
         throw new Error("OTP has expired or is invalid");
       }
-      return { success: true, data: { message: "OTP verified successfully", valid: true } };
+      return {
+        success: true,
+        data: { message: "OTP verified successfully", valid: true },
+      };
     },
     {
       onSuccess: (response) => {
@@ -132,11 +132,8 @@ export function ForgotPasswordCard() {
 
   const { mutate: confirmPasswordReset, isPending: isConfirmingReset } =
     useApiMutation(
-      (data: {
-        email: string;
-        code: string;
-        newPassword: string;
-      }) => confirmForgotPassword(data.email, data.code, data.newPassword),
+      (data: { email: string; code: string; newPassword: string }) =>
+        confirmForgotPassword(data.email, data.code, data.newPassword),
       {
         onSuccess: (response) => {
           toast.success(response?.message || "Password reset successfully");
@@ -314,6 +311,8 @@ export function ForgotPasswordCard() {
                 <Button
                   type="submit"
                   className="w-full"
+                  id="forgot-password-verify-otp-button"
+                  data-umami-event="Forgot Passowrd verify OTP"
                   disabled={otpValue.length !== 8 || isVerifyingOTP}
                 >
                   {isVerifyingOTP ? "Verifying..." : "Verify Code"}
@@ -443,6 +442,8 @@ export function ForgotPasswordCard() {
                   <Button
                     type="submit"
                     className="w-full"
+                    id="reset-forgotten-password-button"
+                    data-umami-event="Reset forgotten password button"
                     disabled={isConfirmingReset}
                   >
                     {isConfirmingReset ? "Resetting..." : "Reset Password"}

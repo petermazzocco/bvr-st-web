@@ -28,7 +28,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { Edit } from "lucide-react";
 import { toast } from "sonner";
-import { getAuthToken } from "@/lib/utils";
+import { useAuthToken } from "@/components/auth/auth-context";
 
 const updateUserSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -56,7 +56,7 @@ export function UpdateUserModal({
 }: UpdateUserModalProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
-  const authToken = getAuthToken();
+  const authToken = useAuthToken();
 
   const form = useForm<UpdateUserFormValues>({
     resolver: zodResolver(updateUserSchema),
@@ -73,7 +73,12 @@ export function UpdateUserModal({
   });
 
   const { mutate: updateUserMutation, isPending } = useApiMutation(
-    (data: UpdateUser) => updateUserDetails(authToken, userId, data),
+    (data: UpdateUser) => {
+      if (!authToken) {
+        throw new Error("Authentication token is required");
+      }
+      return updateUserDetails(authToken, userId, data);
+    },
     {
       onSuccess: () => {
         toast.success("User details updated successfully!");
@@ -89,6 +94,11 @@ export function UpdateUserModal({
   );
 
   const onSubmit = (data: UpdateUserFormValues) => {
+    if (!authToken) {
+      toast.error("Please sign in to update your details");
+      return;
+    }
+
     const updateData: UpdateUser = {
       name: data.name,
       email: data.email,
@@ -272,7 +282,12 @@ export function UpdateUserModal({
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                disabled={isPending || !authToken}
+                id="update-user-button"
+                data-umami-event="Update user button"
+              >
                 {isPending ? "Saving..." : "Save changes"}
               </Button>
             </DialogFooter>

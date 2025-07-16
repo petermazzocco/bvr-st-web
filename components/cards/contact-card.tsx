@@ -154,6 +154,8 @@ export function ContactCard() {
             <Button
               type="submit"
               className="w-full"
+              id="contact-submission-button"
+              data-umami-event="Contact submission button"
               disabled={isPending}
             >
               {isPending ? "Sending..." : "Send Message"}

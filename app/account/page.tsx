@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getUserIdFromToken } from "@/lib/utils";
 import {
   Pagination,
   PaginationContent,
@@ -12,37 +11,48 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { UserCard } from "@/components/cards/user-card";
-import { getAuthToken } from "@/lib/utils";
+import { useAuth, useAuthToken, useUserId } from "@/components/auth/auth-context";
 import { useQuery } from "@tanstack/react-query";
 import { getUserDetails, getUserOrders } from "@/server/user/actions";
 import { OrderCard } from "@/components/cards/order-card";
 import { Input } from "@/components/ui/input";
 
 export default function Page() {
-  const [userId, setUserId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const pageSize = 10;
   const router = useRouter();
-
-  useEffect(() => {
-    const id = getUserIdFromToken();
-    setUserId(id);
-  }, [router]);
-
-  const authToken = getAuthToken();
+  const { isAuthenticated } = useAuth();
+  const userId = useUserId();
+  const authToken = useAuthToken();
 
   const { data: user } = useQuery({
     queryKey: ["user", userId],
-    queryFn: () => getUserDetails(authToken, userId!),
-    enabled: !!userId,
+    queryFn: () => getUserDetails(authToken || undefined, userId!),
+    enabled: !!userId && !!authToken && isAuthenticated,
   });
 
   const { data: orders, isLoading: ordersLoading } = useQuery({
     queryKey: ["userOrders", userId, currentPage, pageSize],
-    queryFn: () => getUserOrders(authToken, userId!, currentPage, pageSize),
-    enabled: !!userId,
+    queryFn: () => getUserOrders(authToken || undefined, userId!, currentPage, pageSize),
+    enabled: !!userId && !!authToken && isAuthenticated,
   });
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/signin");
+    }
+  }, [isAuthenticated, router]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p>Redirecting to sign in...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Filter orders based on search term (client-side filtering)
   const filteredOrders =

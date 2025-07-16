@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { verifyUserEmail } from "@/server/user/actions";
-import { getUserIdFromToken, getAuthToken } from "@/lib/utils";
+import { useAuth, useAuthToken, useUserId } from "@/components/auth/auth-context";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 
 const otpSchema = z.object({
@@ -43,8 +43,9 @@ type OTPFormValues = z.infer<typeof otpSchema>;
 
 export function OTPCard() {
   const router = useRouter();
-  const token = getAuthToken();
-  const userId = getUserIdFromToken();
+  const { isAuthenticated } = useAuth();
+  const token = useAuthToken();
+  const userId = useUserId();
 
   const form = useForm<OTPFormValues>({
     resolver: zodResolver(otpSchema),
@@ -66,7 +67,7 @@ export function OTPCard() {
     },
   );
 
-  if (!token || !userId) {
+  if (!isAuthenticated) {
     router.push("/signin");
     return null;
   }

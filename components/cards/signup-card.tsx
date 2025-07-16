@@ -32,6 +32,7 @@ import { setAuthToken } from "@/lib/utils";
 import { UserSignUp } from "@/lib/types";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/components/auth/auth-context";
 
 const signUpSchema = z
   .object({
@@ -60,6 +61,7 @@ type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignUpCard() {
   const router = useRouter();
+  const { refreshAuth } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -88,6 +90,7 @@ export function SignUpCard() {
       onSuccess: (response) => {
         if (response?.token) {
           setAuthToken(response.token);
+          refreshAuth();
         }
         router.push(`/signup/verify-email?token=${response?.token}`);
         toast.success(
@@ -312,6 +315,8 @@ export function SignUpCard() {
                         type="button"
                         variant="ghost"
                         size="sm"
+                        id="signup-button"
+                        data-umami-event="Signup button"
                         className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                         onClick={() =>
                           setShowConfirmPassword(!showConfirmPassword)

@@ -10,9 +10,11 @@ import React, {
   createContext,
   use,
   useContext,
+  useEffect,
   useMemo,
   useOptimistic,
 } from "react";
+import { useOptionalAuth } from "@/components/auth/auth-context";
 
 type UpdateType = "plus" | "minus" | "delete";
 
@@ -24,12 +26,19 @@ type CartAction =
   | {
       type: "ADD_ITEM";
       payload: { variant: ProductVariant; product: Product };
+    }
+  | {
+      type: "CLEAR_CART";
     };
 
 type CartContextType = {
   cart: Cart | undefined;
+  isGuestCheckout: boolean;
+  userId: string | null;
+  isAuthenticated: boolean;
   updateCartItem: (merchandiseId: string, updateType: UpdateType) => void;
   addCartItem: (variant: ProductVariant, product: Product) => void;
+  clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -187,6 +196,9 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
         lines: updatedLines,
       };
     }
+    case "CLEAR_CART": {
+      return createEmptyCart();
+    }
     default:
       return currentCart;
   }
@@ -205,6 +217,21 @@ export function CartProvider({
     cartReducer,
   );
 
+  // Optional auth integration - works without auth context
+  const auth = useOptionalAuth();
+  const userId = auth?.userId || null;
+  const isAuthenticated = auth?.isAuthenticated || false;
+  const isGuestCheckout = !isAuthenticated;
+
+  // Clear cart when user logs out
+  useEffect(() => {
+    if (auth?.isAuthenticated === false && optimisticCart && optimisticCart.lines.length > 0) {
+      // Only clear if we had items and user explicitly logged out
+      // This prevents clearing on initial load
+      updateOptimisticCart({ type: "CLEAR_CART" });
+    }
+  }, [auth?.isAuthenticated]);
+
   const updateCartItem = (merchandiseId: string, updateType: UpdateType) => {
     updateOptimisticCart({
       type: "UPDATE_ITEM",
@@ -216,13 +243,21 @@ export function CartProvider({
     updateOptimisticCart({ type: "ADD_ITEM", payload: { variant, product } });
   };
 
+  const clearCart = () => {
+    updateOptimisticCart({ type: "CLEAR_CART" });
+  };
+
   const value = useMemo(
     () => ({
       cart: optimisticCart,
+      isGuestCheckout,
+      userId,
+      isAuthenticated,
       updateCartItem,
       addCartItem,
+      clearCart,
     }),
-    [optimisticCart, addCartItem, updateCartItem],
+    [optimisticCart, isGuestCheckout, userId, isAuthenticated, updateCartItem, addCartItem, clearCart],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

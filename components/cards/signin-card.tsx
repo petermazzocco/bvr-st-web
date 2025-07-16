@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { setAuthToken } from "@/lib/utils";
 import { signInWithEmail } from "@/server/user/actions";
 import { useApiMutation } from "@/hooks/use-api-mutation";
+import { useAuth } from "@/components/auth/auth-context";
 
 const signInSchema = z
   .object({
@@ -50,6 +51,8 @@ type SignInFormValues = z.infer<typeof signInSchema>;
 
 export function SignInCard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { refreshAuth } = useAuth();
 
   const form = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
@@ -69,6 +72,7 @@ export function SignInCard() {
           // data is guaranteed to be defined here and is the actual response data
           if (data?.token) {
             setAuthToken(data.token);
+            refreshAuth(); // Refresh auth state after setting token
           }
           if (data?.callbackUrl) {
             router.push(data.callbackUrl);
@@ -82,11 +86,15 @@ export function SignInCard() {
     );
 
   const onSubmit = (data: SignInFormValues) => {
-    // Simply call the mutation - all success/error handling is done in useApiMutation
+    const redirect = searchParams.get("redirect");
+    const callbackUrl = redirect
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}${redirect}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/account`;
+
     signInEmailMutation({
       email: data.email!,
       password: data.password,
-      callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/account`,
+      callbackUrl,
     });
   };
 
@@ -136,6 +144,8 @@ export function SignInCard() {
             <Button
               type="submit"
               className="w-full"
+              id="signin-button"
+              data-umami-event="Signin button"
               disabled={isSigningInWithEmail}
             >
               {isSigningInWithEmail ? "Signing In..." : "Sign In"}

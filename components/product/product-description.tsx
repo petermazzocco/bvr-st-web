@@ -1,10 +1,35 @@
+"use client";
+
 import { VariantSelector } from "@/components/product/variant-selector";
 import { Price } from "@/components/product/product-price";
 import { Product } from "@/lib/shopify/types";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Separator } from "../ui/separator";
+import { useCart } from "@/components/cart/cart-context";
+import Link from "next/link";
 
 export function ProductDescription({ product }: { product: Product }) {
+  const { isAuthenticated } = useCart();
+
+  // Calculate points based on membership status
+  const basePoints = Math.floor(
+    Number(product.priceRange.maxVariantPrice.amount),
+  );
+  const membershipMultiplier = isAuthenticated ? 1.5 : 1; // 1.5x points for members
+  const earnedPoints = Math.floor(basePoints * membershipMultiplier);
+
+  // Check stock availability across all variants
+  const totalStock = product.variants.reduce((total, variant) => {
+    return total + (variant.availableForSale ? 1 : 0);
+  }, 0);
+
+  const stockStatus =
+    totalStock === 0
+      ? "Out of Stock"
+      : totalStock === product.variants.length
+        ? "In Stock"
+        : `${totalStock}/${product.variants.length} variants available`;
+
   return (
     <>
       <div className="mb-2 flex flex-row items-center justify-between">
@@ -33,8 +58,29 @@ export function ProductDescription({ product }: { product: Product }) {
       <Separator className="my-4" />
       <AddToCartButton product={product} />
       <div className="mt-4 flex flex-col gap-1 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
-        <p>Earn {Number(product.priceRange.maxVariantPrice.amount)} points</p>
-        <p>In Stock</p>
+        <p>
+          {isAuthenticated ? (
+            <>
+              Earn {earnedPoints} points
+              <span className="text-green-600 ml-1">(Member Bonus!)</span>
+            </>
+          ) : (
+            <>
+              Earn {earnedPoints} points +
+              <Link
+                className="text-blue-600 cursor-pointer hover:underline ml-1"
+                href="/membership"
+              >
+                Become a member today and earn 100 points instantly.
+              </Link>
+            </>
+          )}
+        </p>
+        <p
+          className={`${totalStock === 0 ? "text-red-600" : totalStock === product.variants.length ? "text-green-600" : "text-yellow-600"}`}
+        >
+          {stockStatus}
+        </p>
       </div>
     </>
   );

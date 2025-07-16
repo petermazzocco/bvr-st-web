@@ -87,6 +87,8 @@ export function NavSideSheet({
                             <a
                               key={collection.handle}
                               href={collection.path}
+                              id="collection-chosen-button"
+                              data-umami-event="Collection chose button"
                               className="flex justify-between items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                               onClick={handleSubItemClick}
                             >
@@ -104,6 +106,8 @@ export function NavSideSheet({
                     <div key={collection.handle}>
                       <a
                         href={collection.path}
+                        id="collection-chosen-button"
+                        data-umami-event="Collection chose button"
                         className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
                         onClick={handleDirectLinkClick}
                       >

@@ -25,12 +25,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { resendOTPCode } from "@/server/user/actions";
-import { getUserIdFromToken, getAuthToken } from "@/lib/utils";
+import {
+  useAuth,
+  useAuthToken,
+  useUserId,
+} from "@/components/auth/auth-context";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { OTPCard } from "@/components/cards/otp-card";
 
 const resendOTPSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.email("Please enter a valid email address"),
 });
 
 type ResendOTPFormValues = z.infer<typeof resendOTPSchema>;
@@ -38,8 +42,9 @@ type ResendOTPFormValues = z.infer<typeof resendOTPSchema>;
 export function ResendOTPModal({ email }: { email: string }) {
   const [open, setOpen] = useState(false);
   const [showOTPCard, setShowOTPCard] = useState(false);
-  const token = getAuthToken();
-  const userId = getUserIdFromToken();
+  const { isAuthenticated } = useAuth();
+  const token = useAuthToken();
+  const userId = useUserId();
 
   const form = useForm<ResendOTPFormValues>({
     resolver: zodResolver(resendOTPSchema),
@@ -81,7 +86,7 @@ export function ResendOTPModal({ email }: { email: string }) {
     }
   };
 
-  if (!token || !userId) {
+  if (!isAuthenticated) {
     return null;
   }
 
@@ -126,7 +131,13 @@ export function ResendOTPModal({ email }: { email: string }) {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isResending}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isResending}
+                id="resend-otp-button"
+                data-umami-event="User resend otp button"
+              >
                 {isResending ? "Resending..." : "Resend OTP Code"}
               </Button>
             </form>

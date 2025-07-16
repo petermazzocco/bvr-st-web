@@ -8,7 +8,12 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   createCartAndSetCookie,
   redirectToCheckout,
@@ -19,7 +24,7 @@ import { OpenCartButton } from "@/components/cart/open-cart-button";
 import { ShoppingCart } from "lucide-react";
 
 export function CartSheet() {
-  const { cart, updateCartItem } = useCart();
+  const { cart, updateCartItem, isGuestCheckout, isAuthenticated } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
 
@@ -58,6 +63,8 @@ export function CartSheet() {
         onClick={() => {
           openCart();
         }}
+        id="open-cart-button"
+        data-umami-event="Open cart button"
         variant="ghost"
         className="px-2.5"
       >
@@ -74,12 +81,17 @@ export function CartSheet() {
           side="right"
           className="flex h-full w-full flex-col border-l bg-background p-6 text-foreground backdrop-blur-xl  md:w-[490px]"
         >
-          <SheetHeader className="flex flex-row items-center justify-between"></SheetHeader>
+          <SheetHeader className="flex flex-row items-center justify-between">
+            <SheetTitle>Shopping Cart</SheetTitle>
+          </SheetHeader>
 
           {!cart || cart.lines.length === 0 ? (
             <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
               <ShoppingCart className="h-16" />
-              <p className="mt-6 text-center text-lg">Your cart is empty.</p>
+              <p className="mt-2 text-center text-lg">Your cart is empty.</p>
+              <Link href="/products">
+                <Button className="mt-4">Shop Products Now</Button>
+              </Link>
             </div>
           ) : (
             <div className="flex h-full flex-col justify-between overflow-hidden p-1">
@@ -193,7 +205,7 @@ export function CartSheet() {
                 </div>
               </div>
               <form action={redirectToCheckout}>
-                <CheckoutButton />
+                <CheckoutButton isGuestCheckout={isGuestCheckout} />
               </form>
             </div>
           )}
@@ -203,7 +215,7 @@ export function CartSheet() {
   );
 }
 
-function CheckoutButton() {
+function CheckoutButton({ isGuestCheckout }: { isGuestCheckout: boolean }) {
   const { pending } = useFormStatus();
 
   return (
@@ -213,7 +225,11 @@ function CheckoutButton() {
       type="submit"
       disabled={pending}
     >
-      {pending ? "Adding To Cart..." : "Proceed to Checkout"}
+      {pending
+        ? "Processing..."
+        : isGuestCheckout
+          ? "Guest Checkout"
+          : "Proceed to Checkout"}
     </Button>
   );
 }

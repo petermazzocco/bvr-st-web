@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { cookies } from "next/headers";
 import { getCart } from "@/lib/shopify";
 import { CartProvider } from "@/components/cart/cart-context";
+import { AuthProvider } from "@/components/auth/auth-context";
 import { getCollections } from "@/lib/shopify";
 import Script from "next/script";
 
@@ -40,14 +41,16 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${ibm.variable} antialiased min-h-screen`}>
         <ReactQueryProvider>
-          <CartProvider cartPromise={cart}>
-            <Navbar collections={collections} />
-            <main>
-              {children}
-              <Toaster closeButton />
-            </main>
-            <Footer />
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider cartPromise={cart}>
+              <Navbar collections={collections} />
+              <main>
+                {children}
+                <Toaster closeButton />
+              </main>
+              <Footer />
+            </CartProvider>
+          </AuthProvider>
         </ReactQueryProvider>
       </body>
       <Script

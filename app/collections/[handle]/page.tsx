@@ -77,7 +77,11 @@ export default async function Page(props: {
                   <div key={product.id} className="group">
                     <div className="relative aspect-square overflow-hidden rounded-md">
                       {product.images[0] && (
-                        <Link href={`/products/${product.handle}`}>
+                        <Link
+                          href={`/products/${product.handle}`}
+                          id="product-viewed-button"
+                          data-umami-event="Product viewed button"
+                        >
                           <ProductProvider>
                             <ProductImageHover images={product.images} />
                           </ProductProvider>

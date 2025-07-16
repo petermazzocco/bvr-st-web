@@ -26,19 +26,24 @@ import { changeUserPassword } from "@/server/user/actions";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { toast } from "sonner";
-import { getAuthToken } from "@/lib/utils";
+import { useAuthToken } from "@/components/auth/auth-context";
 
-const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, "Current password is required"),
-  newPassword: z.string().min(8, "New password must be at least 8 characters long"),
-  confirmPassword: z.string().min(1, "Please confirm your password"),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "New passwords do not match",
-  path: ["confirmPassword"],
-}).refine((data) => data.currentPassword !== data.newPassword, {
-  message: "New password must be different from current password",
-  path: ["newPassword"],
-});
+const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required"),
+    newPassword: z
+      .string()
+      .min(8, "New password must be at least 8 characters long"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "New passwords do not match",
+    path: ["confirmPassword"],
+  })
+  .refine((data) => data.currentPassword !== data.newPassword, {
+    message: "New password must be different from current password",
+    path: ["newPassword"],
+  });
 
 type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
 
@@ -65,7 +70,7 @@ export function ChangePasswordModal({
     },
   });
 
-  const authToken = getAuthToken();
+  const authToken = useAuthToken();
 
   const { mutate: changePasswordMutation, isPending } = useApiMutation(
     ({
@@ -74,7 +79,17 @@ export function ChangePasswordModal({
     }: {
       currentPassword: string;
       newPassword: string;
-    }) => changeUserPassword(authToken, userId, currentPassword, newPassword),
+    }) => {
+      if (!authToken) {
+        throw new Error("Authentication token is required");
+      }
+      return changeUserPassword(
+        authToken,
+        userId,
+        currentPassword,
+        newPassword,
+      );
+    },
     {
       onSuccess: () => {
         toast.success("Password changed successfully!");
@@ -89,6 +104,11 @@ export function ChangePasswordModal({
   );
 
   const onSubmit = (data: ChangePasswordFormValues) => {
+    if (!authToken) {
+      toast.error("Please sign in to change your password");
+      return;
+    }
+
     changePasswordMutation({
       currentPassword: data.currentPassword,
       newPassword: data.newPassword,
@@ -145,7 +165,9 @@ export function ChangePasswordModal({
                           variant="ghost"
                           size="sm"
                           className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                          onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                          onClick={() =>
+                            setShowCurrentPassword(!showCurrentPassword)
+                          }
                         >
                           {showCurrentPassword ? (
                             <EyeOff className="h-4 w-4" />
@@ -219,7 +241,9 @@ export function ChangePasswordModal({
                           variant="ghost"
                           size="sm"
                           className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
                         >
                           {showConfirmPassword ? (
                             <EyeOff className="h-4 w-4" />
@@ -240,14 +264,18 @@ export function ChangePasswordModal({
                 <ul className="list-disc list-inside mt-1 space-y-1">
                   <li
                     className={
-                      watchedFields.newPassword && watchedFields.newPassword.length >= 8 ? "text-green-600" : ""
+                      watchedFields.newPassword &&
+                      watchedFields.newPassword.length >= 8
+                        ? "text-green-600"
+                        : ""
                     }
                   >
                     At least 8 characters long
                   </li>
                   <li
                     className={
-                      watchedFields.newPassword !== watchedFields.currentPassword &&
+                      watchedFields.newPassword !==
+                        watchedFields.currentPassword &&
                       watchedFields.newPassword
                         ? "text-green-600"
                         : ""
@@ -257,7 +285,8 @@ export function ChangePasswordModal({
                   </li>
                   <li
                     className={
-                      watchedFields.newPassword === watchedFields.confirmPassword &&
+                      watchedFields.newPassword ===
+                        watchedFields.confirmPassword &&
                       watchedFields.confirmPassword
                         ? "text-green-600"
                         : ""
@@ -277,10 +306,13 @@ export function ChangePasswordModal({
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending
-                  ? "Changing..."
-                  : "Change Password"}
+              <Button
+                type="submit"
+                disabled={isPending || !authToken}
+                id="user-change-password-button"
+                data-umami-event="User change password button"
+              >
+                {isPending ? "Changing..." : "Change Password"}
               </Button>
             </DialogFooter>
           </form>

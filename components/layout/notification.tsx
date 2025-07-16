@@ -10,8 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
-import { getUserIdFromToken } from "@/lib/utils";
+import { useUserId } from "@/components/auth/auth-context";
 import { useRouter } from "next/navigation";
 
 interface Notification {
@@ -26,13 +25,8 @@ interface Notification {
 }
 
 export function NotificationDropdown() {
-  const [userId, setUserId] = useState<string | null>(null);
+  const userId = useUserId();
   const router = useRouter();
-
-  useEffect(() => {
-    const id = getUserIdFromToken();
-    setUserId(id || null);
-  }, []);
 
   const handleNotificationClick = (notification: Notification) => {
     if (notification.route) {

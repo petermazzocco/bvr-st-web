@@ -1,7 +1,7 @@
 import { LogOutIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+import { useAuth } from "@/components/auth/auth-context";
 
 export function SignOutButton({
   iconSize = "w-4 h-4",
@@ -23,11 +23,11 @@ export function SignOutButton({
   size?: "default" | "sm" | "lg" | "icon" | null | undefined;
 }) {
   const router = useRouter();
+  const { logout } = useAuth();
 
   const signOut = () => {
     try {
-      // Remove the auth token cookie
-      Cookies.remove("authToken");
+      logout();
       router.push("/");
       return { success: true };
     } catch (error) {

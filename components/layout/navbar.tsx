@@ -6,17 +6,15 @@ import { Search } from "./search";
 import { CartSheet } from "../cart/cart-sheet";
 import { NotificationDropdown } from "./notification";
 import { Collection } from "@/lib/shopify/types";
-import { getAuthToken } from "@/lib/utils";
+import { useAuth } from "@/components/auth/auth-context";
 import { useEffect, useState } from "react";
 
 export function Navbar({ collections }: { collections: Collection[] }) {
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const { isAuthenticated } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    const token = getAuthToken();
-    setToken(token);
   }, []);
 
   return (
@@ -32,7 +30,7 @@ export function Navbar({ collections }: { collections: Collection[] }) {
       <div className="flex items-center justify-end gap-4">
         <Search />
         <NotificationDropdown />
-        <Link href={isClient && token != undefined ? "/account" : "/signin"}>
+        <Link href={isClient && isAuthenticated ? "/account" : "/signin"}>
           <UserIcon className="h-4" />
         </Link>
         <CartSheet />

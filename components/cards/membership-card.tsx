@@ -13,20 +13,19 @@ import { Separator } from "../ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { createCheckoutSession } from "@/server/stripe/actions";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import { getAuthToken, getUserIdFromToken } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import {
+  useAuth,
+  useAuthToken,
+  useUserId,
+} from "@/components/auth/auth-context";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function MembershipCard() {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [authToken, setAuthToken] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const id = getUserIdFromToken();
-    const token = getAuthToken();
-    setUserId(id);
-    setAuthToken(token);
-  }, []);
+  const { isAuthenticated } = useAuth();
+  const userId = useUserId();
+  const authToken = useAuthToken();
+  const router = useRouter();
 
   const { mutate: createCheckout, isPending } = useApiMutation(
     async () => {
@@ -57,8 +56,8 @@ export function MembershipCard() {
   );
 
   const handleStartMembership = () => {
-    if (!userId || !authToken) {
-      toast.error("Please sign in to continue");
+    if (!isAuthenticated) {
+      router.push("/signin?redirect=/membership");
       return;
     }
     createCheckout(undefined);
@@ -94,6 +93,8 @@ export function MembershipCard() {
         <Button
           className="w-full"
           onClick={handleStartMembership}
+          id="membership-button"
+          data-umami-event="Create membership intent button"
           disabled={isPending}
         >
           {isPending ? "Processing..." : "Start Membership"}

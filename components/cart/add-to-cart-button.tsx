@@ -8,13 +8,16 @@ import { Product, ProductVariant } from "@/lib/shopify/types";
 import { useActionState } from "react";
 import { useCart } from "./cart-context";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 function SubmitButton({
   availableForSale,
   selectedVariantId,
+  isGuestCheckout,
 }: {
   availableForSale: boolean;
   selectedVariantId: string | undefined;
+  isGuestCheckout: boolean;
 }) {
   const buttonClasses =
     "relative flex w-full items-center justify-center h-12 p-4 tracking-wide text-white";
@@ -46,6 +49,8 @@ function SubmitButton({
   return (
     <Button
       aria-label="Add to cart"
+      id="add-to-cart-button"
+      data-umami-event="Add to cart button"
       className={clsx(buttonClasses, {
         "hover:opacity-90": true,
       })}
@@ -60,7 +65,7 @@ function SubmitButton({
 
 export function AddToCartButton({ product }: { product: Product }) {
   const { variants, availableForSale } = product;
-  const { addCartItem } = useCart();
+  const { addCartItem, isGuestCheckout, isAuthenticated } = useCart();
   const { state } = useProduct();
   const [message, formAction] = useActionState(addItem, null);
 
@@ -86,10 +91,25 @@ export function AddToCartButton({ product }: { product: Product }) {
       <SubmitButton
         availableForSale={availableForSale}
         selectedVariantId={selectedVariantId}
+        isGuestCheckout={isGuestCheckout}
       />
       <p aria-live="polite" className="sr-only" role="status">
         {message}
       </p>
+      <div>
+        {isGuestCheckout && (
+          <p className="mt-2 text-xs text-muted-foreground text-left">
+            Shopping as guest •{" "}
+            <Link
+              className="text-blue-600 cursor-pointer hover:underline"
+              href={`/signin?redirect=/products/${product.handle}`}
+            >
+              Sign in
+            </Link>{" "}
+            for saved cart
+          </p>
+        )}
+      </div>
     </form>
   );
 }
