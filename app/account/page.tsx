@@ -11,15 +11,17 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { UserCard } from "@/components/cards/user-card";
-import { useAuth, useAuthToken, useUserId } from "@/components/auth/auth-context";
+import {
+  useAuth,
+  useAuthToken,
+  useUserId,
+} from "@/components/auth/auth-context";
 import { useQuery } from "@tanstack/react-query";
 import { getUserDetails, getUserOrders } from "@/server/user/actions";
 import { OrderCard } from "@/components/cards/order-card";
-import { Input } from "@/components/ui/input";
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
   const pageSize = 10;
   const router = useRouter();
   const { isAuthenticated } = useAuth();
@@ -34,7 +36,8 @@ export default function Page() {
 
   const { data: orders, isLoading: ordersLoading } = useQuery({
     queryKey: ["userOrders", userId, currentPage, pageSize],
-    queryFn: () => getUserOrders(authToken || undefined, userId!, currentPage, pageSize),
+    queryFn: () =>
+      getUserOrders(authToken || undefined, userId!, currentPage, pageSize),
     enabled: !!userId && !!authToken && isAuthenticated,
   });
 
@@ -54,14 +57,7 @@ export default function Page() {
     );
   }
 
-  // Filter orders based on search term (client-side filtering)
-  const filteredOrders =
-    orders?.data?.filter(
-      (order) =>
-        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.tracking.toLowerCase().includes(searchTerm.toLowerCase()),
-    ) || [];
+  const filteredOrders = orders?.data || [];
 
   // Calculate total pages (this assumes your server returns all orders for the page)
   // You might want to modify your server function to return total count for better pagination
@@ -94,14 +90,6 @@ export default function Page() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Order History</h2>
-              <Input
-                type="text"
-                placeholder="Search orders..."
-                value={searchTerm}
-                className="w-1/3"
-                onChange={(e) => setSearchTerm(e.target.value)}
-                disabled={ordersLoading || orders?.data?.length === 0}
-              />
             </div>
 
             <div className="space-y-4">
@@ -115,11 +103,7 @@ export default function Page() {
                 ))
               ) : (
                 <div className="flex justify-center items-center h-32">
-                  <div className="text-center">
-                    {searchTerm
-                      ? "No orders found matching your search"
-                      : "No orders found"}
-                  </div>
+                  <div className="text-center">No orders found</div>
                 </div>
               )}
             </div>
