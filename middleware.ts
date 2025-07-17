@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
   // Get the authToken from cookies
-  const authToken = request.cookies.get("authToken")?.value;
+  const authToken = request.cookies.get("bvrstrco_auth")?.value;
 
   // Check if current path is a protected route
   const isProtectedRoute = PROTECTED_ROUTES.some((route) =>

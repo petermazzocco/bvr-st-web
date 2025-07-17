@@ -132,7 +132,7 @@ export const signInWithPhone = async (
 export const signOut = async (): Promise<ApiResult<{}>> => {
   try {
     // Remove the auth token cookie
-    Cookies.remove("authToken");
+    Cookies.remove("bvrstrco_auth");
     return { success: true, data: {} };
   } catch (error) {
     console.error("Sign out error:", error);

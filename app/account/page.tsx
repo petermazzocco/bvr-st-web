@@ -1,19 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, LogOut, MapPin, Package, Star, User } from "lucide-react";
+import { CreditCard, LogOut, MapPin, Star, User } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -36,18 +37,36 @@ import {
   useAuthToken,
   useUserId,
 } from "@/components/auth/auth-context";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUserDetails, getUserOrders } from "@/server/user/actions";
-import { getCustomerPaymentMethods, getSubscriptionPaymentInfo, getPaymentHistory } from "@/server/stripe/actions";
+import {
+  getCustomerPaymentMethods,
+  getSubscriptionPaymentInfo,
+  getPaymentHistory,
+} from "@/server/stripe/actions";
 import { UpdateUserModal } from "@/components/modals/update-user-details";
 
 export default function ProfilePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const userId = useUserId();
   const authToken = useAuthToken();
+  const queryClient = useQueryClient();
+
+  const signOutMutation = useMutation({
+    mutationFn: async () => {
+      logout();
+      queryClient.clear();
+    },
+    onSuccess: () => {
+      router.push("/signin");
+    },
+    onError: (error) => {
+      console.error("Sign out error:", error);
+    },
+  });
 
   const { data: user } = useQuery({
     queryKey: ["user", userId],
@@ -100,7 +119,7 @@ export default function ProfilePage() {
   const totalPages = Math.ceil((orders?.data?.length || 0) / pageSize);
 
   const handleSignOut = () => {
-    console.log("Signing out...");
+    signOutMutation.mutate();
   };
 
   const handlePageChange = (page: number) => {
@@ -121,10 +140,9 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4 py-6">
             <div className="flex items-center space-x-4">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
@@ -141,26 +159,34 @@ export default function ProfilePage() {
                 )}
               </div>
             </div>
-            <Button variant="outline" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
+            <div className="flex flex-col md:flex-row gap-4 ">
+              {!user?.data?.isMember && (
+                <Link href="/membership">
+                  <Button variant="default">Become A Member</Button>
+                </Link>
+              )}
+              <Button
+                variant="outline"
+                onClick={handleSignOut}
+                disabled={signOutMutation.isPending}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                {signOutMutation.isPending ? "Signing Out..." : "Sign Out"}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="space-y-8">
-          {/* Personal Information and Membership Row */}
-          <div className="flex gap-8">
-            {/* Personal Information - 2/3 width */}
-            <div className="flex-1 w-2/4 h-full">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 w-full  h-full">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <User className="w-5 h-5 mr-2" />
-                    Personal Information
+                    Information
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -189,45 +215,23 @@ export default function ProfilePage() {
                         {user?.data?.phone || "Not provided"}
                       </p>
                     </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Available Points
+                      </label>
+                      <p className="mt-1 text-gray-900">
+                        {user?.data?.points || "Not provided"}
+                      </p>
+                    </div>
                   </div>
                   <UpdateUserModal user={user?.data} userId={user?.data?.id} />
                 </CardContent>
               </Card>
             </div>
-
-            {/* Membership Status - 1/3 width */}
-            <div className="flex-1 w-1/3">
-              {!user?.data?.isMember && (
-                <Card className="border-2 border-dashed border-primary/50 bg-primary/20">
-                  <CardHeader>
-                    <CardTitle className="flex items-center text-primary">
-                      <Star className="w-5 h-5 mr-2" />
-                      Become a Member
-                    </CardTitle>
-                    <CardDescription className="text-muted-foreground">
-                      Unlock exclusive benefits and early access to new products
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 text-sm text-muted-foreground mb-4">
-                      <li>• Free shipping on all orders</li>
-                      <li>• 15% off all purchases</li>
-                      <li>• Early access to sales</li>
-                      <li>• Exclusive member-only products</li>
-                    </ul>
-                    <Link href="/membership">
-                      <Button className="w-full">Become a Member</Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
           </div>
 
-          {/* Shipping Address and Payment Methods Row */}
-          <div className="flex gap-8">
-            {/* Shipping Address - 1/2 width */}
-            <div className="flex-1 w-1/2">
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex-1 w-full">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -249,70 +253,77 @@ export default function ProfilePage() {
               </Card>
             </div>
 
-            {/* Payment Methods - 1/2 width */}
-            <div className="flex-1 w-1/2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <CreditCard className="w-5 h-5 mr-2" />
-                    Payment Methods
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {paymentMethodsLoading ? (
-                    <div className="flex justify-center items-center h-20">
-                      <div className="text-center">Loading payment methods...</div>
-                    </div>
-                  ) : paymentMethods && paymentMethods.length > 0 ? (
-                    <>
-                      {paymentMethods.map((method) => (
-                        <div
-                          key={method.id}
-                          className="flex items-center justify-between p-4 border rounded-lg"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
-                              <CreditCard className="w-4 h-4" />
-                            </div>
-                            <div>
-                              <p className="font-medium">
-                                {method.card?.brand || method.type} ending in {method.card?.last4 || method.bank?.last4}
-                              </p>
-                              <p className="text-sm text-gray-600">
-                                {method.card ? `Expires ${method.card.exp_month}/${method.card.exp_year}` : method.bank?.account_type}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            {method.is_default && (
-                              <Badge variant="secondary">Default</Badge>
-                            )}
-                            <Button variant="ghost" size="sm">
-                              Edit
-                            </Button>
-                          </div>
+            {paymentMethods && paymentMethods?.length > 0 && (
+              <div className="flex-1 w-full">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <CreditCard className="w-5 h-5 mr-2" />
+                      Payment Methods
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {paymentMethodsLoading ? (
+                      <div className="flex justify-center items-center h-20">
+                        <div className="text-center">
+                          Loading payment methods...
                         </div>
-                      ))}
-                      <Button variant="outline" size="sm">
-                        Add New Card
-                      </Button>
-                    </>
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-muted-foreground mb-4">No payment methods on file</p>
-                      <Button variant="outline" size="sm">
-                        Add New Card
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                      </div>
+                    ) : paymentMethods && paymentMethods.length > 0 ? (
+                      <>
+                        {paymentMethods.map((method) => (
+                          <div
+                            key={method.id}
+                            className="flex items-center justify-between p-4 border rounded-lg"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
+                                <CreditCard className="w-4 h-4" />
+                              </div>
+                              <div>
+                                <p className="font-medium">
+                                  {method.card?.brand || method.type} ending in{" "}
+                                  {method.card?.last4 || method.bank?.last4}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  {method.card
+                                    ? `Expires ${method.card.exp_month}/${method.card.exp_year}`
+                                    : method.bank?.account_type}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              {method.is_default && (
+                                <Badge variant="secondary">Default</Badge>
+                              )}
+                              <Button variant="ghost" size="sm">
+                                Edit
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                        <Button variant="outline" size="sm">
+                          Add New Card
+                        </Button>
+                      </>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground mb-4">
+                          No payment methods on file
+                        </p>
+                        <Button variant="outline" size="sm">
+                          Add New Card
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Subscription Payment Info */}
-        {subscriptionInfo && (
+        {subscriptionInfo && user?.data?.isMember && (
           <Card className="mt-8">
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -323,7 +334,9 @@ export default function ProfilePage() {
             <CardContent>
               {subscriptionLoading ? (
                 <div className="flex justify-center items-center h-20">
-                  <div className="text-center">Loading subscription info...</div>
+                  <div className="text-center">
+                    Loading subscription info...
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -333,7 +346,13 @@ export default function ProfilePage() {
                         Status
                       </label>
                       <p className="mt-1 text-gray-900">
-                        <Badge variant={subscriptionInfo.status === 'active' ? 'default' : 'secondary'}>
+                        <Badge
+                          variant={
+                            subscriptionInfo.status === "active"
+                              ? "default"
+                              : "secondary"
+                          }
+                        >
                           {subscriptionInfo.status}
                         </Badge>
                       </p>
@@ -354,10 +373,17 @@ export default function ProfilePage() {
                       </label>
                       <div className="mt-2 p-3 border rounded-lg bg-gray-50">
                         <p className="font-medium">
-                          {subscriptionInfo.default_payment.card?.brand || subscriptionInfo.default_payment.type} ending in {subscriptionInfo.default_payment.card?.last4 || subscriptionInfo.default_payment.bank?.last4}
+                          {subscriptionInfo.default_payment.card?.brand ||
+                            subscriptionInfo.default_payment.type}{" "}
+                          ending in{" "}
+                          {subscriptionInfo.default_payment.card?.last4 ||
+                            subscriptionInfo.default_payment.bank?.last4}
                         </p>
                         <p className="text-sm text-gray-600">
-                          {subscriptionInfo.default_payment.card ? `Expires ${subscriptionInfo.default_payment.card.exp_month}/${subscriptionInfo.default_payment.card.exp_year}` : subscriptionInfo.default_payment.bank?.account_type}
+                          {subscriptionInfo.default_payment.card
+                            ? `Expires ${subscriptionInfo.default_payment.card.exp_month}/${subscriptionInfo.default_payment.card.exp_year}`
+                            : subscriptionInfo.default_payment.bank
+                                ?.account_type}
                         </p>
                       </div>
                     </div>
@@ -369,10 +395,14 @@ export default function ProfilePage() {
                       </label>
                       <div className="mt-2 p-3 border rounded-lg bg-gray-50">
                         <p className="font-medium">
-                          ${subscriptionInfo.last_payment.amount / 100} {subscriptionInfo.last_payment.currency.toUpperCase()}
+                          ${subscriptionInfo.last_payment.amount / 100}{" "}
+                          {subscriptionInfo.last_payment.currency.toUpperCase()}
                         </p>
                         <p className="text-sm text-gray-600">
-                          {new Date(subscriptionInfo.last_payment.paid_at).toLocaleDateString()} - {subscriptionInfo.last_payment.status}
+                          {new Date(
+                            subscriptionInfo.last_payment.paid_at,
+                          ).toLocaleDateString()}{" "}
+                          - {subscriptionInfo.last_payment.status}
                         </p>
                       </div>
                     </div>
@@ -383,14 +413,11 @@ export default function ProfilePage() {
           </Card>
         )}
 
-        {/* Payment History */}
         {paymentHistory && paymentHistory.length > 0 && (
           <Card className="mt-8">
             <CardHeader>
               <CardTitle>Payment History</CardTitle>
-              <CardDescription>
-                Recent payment transactions
-              </CardDescription>
+              <CardDescription>Recent payment transactions</CardDescription>
             </CardHeader>
             <CardContent>
               {paymentHistoryLoading ? (
@@ -414,16 +441,21 @@ export default function ProfilePage() {
                           {new Date(payment.paid_at).toLocaleDateString()}
                         </TableCell>
                         <TableCell>
-                          ${payment.amount / 100} {payment.currency.toUpperCase()}
+                          ${payment.amount / 100}{" "}
+                          {payment.currency.toUpperCase()}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={payment.status === 'succeeded' ? 'default' : 'secondary'}>
+                          <Badge
+                            variant={
+                              payment.status === "succeeded"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
                             {payment.status}
                           </Badge>
                         </TableCell>
-                        <TableCell>
-                          {payment.payment_method}
-                        </TableCell>
+                        <TableCell>{payment.payment_method}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

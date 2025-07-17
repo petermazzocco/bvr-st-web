@@ -10,7 +10,12 @@ import { Input } from "../ui/input";
 export function Search() {
   const searchParams = useSearchParams();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (isExpanded && inputRef.current) {
@@ -28,8 +33,24 @@ export function Search() {
     }
   };
 
+  if (!isClient) {
+    return (
+      <Form action="/search" className="relative items-center hidden sm:flex">
+        <div className="flex items-center transition-all duration-300 w-auto">
+          <Button
+            type="button"
+            variant="ghost"
+            className="flex h-9 items-center justify-center"
+          >
+            <SearchIcon className="h-4" />
+          </Button>
+        </div>
+      </Form>
+    );
+  }
+
   return (
-    <Form action="/search" className="relative flex items-center">
+    <Form action="/search" className="relative items-center hidden sm:flex">
       <div
         className={`flex items-center transition-all duration-300 ${
           isExpanded ? "w-full lg:w-80 xl:w-full" : "w-auto"

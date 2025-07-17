@@ -54,7 +54,7 @@ export function NavSideSheet({
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="w-1/3 p-0 bg-background border-r shadow-lg"
+        className="w-full sm:w-2/3 md:w-1/3 p-0 bg-background border-r shadow-lg"
       >
         <div className="flex h-full w-full flex-col">
           <SheetHeader className="p-6 pb-4">

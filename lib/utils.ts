@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
  * @param token - JWT authentication token to store
  */
 export const setAuthToken = (token: string) => {
-  Cookies.set("authToken", token, {
+  Cookies.set("bvrstrco_auth", token, {
     expires: 1, // 1 day
     secure: true,
     sameSite: "strict",
@@ -20,7 +20,7 @@ export const setAuthToken = (token: string) => {
  * @returns The stored authentication token, or undefined if not found
  */
 export const getAuthToken = () => {
-  const token = Cookies.get("authToken");
+  const token = Cookies.get("bvrstrco_auth");
   return token;
 };
 
@@ -28,7 +28,7 @@ export const getAuthToken = () => {
  * Removes the authentication token from cookies (for logout)
  */
 export const removeAuthToken = () => {
-  Cookies.remove("authToken");
+  Cookies.remove("bvrstrco_auth");
 };
 
 /**
@@ -38,7 +38,7 @@ export const removeAuthToken = () => {
  */
 export const getUserIdFromToken = (): string | null => {
   try {
-    const token = Cookies.get("authToken");
+    const token = Cookies.get("bvrstrco_auth");
     if (!token) return null;
     const payload = JSON.parse(atob(token.split(".")[1]));
     return payload.userid || null;
