@@ -127,3 +127,184 @@ export interface UserSignUp {
   /** User's password */
   password: string | undefined;
 }
+
+/**
+ * Represents a notification via Sanity CMS
+ */
+export interface Notification {
+  /** Unique identifier for the notification */
+  _id: string;
+  /** Title text of the notification */
+  title: string;
+  /** Image associated with the notification */
+  image: Image;
+  /** Route/URL the notification links to */
+  route: string;
+  /** ISO timestamp when the notification was created */
+  createdAt: string;
+  /** ISO timestamp when the notification expires */
+  expiresAt: string;
+  /** Array of user IDs this notification targets (empty array means all users) */
+  targetUsers: string[];
+  /** Minimum points required to see this notification */
+  minimumPoints: number;
+  /** Array of read records for users who have read this notification */
+  readBy: ReadRecord[];
+  /** Whether the notification is currently active */
+  isActive: boolean;
+}
+
+/**
+ * Represents a team member via Sanity CMS
+ */
+export interface Team {
+  /** Unique identifier for the team member */
+  _id: string;
+  /** Title/role of the team member */
+  title: string;
+  /** Profile image of the team member */
+  image: Image;
+  /** Name of the team member */
+  name: string;
+  /** Tier/level of the team member */
+  tier: string;
+}
+
+/**
+ * Represents a blog post via Sanity CMS
+ */
+export interface Post {
+  /** Unique identifier for the post */
+  _id: string;
+  /** Title of the post */
+  title: string;
+  /** Author of the post */
+  author: string;
+  /** Author's profile image */
+  author_image: Image;
+  /** URL slug for the post */
+  slug: Slug;
+  /** ISO timestamp when the post was published */
+  publishedAt: string;
+  /** Featured image for the post */
+  image: Image;
+  /** Array of block content representing the post body */
+  body: Block[];
+}
+
+/**
+ * Represents a legal document via Sanity CMS
+ */
+export interface Doc {
+  /** Unique identifier for the document */
+  _id: string;
+  /** Title of the document */
+  title: string;
+  /** URL slug for the document */
+  slug: Slug;
+  /** Array of block content representing the document body */
+  body: Block[];
+  /** ISO timestamp when the document was last updated */
+  updatedAt: string;
+}
+
+/**
+ * Represents the hero section via Sanity CMS
+ */
+export interface HeroSection {
+  /** Unique identifier for the hero section */
+  _id: string;
+  /** Main heading text displayed in the hero section */
+  heading: string;
+  /** Background or featured image for the hero section */
+  image: Image;
+  /** Text displayed on the call-to-action button */
+  buttonText: string;
+  /** Route/URL the button links to */
+  buttonRoute: string;
+}
+
+/**
+ * Represents a featured product via Sanity CMS
+ */
+export interface FeaturedProduct {
+  /** Unique identifier for the featured product */
+  _id: string;
+  /** Product name or title */
+  name: string;
+  /** Featured image for the product */
+  image: Image;
+  /** Product price */
+  price: number;
+  /** URL slug for the product */
+  slug: Slug;
+}
+
+/**
+ * Represents a featured collection via Sanity CMS
+ */
+export interface FeaturedCollection {
+  /** Unique identifier for the featured collection */
+  _id: string;
+  /** Collection name or title */
+  name: string;
+  /** Featured image for the collection */
+  image: Image;
+  /** URL slug for the collection */
+  slug: Slug;
+  /** Brief description of the collection */
+  description?: string;
+}
+
+/**
+ * Helper type for Sanity image
+ */
+export interface Image {
+  /** Asset reference containing the actual image data */
+  asset: Asset;
+}
+
+/**
+ * Helper type for Sanity asset
+ */
+export interface Asset {
+  /** Unique identifier for the asset */
+  _id: string;
+  /** URL to access the asset */
+  url: string;
+}
+
+/**
+ * Helper type for Sanity slug
+ */
+export interface Slug {
+  /** Current slug value used in URLs */
+  current: string;
+}
+
+/**
+ * Represents a Sanity block content element
+ */
+export interface Block {
+  /** Type of the block content */
+  _type: string;
+}
+
+/**
+ * Represents a user's read record for notifications
+ */
+export interface ReadRecord {
+  /** ID of the user who read the notification */
+  userId: string;
+  /** ISO timestamp when the notification was read */
+  readAt: string;
+}
+
+/**
+ * Common result type for consistent error handling
+ */
+export type ApiResult<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};

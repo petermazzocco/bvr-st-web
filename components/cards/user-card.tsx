@@ -2,13 +2,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { UserIcon, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { User } from "@/lib/types";
+import { User, ApiResult } from "@/lib/types";
 import { UpdateUserModal } from "../modals/update-user-details";
 import { ChangePasswordModal } from "../modals/change-user-password";
 import { ResendOTPModal } from "../modals/resend-otp-modal";
 import Link from "next/link";
 import { SignOutButton } from "../utils/signout-button";
-import { ApiResult } from "@/server/user/actions";
 
 export function UserCard({ user }: { user: ApiResult<User> | undefined }) {
   if (!user) return null;

@@ -1,44 +1,75 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { client } from "@/lib/sanity/client";
-import { SanityDocument } from "next-sanity";
+import { useApiMutation } from "@/hooks/use-api-mutation";
+import { getHeroSection } from "@/server/sanity/actions";
+import { HeroSection } from "@/lib/types";
 import { urlFor } from "@/lib/sanity/image";
+import { useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const HERO_QUERY = `*[_type == "hero"][0]{
-  _id,
-  heading,
-  image,
-  buttonText,
-  buttonRoute
-}`;
+export default function Page() {
+  const {
+    mutate: fetchHero,
+    data: hero,
+    isPending,
+    error,
+  } = useApiMutation<HeroSection, void>(async (_variables: void) => {
+    return await getHeroSection();
+  }, {
+    onError: (error) => {
+      console.error("Failed to fetch hero section:", error);
+    },
+  });
 
-export const metadata = {
-  title: "BVR STR CO",
-  description: "Shop BVR STR and support Oregon State University.",
-  openGraph: {
-    type: "website",
-  },
-};
+  useEffect(() => {
+    fetchHero();
+  }, [fetchHero]);
 
-export default async function Page() {
-  const hero = await client.fetch<SanityDocument>(HERO_QUERY, {});
-
-  // Handle case where no hero data is found
-  if (!hero) {
+  if (isPending) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center">
-        <p>Hero content not found. Please add hero content in Sanity Studio.</p>
-      </div>
+      <section className="flex min-h-screen flex-col items-center justify-end bg-cover bg-center bg-gray-200">
+        <div className="mb-44 flex flex-col items-center justify-center gap-4">
+          <Skeleton className="h-12 w-80" />
+          <Skeleton className="h-12 w-40" />
+        </div>
+      </section>
     );
   }
 
-  // Get the image URL from Sanity
-  const imageUrl = hero.image ? urlFor(hero.image).url() : "/labubu-bg.jpg";
+  if (error || !hero) {
+    return (
+      <section
+        className="flex min-h-screen flex-col items-center justify-end bg-cover bg-center"
+        style={{
+          backgroundImage: `url('/labubu-bg.jpg')`,
+        }}
+      >
+        <div className="mb-44 flex flex-col items-center justify-center gap-4">
+          <h1 className="text-center text-4xl font-bold text-foreground">
+            BVR STR CO
+          </h1>
+          <Button
+            variant="secondary"
+            size="lg"
+            asChild
+            className="flex items-center text-xl justify-center gap-2"
+          >
+            <Link href="/shop">
+              Shop Now <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+    );
+  }
+
+  const imageUrl = hero.image ? urlFor(hero.image)?.url() || "/labubu-bg.jpg" : "/labubu-bg.jpg";
 
   return (
     <>
-      {/* HERO SECTION */}
       <section
         className="flex min-h-screen flex-col items-center justify-end bg-cover bg-center"
         style={{

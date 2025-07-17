@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
         return {
           ...notification,
           imageUrl: notification.image
-            ? urlFor(notification.image).width(40).height(40).url()
+            ? urlFor(notification.image)?.width(40).height(40).url()
             : null,
           isRead: !!readEntry,
           readAt: readEntry?.readAt || null,

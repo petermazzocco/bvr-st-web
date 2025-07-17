@@ -1,14 +1,7 @@
 "use server";
 
-import { Order, UpdateUser, User, UserSignUp } from "@/lib/types";
+import { Order, UpdateUser, User, UserSignUp, ApiResult } from "@/lib/types";
 import Cookies from "js-cookie";
-
-// Common result type for consistent error handling
-export type ApiResult<T> = {
-  success: boolean;
-  data?: T;
-  error?: string;
-};
 
 /**
  * Signs in a user using email and password
