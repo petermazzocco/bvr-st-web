@@ -1,6 +1,27 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { CreditCard, LogOut, MapPin, Package, Star, User } from "lucide-react";
+import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Pagination,
   PaginationContent,
@@ -10,7 +31,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { UserCard } from "@/components/cards/user-card";
 import {
   useAuth,
   useAuthToken,
@@ -18,9 +38,10 @@ import {
 } from "@/components/auth/auth-context";
 import { useQuery } from "@tanstack/react-query";
 import { getUserDetails, getUserOrders } from "@/server/user/actions";
-import { OrderCard } from "@/components/cards/order-card";
+import { getCustomerPaymentMethods, getSubscriptionPaymentInfo, getPaymentHistory } from "@/server/stripe/actions";
+import { UpdateUserModal } from "@/components/modals/update-user-details";
 
-export default function Page() {
+export default function ProfilePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const router = useRouter();
@@ -41,6 +62,24 @@ export default function Page() {
     enabled: !!userId && !!authToken && isAuthenticated,
   });
 
+  const { data: paymentMethods, isLoading: paymentMethodsLoading } = useQuery({
+    queryKey: ["paymentMethods", userId],
+    queryFn: () => getCustomerPaymentMethods(userId!, authToken!),
+    enabled: !!userId && !!authToken && isAuthenticated,
+  });
+
+  const { data: subscriptionInfo, isLoading: subscriptionLoading } = useQuery({
+    queryKey: ["subscriptionInfo", userId],
+    queryFn: () => getSubscriptionPaymentInfo(userId!, authToken!),
+    enabled: !!userId && !!authToken && isAuthenticated,
+  });
+
+  const { data: paymentHistory, isLoading: paymentHistoryLoading } = useQuery({
+    queryKey: ["paymentHistory", userId],
+    queryFn: () => getPaymentHistory(userId!, authToken!, "10"),
+    enabled: !!userId && !!authToken && isAuthenticated,
+  });
+
   useEffect(() => {
     if (!isAuthenticated) {
       router.push("/signin");
@@ -58,10 +97,11 @@ export default function Page() {
   }
 
   const filteredOrders = orders?.data || [];
+  const totalPages = Math.ceil((orders?.data?.length || 0) / pageSize);
 
-  // Calculate total pages (this assumes your server returns all orders for the page)
-  // You might want to modify your server function to return total count for better pagination
-  const totalPages = Math.ceil(filteredOrders.length / pageSize);
+  const handleSignOut = () => {
+    console.log("Signing out...");
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -80,154 +120,503 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6 flex flex-col justify-between min-h-screen">
-        <div>
-          {/* Header with User Info */}
-          <UserCard user={user} />
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center space-x-4">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {user?.data?.name || "Loading..."}
+                </h1>
+                <p className="text-muted-foreground">
+                  {user?.data?.email || "Loading..."}
+                </p>
+                {user?.data?.isMember && (
+                  <Badge variant="secondary" className="mt-1">
+                    <Star className="w-3 h-3 mr-1" />
+                    Member since {user.data?.createdAt}
+                  </Badge>
+                )}
+              </div>
+            </div>
+            <Button variant="outline" onClick={handleSignOut}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+      </div>
 
-          {/* Orders Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Order History</h2>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="space-y-8">
+          {/* Personal Information and Membership Row */}
+          <div className="flex gap-8">
+            {/* Personal Information - 2/3 width */}
+            <div className="flex-1 w-2/4 h-full">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <User className="w-5 h-5 mr-2" />
+                    Personal Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Full Name
+                      </label>
+                      <p className="mt-1 text-gray-900">
+                        {user?.data?.name || "Loading..."}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Email
+                      </label>
+                      <p className="mt-1 text-gray-900">
+                        {user?.data?.email || "Loading..."}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Phone
+                      </label>
+                      <p className="mt-1 text-gray-900">
+                        {user?.data?.phone || "Not provided"}
+                      </p>
+                    </div>
+                  </div>
+                  <UpdateUserModal user={user?.data} userId={user?.data?.id} />
+                </CardContent>
+              </Card>
             </div>
 
-            <div className="space-y-4">
-              {ordersLoading ? (
-                <div className="flex justify-center items-center h-32">
-                  <div className="text-center">Loading orders...</div>
-                </div>
-              ) : filteredOrders && filteredOrders.length > 0 ? (
-                filteredOrders.map((order) => (
-                  <OrderCard key={order.id} order={order} />
-                ))
-              ) : (
-                <div className="flex justify-center items-center h-32">
-                  <div className="text-center">No orders found</div>
-                </div>
+            {/* Membership Status - 1/3 width */}
+            <div className="flex-1 w-1/3">
+              {!user?.data?.isMember && (
+                <Card className="border-2 border-dashed border-primary/50 bg-primary/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-primary">
+                      <Star className="w-5 h-5 mr-2" />
+                      Become a Member
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground">
+                      Unlock exclusive benefits and early access to new products
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-sm text-muted-foreground mb-4">
+                      <li>• Free shipping on all orders</li>
+                      <li>• 15% off all purchases</li>
+                      <li>• Early access to sales</li>
+                      <li>• Exclusive member-only products</li>
+                    </ul>
+                    <Link href="/membership">
+                      <Button className="w-full">Become a Member</Button>
+                    </Link>
+                  </CardContent>
+                </Card>
               )}
+            </div>
+          </div>
+
+          {/* Shipping Address and Payment Methods Row */}
+          <div className="flex gap-8">
+            {/* Shipping Address - 1/2 width */}
+            <div className="flex-1 w-1/2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <MapPin className="w-5 h-5 mr-2" />
+                    Shipping Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <p className="text-gray-900">
+                      {user?.data?.address?.street}
+                    </p>
+                    <p className="text-gray-900">
+                      {user?.data?.address?.city}, {user?.data?.address?.state}{" "}
+                      {user?.data?.address?.zip}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Payment Methods - 1/2 width */}
+            <div className="flex-1 w-1/2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <CreditCard className="w-5 h-5 mr-2" />
+                    Payment Methods
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {paymentMethodsLoading ? (
+                    <div className="flex justify-center items-center h-20">
+                      <div className="text-center">Loading payment methods...</div>
+                    </div>
+                  ) : paymentMethods && paymentMethods.length > 0 ? (
+                    <>
+                      {paymentMethods.map((method) => (
+                        <div
+                          key={method.id}
+                          className="flex items-center justify-between p-4 border rounded-lg"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
+                              <CreditCard className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <p className="font-medium">
+                                {method.card?.brand || method.type} ending in {method.card?.last4 || method.bank?.last4}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                {method.card ? `Expires ${method.card.exp_month}/${method.card.exp_year}` : method.bank?.account_type}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {method.is_default && (
+                              <Badge variant="secondary">Default</Badge>
+                            )}
+                            <Button variant="ghost" size="sm">
+                              Edit
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      <Button variant="outline" size="sm">
+                        Add New Card
+                      </Button>
+                    </>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground mb-4">No payment methods on file</p>
+                      <Button variant="outline" size="sm">
+                        Add New Card
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
 
+        {/* Subscription Payment Info */}
+        {subscriptionInfo && (
+          <Card className="mt-8">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <CreditCard className="w-5 h-5 mr-2" />
+                Subscription Payment Info
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {subscriptionLoading ? (
+                <div className="flex justify-center items-center h-20">
+                  <div className="text-center">Loading subscription info...</div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Status
+                      </label>
+                      <p className="mt-1 text-gray-900">
+                        <Badge variant={subscriptionInfo.status === 'active' ? 'default' : 'secondary'}>
+                          {subscriptionInfo.status}
+                        </Badge>
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Subscription ID
+                      </label>
+                      <p className="mt-1 text-gray-900 font-mono text-sm">
+                        {subscriptionInfo.subscription_id}
+                      </p>
+                    </div>
+                  </div>
+                  {subscriptionInfo.default_payment && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Default Payment Method
+                      </label>
+                      <div className="mt-2 p-3 border rounded-lg bg-gray-50">
+                        <p className="font-medium">
+                          {subscriptionInfo.default_payment.card?.brand || subscriptionInfo.default_payment.type} ending in {subscriptionInfo.default_payment.card?.last4 || subscriptionInfo.default_payment.bank?.last4}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {subscriptionInfo.default_payment.card ? `Expires ${subscriptionInfo.default_payment.card.exp_month}/${subscriptionInfo.default_payment.card.exp_year}` : subscriptionInfo.default_payment.bank?.account_type}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {subscriptionInfo.last_payment && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Last Payment
+                      </label>
+                      <div className="mt-2 p-3 border rounded-lg bg-gray-50">
+                        <p className="font-medium">
+                          ${subscriptionInfo.last_payment.amount / 100} {subscriptionInfo.last_payment.currency.toUpperCase()}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {new Date(subscriptionInfo.last_payment.paid_at).toLocaleDateString()} - {subscriptionInfo.last_payment.status}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Payment History */}
+        {paymentHistory && paymentHistory.length > 0 && (
+          <Card className="mt-8">
+            <CardHeader>
+              <CardTitle>Payment History</CardTitle>
+              <CardDescription>
+                Recent payment transactions
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {paymentHistoryLoading ? (
+                <div className="flex justify-center items-center h-20">
+                  <div className="text-center">Loading payment history...</div>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Payment Method</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paymentHistory.map((payment, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          {new Date(payment.paid_at).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          ${payment.amount / 100} {payment.currency.toUpperCase()}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={payment.status === 'succeeded' ? 'default' : 'secondary'}>
+                            {payment.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {payment.payment_method}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Full Order History */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Order History</CardTitle>
+            <CardDescription>
+              Complete history of your purchases
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {ordersLoading ? (
+              <div className="flex justify-center items-center h-32">
+                <div className="text-center">Loading orders...</div>
+              </div>
+            ) : filteredOrders && filteredOrders.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Items</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredOrders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell className="font-medium">#{order.id}</TableCell>
+                      <TableCell>
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {orders?.data?.length || "Order items"}
+                      </TableCell>
+                      <TableCell>${order.total}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            order.status === "delivered"
+                              ? "default"
+                              : "secondary"
+                          }
+                        >
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="sm">
+                          View Details
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="flex justify-center items-center h-32">
+                <div className="text-center">No orders found</div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Pagination */}
         {filteredOrders && filteredOrders.length > 0 && totalPages > 1 && (
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePrevious();
-                  }}
-                  className={
-                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                  }
-                />
-              </PaginationItem>
-
-              {/* First page */}
-              {currentPage > 2 && (
+          <div className="mt-6 flex justify-center">
+            <Pagination>
+              <PaginationContent>
                 <PaginationItem>
-                  <PaginationLink
+                  <PaginationPrevious
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      handlePageChange(1);
+                      handlePrevious();
                     }}
-                  >
-                    1
-                  </PaginationLink>
+                    className={
+                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
                 </PaginationItem>
-              )}
 
-              {/* Ellipsis before current page */}
-              {currentPage > 3 && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
+                {/* First page */}
+                {currentPage > 2 && (
+                  <PaginationItem>
+                    <PaginationLink
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(1);
+                      }}
+                    >
+                      1
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
 
-              {/* Previous page */}
-              {currentPage > 1 && (
+                {/* Ellipsis before current page */}
+                {currentPage > 3 && (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                )}
+
+                {/* Previous page */}
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationLink
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(currentPage - 1);
+                      }}
+                    >
+                      {currentPage - 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+
+                {/* Current page */}
                 <PaginationItem>
                   <PaginationLink
                     href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(currentPage - 1);
-                    }}
+                    isActive
+                    onClick={(e) => e.preventDefault()}
                   >
-                    {currentPage - 1}
+                    {currentPage}
                   </PaginationLink>
                 </PaginationItem>
-              )}
 
-              {/* Current page */}
-              <PaginationItem>
-                <PaginationLink
-                  href="#"
-                  isActive
-                  onClick={(e) => e.preventDefault()}
-                >
-                  {currentPage}
-                </PaginationLink>
-              </PaginationItem>
+                {/* Next page */}
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationLink
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(currentPage + 1);
+                      }}
+                    >
+                      {currentPage + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
 
-              {/* Next page */}
-              {currentPage < totalPages && (
+                {/* Ellipsis after current page */}
+                {currentPage < totalPages - 2 && (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                )}
+
+                {/* Last page */}
+                {currentPage < totalPages - 1 && (
+                  <PaginationItem>
+                    <PaginationLink
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(totalPages);
+                      }}
+                    >
+                      {totalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+
                 <PaginationItem>
-                  <PaginationLink
+                  <PaginationNext
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      handlePageChange(currentPage + 1);
+                      handleNext();
                     }}
-                  >
-                    {currentPage + 1}
-                  </PaginationLink>
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
                 </PaginationItem>
-              )}
-
-              {/* Ellipsis after current page */}
-              {currentPage < totalPages - 2 && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
-
-              {/* Last page */}
-              {currentPage < totalPages - 1 && (
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(totalPages);
-                    }}
-                  >
-                    {totalPages}
-                  </PaginationLink>
-                </PaginationItem>
-              )}
-
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNext();
-                  }}
-                  className={
-                    currentPage === totalPages
-                      ? "pointer-events-none opacity-50"
-                      : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+              </PaginationContent>
+            </Pagination>
+          </div>
         )}
       </div>
     </div>

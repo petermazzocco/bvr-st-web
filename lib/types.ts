@@ -308,3 +308,44 @@ export type ApiResult<T> = {
   data?: T;
   error?: string;
 };
+
+// Type definitions for the API responses matching Go models
+export interface CardInfo {
+  brand: string;
+  last4: string;
+  exp_month: number;
+  exp_year: number;
+  country: string;
+}
+
+export interface BankInfo {
+  bank: string;
+  last4: string;
+  account_type: string;
+}
+
+export interface PaymentMethodInfo {
+  id: string;
+  type: string;
+  created_at: string;
+  is_default: boolean;
+  card?: CardInfo;
+  bank?: BankInfo;
+}
+
+export interface LastPaymentInfo {
+  amount: number;
+  currency: string;
+  status: string;
+  payment_method: string;
+  paid_at: string;
+}
+
+export interface SubscriptionPaymentInfo {
+  customer_id: string;
+  subscription_id: string;
+  status: string;
+  payment_methods: PaymentMethodInfo[];
+  default_payment: PaymentMethodInfo | null;
+  last_payment: LastPaymentInfo | null;
+}

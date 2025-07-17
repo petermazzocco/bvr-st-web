@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -44,8 +45,8 @@ const updateUserSchema = z.object({
 type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
 
 interface UpdateUserModalProps {
-  user: UpdateUser;
-  userId: string;
+  user: UpdateUser | undefined;
+  userId: string | undefined;
   trigger?: React.ReactNode;
 }
 
@@ -61,21 +62,21 @@ export function UpdateUserModal({
   const form = useForm<UpdateUserFormValues>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      street: user.address.street,
-      city: user.address.city,
-      state: user.address.state,
-      apt: user.address.apt || "",
-      zip: user.address.zip,
+      name: user?.name || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      street: user?.address?.street || "",
+      city: user?.address?.city || "",
+      state: user?.address?.state || "",
+      apt: user?.address?.apt || "",
+      zip: user?.address?.zip || "",
     },
   });
 
   const { mutate: updateUserMutation, isPending } = useApiMutation(
     (data: UpdateUser) => {
-      if (!authToken) {
-        throw new Error("Authentication token is required");
+      if (!authToken || !userId) {
+        throw new Error("Authentication token or userID is required");
       }
       return updateUserDetails(authToken, userId, data);
     },
@@ -92,6 +93,26 @@ export function UpdateUserModal({
       },
     },
   );
+
+  // Reset form when user data changes
+  React.useEffect(() => {
+    if (user) {
+      form.reset({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        street: user.address?.street || "",
+        city: user.address?.city || "",
+        state: user.address?.state || "",
+        apt: user.address?.apt || "",
+        zip: user.address?.zip || "",
+      });
+    }
+  }, [user, form]);
+
+  if (!user || !userId) {
+    return null;
+  }
 
   const onSubmit = (data: UpdateUserFormValues) => {
     if (!authToken) {
