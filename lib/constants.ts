@@ -1,3 +1,5 @@
+export const AUCTION_PRODUCT_TAG = "product_auction";
+
 /**
  * Configuration object for product sorting and filtering options
  * Used to build sort dropdowns and URL query parameters

@@ -2,6 +2,8 @@ import { clsx, type ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import Cookies from "js-cookie";
+import { AUCTION_PRODUCT_TAG } from "@/lib/constants";
+import { Product } from "@/lib/shopify/types";
 
 /**
  * Sets the authentication token in a secure HTTP-only cookie
@@ -130,4 +132,8 @@ export const validateEnvironmentVariables = () => {
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function isAuctionProduct(product: Product): boolean {
+  return product.tags.includes(AUCTION_PRODUCT_TAG);
 }

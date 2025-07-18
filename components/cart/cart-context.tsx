@@ -13,6 +13,7 @@ import React, {
   useEffect,
   useMemo,
   useOptimistic,
+  startTransition,
 } from "react";
 import { useOptionalAuth } from "@/components/auth/auth-context";
 
@@ -228,7 +229,9 @@ export function CartProvider({
     if (auth?.isAuthenticated === false && optimisticCart && optimisticCart.lines.length > 0) {
       // Only clear if we had items and user explicitly logged out
       // This prevents clearing on initial load
-      updateOptimisticCart({ type: "CLEAR_CART" });
+      startTransition(() => {
+        updateOptimisticCart({ type: "CLEAR_CART" });
+      });
     }
   }, [auth?.isAuthenticated]);
 

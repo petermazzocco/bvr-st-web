@@ -1,5 +1,4 @@
 "use client";
-
 import { VariantSelector } from "@/components/product/variant-selector";
 import { Price } from "@/components/product/product-price";
 import { Product } from "@/lib/shopify/types";
@@ -7,18 +6,24 @@ import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Separator } from "../ui/separator";
 import { useCart } from "@/components/cart/cart-context";
 import Link from "next/link";
+import { isAuctionProduct } from "@/lib/utils";
+import { AuctionProductDescription } from "./auction-product-description";
 
 export function ProductDescription({ product }: { product: Product }) {
+  // Check if this is an auction product
+  if (isAuctionProduct(product)) {
+    return <AuctionProductDescription product={product} />;
+  }
+
+  // Regular product flow (your existing code)
   const { isAuthenticated } = useCart();
 
-  // Calculate points based on membership status
   const basePoints = Math.floor(
     Number(product.priceRange.maxVariantPrice.amount),
   );
-  const membershipMultiplier = isAuthenticated ? 1.5 : 1; // 1.5x points for members
+  const membershipMultiplier = isAuthenticated ? 1.5 : 1;
   const earnedPoints = Math.floor(basePoints * membershipMultiplier);
 
-  // Check stock availability across all variants
   const totalStock = product.variants.reduce((total, variant) => {
     return total + (variant.availableForSale ? 1 : 0);
   }, 0);
@@ -43,20 +48,18 @@ export function ProductDescription({ product }: { product: Product }) {
           </div>
         </div>
       </div>
+
       <VariantSelector options={product.options} variants={product.variants} />
-      {/* {product.descriptionHtml ? (
-        <Prose
-          className="mb-6 text-sm leading-tight text-muted-foreground"
-          html={product.descriptionHtml}
-        />
-      ) : null} */}
 
       <div className="mb-6 text-xs leading-tight text-muted-foreground flex flex-row items-center justify-between">
         <p>Model is 5&apos;10&quot; wearing a size Large</p>
         <p className="cursor-pointer underline">Size Chart</p>
       </div>
+
       <Separator className="my-4" />
+
       <AddToCartButton product={product} />
+
       <div className="mt-4 flex flex-col gap-1 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
         <p>
           {isAuthenticated ? (

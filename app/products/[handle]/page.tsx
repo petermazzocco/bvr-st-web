@@ -51,7 +51,7 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const product = await getProduct(params.handle);
-
+  console.log(product);
   if (!product) return notFound();
 
   const productJsonLd = {

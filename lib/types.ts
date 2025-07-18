@@ -349,3 +349,113 @@ export interface SubscriptionPaymentInfo {
   default_payment: PaymentMethodInfo | null;
   last_payment: LastPaymentInfo | null;
 }
+// Base bid interface for common bid properties
+interface BaseBid {
+  customer_id: string;
+  customer_email: string;
+  customer_first_name: string;
+  customer_last_name: string;
+  currency: string;
+  bid: number;
+  bid_date: string; // ISO 8601 date string
+}
+
+// Auction bid type
+interface AuctionBid extends BaseBid {}
+
+// Automatic bid type
+interface AutomaticBid extends BaseBid {}
+
+// Main auction configuration
+interface AuctionConfig {
+  shopify_product_id: string;
+  starting_price: number;
+  end_price: number | null;
+  minimum_bid_increment: number;
+  maximum_bid_increment: number;
+  buy_it_now_price: number;
+  reserve_price: number | null;
+  reserve_price_show: boolean | null;
+  highest_bid: number;
+  bid_count: number;
+  real_time_auction: boolean;
+  enable_automatic_bids: boolean;
+  popcorn_bidding_settings: unknown | null; // Type unknown since value is null
+  end_date: string; // ISO 8601 date string
+}
+
+// Root auction object
+interface Auction {
+  auction: AuctionConfig;
+  auction_bids: AuctionBid[];
+  automatic_bids: AutomaticBid[];
+}
+
+// Export all types
+export type { Auction, AuctionConfig, AuctionBid, AutomaticBid, BaseBid };
+
+// Optional: More specific currency type if you have a limited set
+type Currency = "USD" | "EUR" | "GBP" | "CAD"; // Add more as needed
+
+// Optional: Enhanced types with specific currency
+interface EnhancedAuctionBid extends Omit<AuctionBid, "currency"> {
+  currency: Currency;
+}
+
+interface EnhancedAutomaticBid extends Omit<AutomaticBid, "currency"> {
+  currency: Currency;
+}
+
+export type { Currency, EnhancedAuctionBid, EnhancedAutomaticBid };
+
+// POST request body for creating/placing a bid
+interface PlaceBidRequest {
+  bid: string; // String containing a number
+  currency: string; // Valid currency symbol (USD, EUR, CAD, etc.)
+  customer_email: string; // Valid customer email address
+  customer_id: string; // Customer ID (added to match curl command)
+  customer_first_name: string; // Valid customer first name
+  customer_last_name: string; // Valid customer last name
+  shopify_product_id: string; // Valid Shopify product ID
+}
+
+// Response type for place bid API
+export interface PlaceBidResponse {
+  bid: string;
+  bid_date: string; // ISO 8601 date string
+  currency: string;
+  customer_first_name: string; // May be masked (e.g., "T***")
+  customer_id: string;
+  customer_last_name: string; // May be masked (e.g., "T***")
+}
+
+// Optional: Enhanced version with stricter typing
+interface EnhancedPlaceBidRequest
+  extends Omit<PlaceBidRequest, "currency" | "bid"> {
+  bid: string; // Keep as string since API expects string representation of number
+  currency: Currency; // Use the stricter Currency type
+}
+
+// Optional: Validation helper types
+type EmailString = string & { __brand: "email" };
+type ProductId = string & { __brand: "product_id" };
+type BidAmount = string & { __brand: "bid_amount" };
+
+// Optional: Strictly typed version with branded types
+interface StrictPlaceBidRequest {
+  bid: BidAmount;
+  currency: Currency;
+  customer_email: EmailString;
+  customer_first_name: string;
+  customer_last_name: string;
+  shopify_product_id: ProductId;
+}
+
+export type {
+  PlaceBidRequest,
+  EnhancedPlaceBidRequest,
+  StrictPlaceBidRequest,
+  EmailString,
+  ProductId,
+  BidAmount,
+};

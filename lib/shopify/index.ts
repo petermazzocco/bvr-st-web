@@ -28,6 +28,11 @@ import {
   getProductsQuery,
 } from "./queries/product";
 import {
+  getAuctionQuery,
+  getAuctionsQuery,
+  getAuctionProductsQuery,
+} from "./queries/auctions";
+import {
   Cart,
   Collection,
   Connection,
@@ -627,4 +632,60 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
   }
 
   return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });
+}
+
+/**
+ * Retrieves a single auction by its handle/slug
+ * @param handle - URL handle/slug of the auction
+ * @returns Promise containing the auction object, or undefined if not found
+ */
+export async function getAuction(handle: string): Promise<any | undefined> {
+  const res = await shopifyFetch<any>({
+    query: getAuctionQuery,
+    tags: [TAGS.collections],
+    variables: {
+      handle,
+    },
+  });
+
+  return res.body.data.metaobject;
+}
+
+/**
+ * Retrieves all auctions from the store
+ * @returns Promise containing array of all auctions
+ */
+export async function getAuctions(): Promise<any[]> {
+  const res = await shopifyFetch<any>({
+    query: getAuctionsQuery,
+    tags: [TAGS.collections],
+  });
+
+  return removeEdgesAndNodes(res.body.data.metaobjects);
+}
+
+/**
+ * Retrieves products from a specific auction
+ * @param auctionHandle - Handle/slug of the auction
+ * @returns Promise containing array of products in the auction
+ */
+export async function getAuctionProducts(auctionHandle: string): Promise<Product[]> {
+  const res = await shopifyFetch<any>({
+    query: getAuctionProductsQuery,
+    tags: [TAGS.products],
+    variables: {
+      auctionHandle,
+    },
+  });
+
+  if (!res.body.data.metaobject) {
+    console.log(`No auction found for \`${auctionHandle}\``);
+    return [];
+  }
+
+  const productReferences = res.body.data.metaobject.fields.find(
+    (field: any) => field.key === 'products'
+  )?.references?.edges || [];
+
+  return reshapeProducts(productReferences.map((edge: any) => edge.node));
 }

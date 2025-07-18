@@ -11,12 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import { Collection } from "@/lib/shopify/types";
 
@@ -34,10 +28,6 @@ export function NavSideSheet({
 }) {
   const [parentOpen, setParentOpen] = useState(false);
 
-  const handleSubItemClick = () => {
-    // Close sheet when clicking on sub-items
-    setParentOpen(false);
-  };
 
   const handleDirectLinkClick = () => {
     // Close sheet when clicking on direct links
@@ -66,60 +56,21 @@ export function NavSideSheet({
           {/* Collections Section */}
           <div className="flex-1 px-2">
             <nav className="space-y-1">
-              <Accordion type="multiple" className="w-full">
-                {collections?.map((collection, index) => {
-                  if (collection.path.startsWith("/collections/")) {
-                    return (
-                      <AccordionItem
-                        key={collection.handle}
-                        value={`item-${index}`}
-                        className="border-none"
-                      >
-                        <AccordionTrigger
-                          className={`hover:no-underline rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span>{collection.title}</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="pb-2 pt-0">
-                          <div className="ml-6 space-y-1">
-                            <a
-                              key={collection.handle}
-                              href={collection.path}
-                              id="collection-chosen-button"
-                              data-umami-event="Collection chose button"
-                              className="flex justify-between items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                              onClick={handleSubItemClick}
-                            >
-                              <span>View All</span>{" "}
-                              <ChevronRight className="h-4 w-4 shrink-0 opacity-50" />
-                            </a>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    );
-                  }
-
-                  // Regular collection item without sub-collections
-                  return (
-                    <div key={collection.handle}>
-                      <a
-                        href={collection.path}
-                        id="collection-chosen-button"
-                        data-umami-event="Collection chose button"
-                        className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
-                        onClick={handleDirectLinkClick}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span>{collection.title}</span>
-                        </div>
-                        <ChevronRight className="h-4 w-4 opacity-50" />
-                      </a>
-                    </div>
-                  );
-                })}
-              </Accordion>
+              {collections?.map((collection) => (
+                <a
+                  key={collection.handle}
+                  href={collection.path}
+                  id="collection-chosen-button"
+                  data-umami-event="Collection chose button"
+                  className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
+                  onClick={handleDirectLinkClick}
+                >
+                  <div className="flex items-center gap-3">
+                    <span>{collection.title}</span>
+                  </div>
+                  <ChevronRight className="h-4 w-4 opacity-50" />
+                </a>
+              ))}
             </nav>
           </div>
 

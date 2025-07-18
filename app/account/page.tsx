@@ -141,8 +141,8 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4">
             <div className="flex items-center space-x-4">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
@@ -178,8 +178,8 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <div className="space-y-2">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 w-full  h-full">
               <Card>
@@ -324,7 +324,7 @@ export default function ProfilePage() {
         </div>
 
         {subscriptionInfo && user?.data?.isMember && (
-          <Card className="mt-8">
+          <Card className="mt-2">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <CreditCard className="w-5 h-5 mr-2" />
@@ -414,7 +414,7 @@ export default function ProfilePage() {
         )}
 
         {paymentHistory && paymentHistory.length > 0 && (
-          <Card className="mt-8">
+          <Card className="mt-2">
             <CardHeader>
               <CardTitle>Payment History</CardTitle>
               <CardDescription>Recent payment transactions</CardDescription>
@@ -466,7 +466,7 @@ export default function ProfilePage() {
         )}
 
         {/* Full Order History */}
-        <Card className="mt-8">
+        <Card className="mt-2">
           <CardHeader>
             <CardTitle>Order History</CardTitle>
             <CardDescription>
