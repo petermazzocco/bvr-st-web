@@ -18,7 +18,9 @@ export function UserCard({ user }: { user: ApiResult<User> | undefined }) {
         <CardContent className="p-0">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <div className="flex-1 space-y-2">
-              <h1 className="text-2xl font-bold">{user.data?.name}</h1>
+              <h1 className="text-2xl font-bold">
+                {user.data?.firstName} {user.data?.lastName}
+              </h1>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <UserIcon className="w-4 h-4" />
                 {user.data?.isMember ? (
@@ -48,10 +50,16 @@ export function UserCard({ user }: { user: ApiResult<User> | undefined }) {
               <div className="flex gap-2">
                 <UpdateUserModal
                   user={{
-                    name: user.data?.name || "",
-                    phone: user.data?.phone || "",
+                    firstName: user?.data?.firstName || "",
+                    lastName: user?.data?.lastName || "",
+                    phone: user?.data?.phone || "",
                     email: user.data?.email || "",
-                    address: user.data?.address || { street: "", city: "", state: "", zip: "" },
+                    address: user.data?.address || {
+                      street: "",
+                      city: "",
+                      state: "",
+                      zip: "",
+                    },
                   }}
                   userId={user.data?.id || ""}
                 />

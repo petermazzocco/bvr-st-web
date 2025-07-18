@@ -36,7 +36,8 @@ import { useAuth } from "@/components/auth/auth-context";
 
 const signUpSchema = z
   .object({
-    name: z.string().min(1, "Name is required"),
+    firstName: z.string().min(1, "Name is required"),
+    lastName: z.string().min(1, "Name is required"),
     email: z.email("Invalid email address"),
     phone: z.string().optional(),
     address: z.string().min(1, "Street address is required"),
@@ -68,7 +69,8 @@ export function SignUpCard() {
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
       address: "",
@@ -105,7 +107,8 @@ export function SignUpCard() {
 
   const onSubmit = (data: SignUpFormValues) => {
     const userData: UserSignUp = {
-      name: data.name,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
       phone: data.phone || "",
       address: {
@@ -123,7 +126,8 @@ export function SignUpCard() {
 
   const watchedFields = form.watch();
   const isFormValid =
-    watchedFields.name &&
+    watchedFields.firstName &&
+    watchedFields.lastName &&
     watchedFields.email &&
     watchedFields.address &&
     watchedFields.city &&
@@ -146,12 +150,25 @@ export function SignUpCard() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Smith" {...field} />
+                    <Input placeholder="John" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Smith" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

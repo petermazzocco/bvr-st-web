@@ -1,24 +1,41 @@
 "use client";
-import { Price } from "@/components/product/product-price";
+
+import { Badge } from "../ui/badge";
 import { Product } from "@/lib/shopify/types";
 import { Separator } from "../ui/separator";
-import { useCart } from "@/components/cart/cart-context";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useState, useEffect } from "react";
 import { getAuction, placeBid } from "@/server/auction/actions";
 import { Auction } from "@/lib/types";
 import { toast } from "sonner";
+import {
+  useAuth,
+  useAuthToken,
+  useUserId,
+} from "@/components/auth/auth-context";
+import { getUserDetails } from "@/server/user/actions";
+import { useQuery } from "@tanstack/react-query";
+import { AuctionClock } from "@/components/utils/auction-clock";
+import { Input } from "../ui/input";
+import { cn } from "@/lib/utils";
 
 export function AuctionProductDescription({ product }: { product: Product }) {
-  const { isAuthenticated } = useCart();
+  const { isAuthenticated } = useAuth();
+  const userId = useUserId();
+  const authToken = useAuthToken();
   const [bidAmount, setBidAmount] = useState("");
   const [auctionData, setAuctionData] = useState<Auction | null>(null);
   const [loading, setLoading] = useState(true);
   const [bidLoading, setBidLoading] = useState(false);
 
-  // For auction products, we'll use the shopify product ID
   const productId = product.id.split("/").pop() || "";
+
+  const { data: user } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => getUserDetails(authToken || undefined, userId!),
+    enabled: !!userId && !!authToken && isAuthenticated,
+  });
 
   // Fetch auction data on component mount
   useEffect(() => {
@@ -63,14 +80,18 @@ export function AuctionProductDescription({ product }: { product: Product }) {
     setBidLoading(true);
 
     try {
-      // TODO: Get actual customer data from your auth context
+      if (!user) {
+        toast.error("Please sign in to place a bid");
+        return;
+      }
+
       const bidRequest = {
         bid: bidAmount,
-        currency: "USD", // You might want to get this from the product or user settings
-        customer_email: "user@example.com", // Get from auth context
-        customer_id: "12345", // Get from auth context
-        customer_first_name: "John", // Get from auth context
-        customer_last_name: "Doe", // Get from auth context
+        currency: "USD",
+        customer_email: user?.data?.email,
+        customer_id: "12345",
+        customer_first_name: user?.data?.firstName || "",
+        customer_last_name: user?.data?.lastName || "",
         shopify_product_id: productId,
       };
 
@@ -94,25 +115,6 @@ export function AuctionProductDescription({ product }: { product: Product }) {
     } finally {
       setBidLoading(false);
     }
-  };
-
-  const handleBuyNow = async () => {
-    if (!isAuthenticated) {
-      toast.error("Please sign in to buy now");
-      return;
-    }
-
-    if (!auctionData?.auction.buy_it_now_price) {
-      toast.error("Buy it now is not available for this auction");
-      return;
-    }
-
-    // TODO: Implement buy it now functionality
-    // This might involve creating a direct purchase or ending the auction
-    console.log(
-      `Buy now for product ${productId} at ${auctionData.auction.buy_it_now_price}`,
-    );
-    toast.info("Buy now functionality coming soon!");
   };
 
   if (loading) {
@@ -140,6 +142,13 @@ export function AuctionProductDescription({ product }: { product: Product }) {
     );
   }
 
+  const getTimeUntilEnd = (endDate: string) => {
+    const now = new Date().getTime();
+    const end = new Date(endDate).getTime();
+    const timeLeft = Math.max(0, Math.floor((end - now) / 1000));
+    return timeLeft;
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
@@ -152,40 +161,37 @@ export function AuctionProductDescription({ product }: { product: Product }) {
 
   const minimumBid =
     auctionData.auction.highest_bid + auctionData.auction.minimum_bid_increment;
+  const maximumBid = minimumBid + auctionData.auction.maximum_bid_increment;
 
   const isAuctionEnded = new Date() > new Date(auctionData.auction.end_date);
+  const isBidTooHigh = bidAmount ? parseFloat(bidAmount) > maximumBid : false;
 
   return (
     <>
       <div className="mb-2 flex flex-row items-center justify-between">
         <h1 className="text-sm font-semibold">{product.title}</h1>
-        <div className="flex flex-col items-center gap-2">
-          <div className="mr-auto w-auto p-2 text-sm font-semibold">
-            <span className="text-xs text-muted-foreground">Current Bid:</span>
-            <Price
-              amount={auctionData.auction.highest_bid.toString()}
-              currencyCode="USD"
-            />
-          </div>
-        </div>
+        <Badge
+          variant={isAuctionEnded ? "destructive" : "default"}
+          className="animate-pulse"
+        >
+          {isAuctionEnded ? "Ended" : "Live"}
+        </Badge>
       </div>
 
       {/* Auction Status */}
-      <div className={`mb-4 p-3 rounded-md ${isAuctionEnded ? 'bg-red-50' : 'bg-blue-50'}`}>
+      <div
+        className={`mb-4 p-3 rounded-md ${isAuctionEnded ? "bg-red-50" : "bg-blue-50"}`}
+      >
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium">
-            {isAuctionEnded ? 'Final Bid' : 'Current Bid'}
+            {isAuctionEnded ? "Final Bid" : "Current Bid"}
           </span>
           <span className="text-lg font-bold">
             ${auctionData.auction.highest_bid}
           </span>
         </div>
-        <div className="flex justify-between items-center text-xs text-muted-foreground mb-2">
-          <span>{auctionData.auction.bid_count} bid(s)</span>
-          <span>
-            {isAuctionEnded ? 'Ended: ' : 'Ends: '}
-            {formatDate(auctionData.auction.end_date)}
-          </span>
+        <div className="flex justify-end items-center text-xs text-muted-foreground mb-2">
+          <AuctionClock time={getTimeUntilEnd(auctionData.auction.end_date)} />
         </div>
         {isAuctionEnded && (
           <div className="text-sm font-medium text-red-600 mt-2">
@@ -201,17 +207,18 @@ export function AuctionProductDescription({ product }: { product: Product }) {
 
       {/* Recent Bids */}
       {auctionData.auction_bids && auctionData.auction_bids.length > 0 && (
-        <div className="mb-4 p-3 bg-gray-50 rounded-md">
-          <h3 className="text-sm font-medium mb-2">Recent Bids</h3>
+        <div className="mb-4 p-3 ">
+          <h3 className="text-sm font-medium mb-2">
+            Recent Bids{" "}
+            <span className="text-muted-foreground text-xs">
+              {auctionData.auction.bid_count} bid(s)
+            </span>
+          </h3>
           <div className="space-y-1">
             {auctionData.auction_bids.slice(0, 3).map((bid, index) => (
               <div key={index} className="flex justify-between text-xs">
-                <span>
-                  {bid.customer_first_name} {bid.customer_last_name}
-                </span>
-                <span>
-                  ${bid.bid} {bid.currency}
-                </span>
+                <span className="text-primary font-semibold">${bid.bid}</span>
+                <span>{formatDate(bid.bid_date)}</span>
               </div>
             ))}
           </div>
@@ -222,49 +229,56 @@ export function AuctionProductDescription({ product }: { product: Product }) {
       {!isAuctionEnded ? (
         <div className="mb-4 space-y-3">
           <div className="flex gap-2">
-            <input
+            <Input
               type="number"
               value={bidAmount}
               onChange={(e) => setBidAmount(e.target.value)}
               placeholder={`Min: ${minimumBid}`}
-              className="flex-1 px-3 py-2 border rounded-md text-sm"
               min={minimumBid}
-              step="0.01"
+              max={maximumBid}
+              step={auctionData.auction.minimum_bid_increment}
+              className={cn(
+                isBidTooHigh && "ring-2 ring-red-500 border-red-500",
+                "w-1/2",
+              )}
             />
             <Button
               onClick={handlePlaceBid}
-              disabled={!bidAmount || !isAuthenticated || bidLoading}
-              className="px-6"
+              disabled={
+                !bidAmount || !isAuthenticated || bidLoading || isBidTooHigh
+              }
+              className="px-6 w-1/2"
             >
               {bidLoading ? "Placing..." : "Place Bid"}
             </Button>
           </div>
-
-          {auctionData.auction.buy_it_now_price && (
-            <Button
-              onClick={handleBuyNow}
-              disabled={!isAuthenticated}
-              variant="outline"
-              className="w-full"
-            >
-              Buy It Now - ${auctionData.auction.buy_it_now_price}
-            </Button>
+          {isBidTooHigh && (
+            <div className="text-xs text-red-600 bg-red-50 p-2 rounded-md">
+              Maximum bid amount exceeded. Please enter a bid of ${maximumBid}{" "}
+              or less.
+            </div>
           )}
         </div>
       ) : (
-        <div className="mb-4 p-4 bg-gray-100 rounded-md text-center">
-          <p className="text-lg font-semibold text-gray-600 mb-2">
+        <div className="mb-4 p-4 bg-accent rounded-md text-center">
+          <p className="text-lg font-semibold text-accent-foreground mb-2">
             This auction has ended
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Bidding is no longer available for this item
           </p>
         </div>
       )}
 
-      <div className="mb-6 text-xs leading-tight text-muted-foreground flex flex-row items-center justify-between">
-        <p>Auction Item - No Returns</p>
-        <p className="cursor-pointer underline">Auction Terms</p>
+      <div className="mb-2 text-xs leading-tight text-muted-foreground flex flex-row items-center justify-between">
+        <p>
+          Auction items have no returns. Shipping is included in the price and
+          times may vary depending on the seller&apos;s location and item. By
+          placing an offer, you agree to the terms of the auction and will pay
+          the invoice of the winning bid within the deadline. You can read more
+          about the auction terms{" "}
+          <span className="cursor-pointer underline">here</span>
+        </p>
       </div>
 
       <Separator className="my-4" />
@@ -274,21 +288,26 @@ export function AuctionProductDescription({ product }: { product: Product }) {
           <p className="text-sm text-yellow-800 mb-2">
             You must be logged in to participate in auctions.
           </p>
-          <Link href="/login" className="text-blue-600 hover:underline text-sm">
+          <Link
+            href={`/signin?redirect=/products/${product.handle}`}
+            className="text-blue-600 hover:underline text-sm"
+          >
             Sign in to bid
           </Link>
         </div>
       )}
 
-      <div className="mt-4 flex flex-col gap-1 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
-        <p className={isAuctionEnded ? "text-red-600" : "text-orange-600"}>
-          {isAuctionEnded 
-            ? `🔴 Auction Ended - ${formatDate(auctionData.auction.end_date)}`
-            : `🔥 Auction Item - Ending ${formatDate(auctionData.auction.end_date)}`
-          }
-        </p>
+      <div className="mt-4 flex flex-col gap-2.5 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
+        <div
+          className={`flex flex-col gap-1 ${isAuctionEnded ? "text-destructive" : "text-orange-600"}`}
+        >
+          <div className="text-xs text-muted-foreground">
+            {isAuctionEnded ? "🕕 Ended: " : "🕕 Ends: "}
+            {formatDate(auctionData.auction.end_date)}
+          </div>
+        </div>
         <p className="text-green-600">
-          ✅ Authentic item verified by our experts
+          ✅ Earn {minimumBid} points by bidding now
         </p>
         {auctionData.auction.real_time_auction && !isAuctionEnded && (
           <p className="text-blue-600">

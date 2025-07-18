@@ -4,8 +4,10 @@
 export interface User {
   /** Unique identifier for the user */
   id: string;
-  /** User's full name */
-  name: string;
+  /** User's firstName name */
+  firstName: string;
+  /** User's lastName name */
+  lastName: string;
   /** User's phone number */
   phone: string;
   /** User's physical address information */
@@ -101,8 +103,10 @@ export interface Product {
  * Contains only the fields that can be modified by the user
  */
 export interface UpdateUser {
-  /** User's full name */
-  name: string;
+  /** User's firstName name */
+  firstName: string;
+  /** User's lastName name */
+  lastName: string;
   /** User's phone number */
   phone: string;
   /** User's physical address information */
@@ -116,8 +120,10 @@ export interface UpdateUser {
  * Contains only the fields that are required for user registration
  */
 export interface UserSignUp {
-  /** User's full name */
-  name: string;
+  /** User's firstName name */
+  firstName: string;
+  /** User's lastName name */
+  lastName: string;
   /** User's phone number */
   phone: string;
   /** User's physical address information */
@@ -410,13 +416,13 @@ export type { Currency, EnhancedAuctionBid, EnhancedAutomaticBid };
 
 // POST request body for creating/placing a bid
 interface PlaceBidRequest {
-  bid: string; // String containing a number
-  currency: string; // Valid currency symbol (USD, EUR, CAD, etc.)
-  customer_email: string; // Valid customer email address
-  customer_id: string; // Customer ID (added to match curl command)
-  customer_first_name: string; // Valid customer first name
-  customer_last_name: string; // Valid customer last name
-  shopify_product_id: string; // Valid Shopify product ID
+  bid?: string; // String containing a number
+  currency?: string; // Valid currency symbol (USD, EUR, CAD, etc.)
+  customer_email?: string; // Valid customer email address
+  customer_id?: string; // Customer ID (added to match curl command)
+  customer_first_name?: string; // Valid customer first name
+  customer_last_name?: string; // Valid customer last name
+  shopify_product_id?: string; // Valid Shopify product ID
 }
 
 // Response type for place bid API

@@ -6,14 +6,12 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
 import {
   Table,
@@ -145,8 +143,8 @@ export default function ProfilePage() {
           <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4">
             <div className="flex items-center space-x-4">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {user?.data?.name || "Loading..."}
+                <h1 className="text-2xl font-bold text-foreground">
+                  {user?.data?.firstName} {user?.data?.lastName}
                 </h1>
                 <p className="text-muted-foreground">
                   {user?.data?.email || "Loading..."}
@@ -192,34 +190,34 @@ export default function ProfilePage() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-700">
-                        Full Name
+                      <label className="text-sm font-medium text-muted-foreground">
+                        Name
                       </label>
-                      <p className="mt-1 text-gray-900">
-                        {user?.data?.name || "Loading..."}
+                      <p className="mt-1 text-foreground">
+                        {user?.data?.firstName} {user?.data?.lastName}
                       </p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-700">
+                      <label className="text-sm font-medium text-muted-foreground">
                         Email
                       </label>
-                      <p className="mt-1 text-gray-900">
+                      <p className="mt-1 text-foreground">
                         {user?.data?.email || "Loading..."}
                       </p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-700">
+                      <label className="text-sm font-medium text-muted-foreground">
                         Phone
                       </label>
-                      <p className="mt-1 text-gray-900">
+                      <p className="mt-1 text-foreground">
                         {user?.data?.phone || "Not provided"}
                       </p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-700">
+                      <label className="text-sm font-medium text-muted-foreground">
                         Available Points
                       </label>
-                      <p className="mt-1 text-gray-900">
+                      <p className="mt-1 text-foreground">
                         {user?.data?.points || "Not provided"}
                       </p>
                     </div>

@@ -32,7 +32,8 @@ import { toast } from "sonner";
 import { useAuthToken } from "@/components/auth/auth-context";
 
 const updateUserSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
   email: z.email("Invalid email address"),
   phone: z.string().min(1, "Phone number is required"),
   street: z.string().min(1, "Street address is required"),
@@ -62,7 +63,8 @@ export function UpdateUserModal({
   const form = useForm<UpdateUserFormValues>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
-      name: user?.name || "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
       email: user?.email || "",
       phone: user?.phone || "",
       street: user?.address?.street || "",
@@ -98,7 +100,8 @@ export function UpdateUserModal({
   React.useEffect(() => {
     if (user) {
       form.reset({
-        name: user.name || "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
         email: user.email || "",
         phone: user.phone || "",
         street: user.address?.street || "",
@@ -121,7 +124,8 @@ export function UpdateUserModal({
     }
 
     const updateData: UpdateUser = {
-      name: data.name,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
       phone: data.phone,
       address: {
@@ -159,11 +163,28 @@ export function UpdateUserModal({
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Name</FormLabel>
+                      <FormLabel className="text-right">First Name</FormLabel>
+                      <div className="col-span-3">
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="text-right">Last Name</FormLabel>
                       <div className="col-span-3">
                         <FormControl>
                           <Input {...field} />
