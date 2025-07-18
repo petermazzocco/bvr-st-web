@@ -467,3 +467,207 @@ export type {
   ProductId,
   BidAmount,
 };
+
+export interface Vendor {
+  _id: string;
+  storeName: string;
+  name: string;
+  image: string;
+  active: boolean;
+  description: string;
+}
+
+export interface CreateCheckoutRequest {
+  line_items: LineItem[];
+  email: string;
+  attributes: Record<string, string>;
+  buyer_identity: BuyerIdentityInput;
+}
+
+export interface LineItem {
+  variant_id: string;
+  quantity: number;
+}
+
+export interface BuyerIdentityInput {
+  email: string;
+  phone: string;
+  country_code: string;
+  customer_access_token: string;
+}
+
+export interface CollectionImage {
+  url: string;
+  altText: string | null;
+}
+
+export interface CollectionProductNode {
+  id: string;
+  title: string;
+  handle: string;
+}
+
+export interface CollectionProductEdge {
+  node: CollectionProductNode;
+}
+
+export interface CollectionProducts {
+  edges: CollectionProductEdge[];
+}
+
+export interface CollectionNode {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  image: CollectionImage | null;
+  products: CollectionProducts;
+}
+
+export interface CollectionEdge {
+  node: CollectionNode;
+}
+
+export interface CollectionPageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface PartnerStoreCollections {
+  edges: CollectionEdge[];
+  pageInfo: CollectionPageInfo;
+}
+
+export interface PartnerStoreCollectionsResponse {
+  collections: PartnerStoreCollections;
+}
+
+// Single collection types for individual collection queries
+export interface CollectionByHandleImage {
+  url: string;
+  altText: string | null;
+}
+
+export interface CollectionByHandleProductVariant {
+  id: string;
+  availableForSale: boolean;
+}
+
+export interface CollectionByHandleProductVariantEdge {
+  node: CollectionByHandleProductVariant;
+}
+
+export interface CollectionByHandleProductVariants {
+  edges: CollectionByHandleProductVariantEdge[];
+}
+
+export interface CollectionByHandleProductPriceRange {
+  minVariantPrice: {
+    amount: string;
+    currencyCode: string;
+  };
+}
+
+export interface CollectionByHandleProductNode {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  featuredImage: CollectionByHandleImage;
+  priceRange: CollectionByHandleProductPriceRange;
+  variants: CollectionByHandleProductVariants;
+}
+
+export interface CollectionByHandleProductEdge {
+  node: CollectionByHandleProductNode;
+}
+
+export interface CollectionByHandleProducts {
+  edges: CollectionByHandleProductEdge[];
+  pageInfo: CollectionPageInfo;
+}
+
+export interface CollectionByHandle {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  image: CollectionByHandleImage | null;
+  products: CollectionByHandleProducts;
+}
+
+export interface CollectionByHandleResponse {
+  collectionByHandle: CollectionByHandle;
+}
+
+// Product by handle types
+export interface ProductByHandleImage {
+  url: string;
+  altText: string | null;
+}
+
+export interface ProductByHandleImageEdge {
+  node: ProductByHandleImage;
+}
+
+export interface ProductByHandleImages {
+  edges: ProductByHandleImageEdge[];
+}
+
+export interface ProductByHandlePriceRange {
+  minVariantPrice: {
+    amount: string;
+    currencyCode: string;
+  };
+  maxVariantPrice: {
+    amount: string;
+    currencyCode: string;
+  };
+}
+
+export interface ProductByHandleSelectedOption {
+  name: string;
+  value: string;
+}
+
+export interface ProductByHandleVariant {
+  id: string;
+  title: string;
+  price: {
+    amount: string;
+    currencyCode: string;
+  };
+  availableForSale: boolean;
+  quantityAvailable: number;
+  selectedOptions: ProductByHandleSelectedOption[];
+}
+
+export interface ProductByHandleVariantEdge {
+  node: ProductByHandleVariant;
+}
+
+export interface ProductByHandleVariants {
+  edges: ProductByHandleVariantEdge[];
+}
+
+export interface ProductByHandleOption {
+  name: string;
+  values: string[];
+}
+
+export interface ProductByHandle {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  featuredImage: ProductByHandleImage;
+  images: ProductByHandleImages;
+  priceRange: ProductByHandlePriceRange;
+  variants: ProductByHandleVariants;
+  options: ProductByHandleOption[];
+  tags: string[];
+}
+
+export interface ProductByHandleResponse {
+  productByHandle: ProductByHandle;
+}

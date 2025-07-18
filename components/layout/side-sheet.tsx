@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Collection } from "@/lib/shopify/types";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPartneredStores } from "@/server/vendor/actions";
 
 const helpLinks = [
   { name: "Returns & Exchanges", href: "/legal/return-policy" },
@@ -28,11 +30,22 @@ export function NavSideSheet({
 }) {
   const [parentOpen, setParentOpen] = useState(false);
 
-
   const handleDirectLinkClick = () => {
     // Close sheet when clicking on direct links
     setParentOpen(false);
   };
+
+  const {
+    data: partners,
+    isLoading: partnersLoading,
+    error: partnersError,
+  } = useQuery({
+    queryKey: ["partners"],
+    queryFn: async () => {
+      const result = await getAllPartneredStores();
+      return result;
+    },
+  });
 
   return (
     <Sheet open={parentOpen} onOpenChange={setParentOpen}>
@@ -72,6 +85,39 @@ export function NavSideSheet({
                 </a>
               ))}
             </nav>
+
+            {/* Partner Stores Section */}
+            <div className="pt-4">
+              <h3 className="mb-3 p-4 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                Partner Stores
+              </h3>
+              <nav className="space-y-1">
+                {partnersLoading && (
+                  <div className="px-3 py-2 text-sm text-muted-foreground">
+                    Loading stores...
+                  </div>
+                )}
+                {partnersError && (
+                  <div className="px-3 py-2 text-sm text-red-600">
+                    Failed to load stores
+                  </div>
+                )}
+                {partners?.success &&
+                  partners.data?.map((vendor) => (
+                    <a
+                      key={vendor._id}
+                      href={`/stores/${vendor.storeName}`}
+                      className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted text-foreground hover:text-foreground"
+                      onClick={handleDirectLinkClick}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span>{vendor.name}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 opacity-50" />
+                    </a>
+                  ))}
+              </nav>
+            </div>
           </div>
 
           <Separator className="mx-auto" />
