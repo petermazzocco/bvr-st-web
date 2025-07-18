@@ -361,10 +361,10 @@ interface BaseBid {
 }
 
 // Auction bid type
-interface AuctionBid extends BaseBid {}
+type AuctionBid = BaseBid;
 
 // Automatic bid type
-interface AutomaticBid extends BaseBid {}
+type AutomaticBid = BaseBid;
 
 // Main auction configuration
 interface AuctionConfig {

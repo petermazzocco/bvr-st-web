@@ -10,13 +10,15 @@ import { isAuctionProduct } from "@/lib/utils";
 import { AuctionProductDescription } from "./auction-product-description";
 
 export function ProductDescription({ product }: { product: Product }) {
+  // Call hooks at the top level, before any conditional logic
+  const { isAuthenticated } = useCart();
+
   // Check if this is an auction product
   if (isAuctionProduct(product)) {
     return <AuctionProductDescription product={product} />;
   }
 
   // Regular product flow (your existing code)
-  const { isAuthenticated } = useCart();
 
   const basePoints = Math.floor(
     Number(product.priceRange.maxVariantPrice.amount),

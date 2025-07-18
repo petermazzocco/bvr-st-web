@@ -9,6 +9,7 @@ import type {
 import React, {
   createContext,
   use,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -233,22 +234,22 @@ export function CartProvider({
         updateOptimisticCart({ type: "CLEAR_CART" });
       });
     }
-  }, [auth?.isAuthenticated]);
+  }, [auth?.isAuthenticated, optimisticCart, updateOptimisticCart]);
 
-  const updateCartItem = (merchandiseId: string, updateType: UpdateType) => {
+  const updateCartItem = useCallback((merchandiseId: string, updateType: UpdateType) => {
     updateOptimisticCart({
       type: "UPDATE_ITEM",
       payload: { merchandiseId, updateType },
     });
-  };
+  }, [updateOptimisticCart]);
 
-  const addCartItem = (variant: ProductVariant, product: Product) => {
+  const addCartItem = useCallback((variant: ProductVariant, product: Product) => {
     updateOptimisticCart({ type: "ADD_ITEM", payload: { variant, product } });
-  };
+  }, [updateOptimisticCart]);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     updateOptimisticCart({ type: "CLEAR_CART" });
-  };
+  }, [updateOptimisticCart]);
 
   const value = useMemo(
     () => ({

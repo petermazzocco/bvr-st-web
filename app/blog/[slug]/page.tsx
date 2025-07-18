@@ -6,6 +6,7 @@ import { getBlogPostBySlug } from "@/server/sanity/actions";
 import { Post } from "@/lib/types";
 import { urlFor } from "@/lib/sanity/image";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -85,12 +86,12 @@ export default function PostPage({
         ← Back to announcements
       </Link>
       {postImageUrl && (
-        <img
+        <Image
           src={postImageUrl}
           alt={post.title}
           className="aspect-video rounded-xl"
-          width="550"
-          height="310"
+          width={550}
+          height={310}
         />
       )}
       <h1 className="text-4xl font-bold mb-8">{post.title}</h1>

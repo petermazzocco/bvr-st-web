@@ -1,5 +1,6 @@
 "use client";
 import { Bell } from "lucide-react";
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -157,10 +158,12 @@ export function NotificationDropdown({
               <div className="flex items-start space-x-3 w-full">
                 {notification.image?.asset?.url && (
                   <div className="flex-shrink-0 w-12 h-12">
-                    <img
+                    <Image
                       src={notification.image.asset.url}
                       alt={notification.title}
                       className="w-full h-full rounded-lg object-cover"
+                      width={48}
+                      height={48}
                     />
                   </div>
                 )}
