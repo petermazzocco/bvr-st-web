@@ -19,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AuctionClock } from "@/components/utils/auction-clock";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
+import { BidConfirmationModal } from "@/components/modals/bid-confirmation-modal";
 
 export function AuctionProductDescription({ product }: { product: Product }) {
   const { isAuthenticated } = useAuth();
@@ -28,6 +29,7 @@ export function AuctionProductDescription({ product }: { product: Product }) {
   const [auctionData, setAuctionData] = useState<Auction | null>(null);
   const [loading, setLoading] = useState(true);
   const [bidLoading, setBidLoading] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const productId = product.id.split("/").pop() || "";
 
@@ -58,7 +60,7 @@ export function AuctionProductDescription({ product }: { product: Product }) {
     fetchAuctionData();
   }, [productId]);
 
-  const handlePlaceBid = async () => {
+  const handlePlaceBidClick = () => {
     if (!isAuthenticated) {
       toast.error("Please sign in to place a bid");
       return;
@@ -77,7 +79,12 @@ export function AuctionProductDescription({ product }: { product: Product }) {
       return;
     }
 
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmBid = async () => {
     setBidLoading(true);
+    setShowConfirmModal(false);
 
     try {
       if (!user) {
@@ -89,7 +96,7 @@ export function AuctionProductDescription({ product }: { product: Product }) {
         bid: bidAmount,
         currency: "USD",
         customer_email: user?.data?.email,
-        customer_id: "12345",
+        customer_id: user?.data?.shopifyCustomerID,
         customer_first_name: user?.data?.firstName || "",
         customer_last_name: user?.data?.lastName || "",
         shopify_product_id: productId,
@@ -180,13 +187,13 @@ export function AuctionProductDescription({ product }: { product: Product }) {
 
       {/* Auction Status */}
       <div
-        className={`mb-4 p-3 rounded-md ${isAuctionEnded ? "bg-red-50" : "bg-blue-50"}`}
+        className={`mb-4 p-3 rounded-md ${isAuctionEnded ? "bg-destructive/10 border-destructive/50 border" : "bg-muted border-border border"}`}
       >
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium">
             {isAuctionEnded ? "Final Bid" : "Current Bid"}
           </span>
-          <span className="text-lg font-bold">
+          <span className="text-lg font-bold text-primary">
             ${auctionData.auction.highest_bid}
           </span>
         </div>
@@ -198,16 +205,11 @@ export function AuctionProductDescription({ product }: { product: Product }) {
             🔴 Auction Ended
           </div>
         )}
-        {auctionData.auction.reserve_price && (
-          <div className="text-xs text-orange-600">
-            Reserve price: ${auctionData.auction.reserve_price}
-          </div>
-        )}
       </div>
 
       {/* Recent Bids */}
       {auctionData.auction_bids && auctionData.auction_bids.length > 0 && (
-        <div className="mb-4 p-3 ">
+        <div className="mb-4 p-0.5">
           <h3 className="text-sm font-medium mb-2">
             Recent Bids{" "}
             <span className="text-muted-foreground text-xs">
@@ -217,8 +219,13 @@ export function AuctionProductDescription({ product }: { product: Product }) {
           <div className="space-y-1">
             {auctionData.auction_bids.slice(0, 3).map((bid, index) => (
               <div key={index} className="flex justify-between text-xs">
-                <span className="text-primary font-semibold">${bid.bid}</span>
-                <span>{formatDate(bid.bid_date)}</span>
+                <span className="text-muted-foreground font-semibold">
+                  ${bid.bid}
+                </span>
+                <span className="text-muted-foreground">
+                  {" "}
+                  {formatDate(bid.bid_date)}
+                </span>
               </div>
             ))}
           </div>
@@ -242,15 +249,23 @@ export function AuctionProductDescription({ product }: { product: Product }) {
                 "w-1/2",
               )}
             />
-            <Button
-              onClick={handlePlaceBid}
-              disabled={
-                !bidAmount || !isAuthenticated || bidLoading || isBidTooHigh
-              }
-              className="px-6 w-1/2"
+            <BidConfirmationModal
+              bidAmount={bidAmount}
+              onConfirm={handleConfirmBid}
+              isLoading={bidLoading}
+              open={showConfirmModal}
+              onOpenChange={setShowConfirmModal}
             >
-              {bidLoading ? "Placing..." : "Place Bid"}
-            </Button>
+              <Button
+                onClick={handlePlaceBidClick}
+                disabled={
+                  !bidAmount || !isAuthenticated || bidLoading || isBidTooHigh
+                }
+                className="px-6 w-1/2"
+              >
+                {bidLoading ? "Placing..." : "Place Bid"}
+              </Button>
+            </BidConfirmationModal>
           </div>
           {isBidTooHigh && (
             <div className="text-xs text-red-600 bg-red-50 p-2 rounded-md">
@@ -272,12 +287,12 @@ export function AuctionProductDescription({ product }: { product: Product }) {
 
       <div className="mb-2 text-xs leading-tight text-muted-foreground flex flex-row items-center justify-between">
         <p>
-          Auction items have no returns. Shipping is included in the price and
-          times may vary depending on the seller&apos;s location and item. By
-          placing an offer, you agree to the terms of the auction and will pay
-          the invoice of the winning bid within the deadline. You can read more
-          about the auction terms{" "}
-          <span className="cursor-pointer underline">here</span>
+          Auction items are non-refundable and cannot be returned. Shipping
+          price and times may vary depending on the seller&apos;s location and
+          item being sold. By placing an offer, you agree to the terms of the
+          auction and will pay the invoice of the winning bid within the
+          deadline. You can read more about the{" "}
+          <span className="cursor-pointer underline">auction terms here</span>.
         </p>
       </div>
 
@@ -307,7 +322,7 @@ export function AuctionProductDescription({ product }: { product: Product }) {
           </div>
         </div>
         <p className="text-green-600">
-          ✅ Earn {minimumBid} points by bidding now
+          ✅ Earn {minimumBid} points if you win the auction
         </p>
         {auctionData.auction.real_time_auction && !isAuctionEnded && (
           <p className="text-blue-600">

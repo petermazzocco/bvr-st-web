@@ -26,6 +26,8 @@ export interface User {
   optInRewards: boolean;
   /** Stripe customer ID for payment processing */
   stripeCustomerID: string;
+  /** Shopify customer ID for payment processing */
+  shopifyCustomerID: string;
   /** User's membership status */
   isMember: boolean;
   /** User's email verification status */
