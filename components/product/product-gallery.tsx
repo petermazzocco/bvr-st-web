@@ -5,7 +5,6 @@ import {
   useProduct,
   useUpdateURL,
 } from "@/components/product/product-provider";
-import Image from "next/image";
 
 export function Gallery({
   images,
@@ -48,13 +47,11 @@ export function Gallery({
           </>
         )}
         {images[imageIndex] && (
-          <Image
+          <img
             className="h-full w-full   object-cover"
-            fill
             sizes="(min-width: 1024px) 66vw, 100vw"
             alt={images[imageIndex]?.altText as string}
             src={images[imageIndex]?.src as string}
-            priority={true}
           />
         )}
       </div>

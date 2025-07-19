@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 interface ProductImageHoverProps {
   images: Array<{
@@ -26,7 +25,7 @@ export function ProductImageHover({ images }: ProductImageHoverProps) {
   if (!images[0]) return null;
 
   return (
-    <Image
+    <img
       src={images[currentImageIndex]?.url || images[0].url}
       alt={images[currentImageIndex]?.altText || images[0].altText}
       width={400}
