@@ -671,3 +671,63 @@ export interface ProductByHandle {
 export interface ProductByHandleResponse {
   productByHandle: ProductByHandle;
 }
+
+// Checkout response types based on curl output
+export interface CheckoutCartCost {
+  totalAmount: {
+    amount: string;
+    currencyCode: string;
+  };
+  subtotalAmount: {
+    amount: string;
+    currencyCode: string;
+  };
+}
+
+export interface CheckoutCartLineMerchandise {
+  id: string;
+  title: string;
+  price: {
+    amount: string;
+    currencyCode: string;
+  };
+  product: {
+    title: string;
+  };
+}
+
+export interface CheckoutCartLineNode {
+  id: string;
+  quantity: number;
+  merchandise: CheckoutCartLineMerchandise;
+}
+
+export interface CheckoutCartLineEdge {
+  node: CheckoutCartLineNode;
+}
+
+export interface CheckoutCartLines {
+  edges: CheckoutCartLineEdge[];
+}
+
+export interface CheckoutCartBuyerIdentity {
+  email: string;
+  phone: string | null;
+  countryCode: string | null;
+}
+
+export interface CheckoutCart {
+  id: string;
+  checkoutUrl: string;
+  totalQuantity: number;
+  cost: CheckoutCartCost;
+  lines: CheckoutCartLines;
+  buyerIdentity: CheckoutCartBuyerIdentity;
+}
+
+export interface CheckoutResponse {
+  cartCreate: {
+    cart: CheckoutCart;
+    userErrors: any[];
+  };
+}

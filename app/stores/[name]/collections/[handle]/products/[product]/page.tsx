@@ -5,7 +5,6 @@ import { ProductProvider } from "@/components/product/product-provider";
 import { PartnerProductDescription } from "@/components/product/partner-product-description";
 import { Gallery } from "@/components/product/product-gallery";
 import { getPartnerStoreProductByHandle } from "@/server/vendor/actions";
-import { ProductByHandleImage } from "@/lib/types";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string; handle: string; product: string }>;

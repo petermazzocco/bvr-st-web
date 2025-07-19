@@ -7,6 +7,7 @@ import {
   PartnerStoreCollections,
   CollectionByHandleResponse,
   ProductByHandleResponse,
+  CheckoutResponse,
 } from "@/lib/types";
 
 /**
@@ -363,16 +364,16 @@ export const getPartnerStoreCollectionByHandle = async (
 export const createCheckoutRequest = async (
   storeName: string,
   checkoutData: CreateCheckoutRequest,
-): Promise<ApiResult<any>> => {
+): Promise<ApiResult<CheckoutResponse>> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/merch/${storeName}/checkout`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ checkoutData }),
+        body: JSON.stringify(checkoutData),
       },
     );
 
@@ -402,7 +403,7 @@ export const createCheckoutRequest = async (
     const body = await response.json();
     return {
       success: true,
-      data: body.checkout || body,
+      data: body,
     };
   } catch (error) {
     console.error("Get product error:", error);

@@ -4,6 +4,15 @@ import { ProductByHandle } from "@/lib/types";
 import { Separator } from "../ui/separator";
 import { ExternalLink, AlertTriangle } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../ui/button";
+import { createCheckoutRequest } from "@/server/vendor/actions";
+import { useQuery } from "@tanstack/react-query";
+import { getUserDetails } from "@/server/user/actions";
+import {
+  useAuth,
+  useAuthToken,
+  useUserId,
+} from "@/components/auth/auth-context";
 
 interface PartnerProductDescriptionProps {
   product: ProductByHandle;
@@ -17,6 +26,15 @@ export function PartnerProductDescription({
   const [selectedVariant, setSelectedVariant] = useState(
     product.variants.edges[0]?.node,
   );
+  const { isAuthenticated } = useAuth();
+  const userId = useUserId();
+  const authToken = useAuthToken();
+
+  const { data: user } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => getUserDetails(authToken || undefined, userId!),
+    enabled: !!userId && !!authToken && isAuthenticated,
+  });
 
   const handleVariantChange = (variantId: string) => {
     const variant = product.variants.edges.find(
@@ -27,12 +45,36 @@ export function PartnerProductDescription({
     }
   };
 
-  const handlePurchase = () => {
-    // This would redirect to the partner store's checkout
-    window.open(
-      `https://partner-store.com/products/${product.handle}`,
-      "_blank",
-    );
+  const handlePurchase = async () => {
+    if (!selectedVariant) return;
+
+    const checkoutData = {
+      line_items: [
+        {
+          variant_id: selectedVariant.id,
+          quantity: 1,
+        },
+      ],
+      email: user?.data?.email || "",
+      attributes: {},
+      buyer_identity: {
+        email: user?.data?.email || "",
+        phone: user?.data?.phone || "",
+        country_code: "US",
+        customer_access_token: "",
+      },
+    };
+
+    try {
+      const result = await createCheckoutRequest(storeName, checkoutData);
+      if (result.success && result.data) {
+        window.open(result.data.cartCreate.cart.checkoutUrl, "_blank");
+      } else {
+        console.error("Checkout failed:", result.error);
+      }
+    } catch (error) {
+      console.error("Error creating checkout:", error);
+    }
   };
 
   return (
@@ -72,11 +114,11 @@ export function PartnerProductDescription({
                   key={value}
                   onClick={() => variant && handleVariantChange(variant.id)}
                   disabled={!variant?.availableForSale}
-                  className={`px-3 py-1 text-xs border rounded-md transition-colors ${
+                  className={`h-14 w-14 text-xs border rounded-md transition-colors ${
                     selectedVariant?.selectedOptions.some(
                       (opt) => opt.value === value,
                     )
-                      ? "bg-black text-white border-black"
+                      ? "bg-transparent text-foreground border-foreground border-2"
                       : variant?.availableForSale
                         ? "bg-white text-black border-gray-300 hover:border-black"
                         : "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
@@ -93,18 +135,22 @@ export function PartnerProductDescription({
       <Separator className="my-4" />
 
       {/* Partner Store Purchase Button */}
-      <button
+      <Button
         onClick={handlePurchase}
+        aria-label="Add to cart"
+        id="add-to-cart-button"
+        data-umami-event="Add to cart button"
         disabled={!selectedVariant?.availableForSale}
-        className={`w-full py-3 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+        variant={"default"}
+        className={`w-full h-12 ${
           selectedVariant?.availableForSale
-            ? "bg-black text-white hover:bg-gray-800"
+            ? "w-full"
             : "bg-gray-100 text-gray-400 cursor-not-allowed"
         }`}
       >
         <span>Purchase from {storeName}</span>
         <ExternalLink size={16} />
-      </button>
+      </Button>
 
       {/* Partner Merchandise Disclaimer */}
       <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md">
@@ -128,9 +174,6 @@ export function PartnerProductDescription({
 
       {/* Product Info */}
       <div className="mt-4 flex flex-col gap-1 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
-        <p className="text-gray-600">
-          Stock: {selectedVariant?.quantityAvailable || 0} available
-        </p>
         <p
           className={`${
             selectedVariant?.availableForSale
@@ -140,6 +183,12 @@ export function PartnerProductDescription({
         >
           {selectedVariant?.availableForSale ? "In Stock" : "Out of Stock"}
         </p>
+        {isAuthenticated && (
+          <p className="text-muted-foreground">
+            Earn {product.priceRange.minVariantPrice.amount} points for this
+            purchase
+          </p>
+        )}
       </div>
 
       {/* Product Description */}
