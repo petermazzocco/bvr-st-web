@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshAuth = () => {
     const currentToken = getAuthToken();
     const currentUserId = getUserIdFromToken();
-    
+
     setToken(currentToken || null);
     setUserId(currentUserId);
     setIsAuthenticated(!!currentToken && !!currentUserId);

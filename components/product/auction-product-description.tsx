@@ -20,6 +20,7 @@ import { AuctionClock } from "@/components/utils/auction-clock";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 import { BidConfirmationModal } from "@/components/modals/bid-confirmation-modal";
+import { Lock } from "lucide-react";
 
 export function AuctionProductDescription({ product }: { product: Product }) {
   const { isAuthenticated } = useAuth();
@@ -173,9 +174,18 @@ export function AuctionProductDescription({ product }: { product: Product }) {
 
   const isAuctionEnded = new Date() > new Date(auctionData.auction.end_date);
   const isBidTooHigh = bidAmount ? parseFloat(bidAmount) > maximumBid : false;
+  const isBidTooLow = bidAmount ? parseFloat(bidAmount) < minimumBid : false;
 
   return (
     <>
+      {!isAuthenticated && !user?.data?.isMember ? (
+        <div className="mb-2 flex flex-row items-center justify-between">
+          <h1 className="text-sm font-semibold text-destructive">
+            Member Only Auction
+          </h1>
+          <Lock className="h-4 w-4 text-destructive" />
+        </div>
+      ) : null}
       <div className="mb-2 flex flex-row items-center justify-between">
         <h1 className="text-sm font-semibold">{product.title}</h1>
         <Badge
@@ -247,17 +257,23 @@ export function AuctionProductDescription({ product }: { product: Product }) {
             <Input
               type="number"
               value={bidAmount}
-              onChange={(e) => setBidAmount(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "" || parseFloat(value) >= minimumBid) {
+                  setBidAmount(value);
+                }
+              }}
               placeholder={`Min: ${minimumBid}`}
               min={minimumBid}
               max={maximumBid}
               step={auctionData.auction.minimum_bid_increment}
               className={cn(
-                isBidTooHigh && "ring-2 ring-destructive border-destructive",
+                (isBidTooHigh || isBidTooLow) &&
+                  "ring-2 ring-destructive border-destructive",
                 "w-1/2",
               )}
             />
-            {isAuthenticated ? (
+            {isAuthenticated && user?.data?.isMember ? (
               <BidConfirmationModal
                 bidAmount={bidAmount}
                 onConfirm={handleConfirmBid}
@@ -268,20 +284,30 @@ export function AuctionProductDescription({ product }: { product: Product }) {
                 <Button
                   onClick={handlePlaceBidClick}
                   disabled={
-                    !bidAmount || !isAuthenticated || bidLoading || isBidTooHigh
+                    !bidAmount ||
+                    !isAuthenticated ||
+                    bidLoading ||
+                    isBidTooHigh ||
+                    isBidTooLow
                   }
                   className="w-1/2"
                 >
-                  {bidLoading ? "Placing..." : "Place Bid"}
+                  {bidLoading ? "Placing..." : "Bid Now"}
                 </Button>
               </BidConfirmationModal>
-            ) : (
+            ) : !isAuthenticated ? (
               <Link
                 href={`/signin?redirect=/products/${product.handle}`}
                 className="w-1/2"
               >
                 <Button variant="default" className="w-full">
-                  Sign in to bid
+                  Sign In To Bid
+                </Button>
+              </Link>
+            ) : (
+              <Link href={`/membership`} className="w-1/2">
+                <Button variant="default" className="w-full">
+                  Become a Member
                 </Button>
               </Link>
             )}
@@ -290,6 +316,12 @@ export function AuctionProductDescription({ product }: { product: Product }) {
             <div className="text-xs text-destructive bg-destructive/10 p-2 rounded-md">
               Maximum bid amount exceeded. Please enter a bid of ${maximumBid}{" "}
               or less.
+            </div>
+          )}
+          {isBidTooLow && (
+            <div className="text-xs text-destructive bg-destructive/10 p-2 rounded-md">
+              Minimum bid amount not met. Please enter a bid of ${minimumBid} or
+              more.
             </div>
           )}
         </div>

@@ -41,7 +41,6 @@ export default async function Page(props: {
   const collection = collectionResponse.data.collectionByHandle;
   const products = collection.products.edges.map((edge) => edge.node);
 
-  console.log(params.name);
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Collection",

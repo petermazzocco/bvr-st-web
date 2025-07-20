@@ -69,21 +69,23 @@ export function NavSideSheet({
           {/* Collections Section */}
           <div className="flex-1 px-2">
             <nav className="space-y-1">
-              {collections?.map((collection) => (
-                <a
-                  key={collection.handle}
-                  href={collection.path}
-                  id="collection-chosen-button"
-                  data-umami-event="Collection chose button"
-                  className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
-                  onClick={handleDirectLinkClick}
-                >
-                  <div className="flex items-center gap-3">
-                    <span>{collection.title}</span>
-                  </div>
-                  <ChevronRight className="h-4 w-4 opacity-50" />
-                </a>
-              ))}
+              {collections
+                ?.filter((collection) => collection.seo.title !== "All")
+                .map((collection) => (
+                  <a
+                    key={collection.handle}
+                    href={collection.path}
+                    id="collection-chosen-button"
+                    data-umami-event="Collection chose button"
+                    className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
+                    onClick={handleDirectLinkClick}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span>{collection.title}</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 opacity-50" />
+                  </a>
+                ))}
             </nav>
 
             {/* Partner Stores Section */}

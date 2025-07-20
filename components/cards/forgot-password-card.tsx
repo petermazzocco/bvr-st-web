@@ -258,7 +258,6 @@ export function ForgotPasswordCard() {
                     maxLength={8}
                     value={otpValue}
                     onChange={(value) => {
-                      console.log("OTP onChange:", value); // Debug log
                       setOtpValue(value);
                     }}
                   >

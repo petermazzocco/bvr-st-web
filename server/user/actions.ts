@@ -987,8 +987,6 @@ export const signInWithOAuth = async (
 
     url.searchParams.append("callback", frontendCallback);
 
-    console.log("OAuth URL being constructed:", url.toString()); // Debug log
-
     return {
       success: true,
       data: { redirectUrl: url.toString() },
