@@ -128,13 +128,14 @@ export function AuctionProductDescription({ product }: { product: Product }) {
     return (
       <div className="animate-pulse">
         <div className="mb-2 flex flex-row items-center justify-between">
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          <div className="h-6 bg-gray-200 rounded w-20"></div>
+          <div className="h-4 bg-muted rounded w-1/2"></div>
+          <div className="h-6 bg-muted rounded w-20"></div>
         </div>
-        <div className="mb-4 p-3 bg-gray-100 rounded-md h-20"></div>
+        <div className="mb-4 p-3 bg-muted rounded-md h-20"></div>
         <div className="mb-4 space-y-3">
-          <div className="h-10 bg-gray-200 rounded"></div>
-          <div className="h-10 bg-gray-200 rounded"></div>
+          <div className="h-20 bg-muted rounded"></div>
+          <div className="h-10 bg-muted rounded"></div>
+          <div className="h-10 bg-muted rounded"></div>
         </div>
       </div>
     );
@@ -143,7 +144,7 @@ export function AuctionProductDescription({ product }: { product: Product }) {
   if (!auctionData) {
     return (
       <div className="text-center p-4">
-        <p className="text-red-600 mb-2">Failed to load auction data</p>
+        <p className="text-destructive mb-2">Failed to load auction data</p>
         <Button onClick={() => window.location.reload()}>Try Again</Button>
       </div>
     );
@@ -189,22 +190,29 @@ export function AuctionProductDescription({ product }: { product: Product }) {
       <div
         className={`mb-4 p-3 rounded-md ${isAuctionEnded ? "bg-destructive/10 border-destructive/50 border" : "bg-muted border-border border"}`}
       >
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium">
-            {isAuctionEnded ? "Final Bid" : "Current Bid"}
-          </span>
-          <span className="text-lg font-bold text-primary">
-            ${auctionData.auction.highest_bid}
-          </span>
-        </div>
-        <div className="flex justify-end items-center text-xs text-muted-foreground mb-2">
-          <AuctionClock time={getTimeUntilEnd(auctionData.auction.end_date)} />
-        </div>
-        {isAuctionEnded && (
-          <div className="text-sm font-medium text-red-600 mt-2">
-            🔴 Auction Ended
+        <div className="flex justify-between items-center ">
+          <div className="flex-col flex justify-between items-start mb-2">
+            <span className="text-sm font-medium">
+              {isAuctionEnded ? "Final Bid" : "Current Bid"}
+            </span>
+            <span className="text-lg font-bold text-primary">
+              ${auctionData.auction.highest_bid}
+            </span>
           </div>
-        )}
+          <div className="flex-col flex justify-between items-start">
+            <span className="text-sm font-medium">Remaining Time</span>
+            <div className="flex justify-end items-center text-xs text-muted-foreground mb-2">
+              <AuctionClock
+                time={getTimeUntilEnd(auctionData.auction.end_date)}
+              />
+            </div>
+            {isAuctionEnded && (
+              <div className="text-sm font-medium text-destructive mt-2">
+                🔴 Auction Ended
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Recent Bids */}
@@ -245,30 +253,41 @@ export function AuctionProductDescription({ product }: { product: Product }) {
               max={maximumBid}
               step={auctionData.auction.minimum_bid_increment}
               className={cn(
-                isBidTooHigh && "ring-2 ring-red-500 border-red-500",
+                isBidTooHigh && "ring-2 ring-destructive border-destructive",
                 "w-1/2",
               )}
             />
-            <BidConfirmationModal
-              bidAmount={bidAmount}
-              onConfirm={handleConfirmBid}
-              isLoading={bidLoading}
-              open={showConfirmModal}
-              onOpenChange={setShowConfirmModal}
-            >
-              <Button
-                onClick={handlePlaceBidClick}
-                disabled={
-                  !bidAmount || !isAuthenticated || bidLoading || isBidTooHigh
-                }
-                className="px-6 w-1/2"
+            {isAuthenticated ? (
+              <BidConfirmationModal
+                bidAmount={bidAmount}
+                onConfirm={handleConfirmBid}
+                isLoading={bidLoading}
+                open={showConfirmModal}
+                onOpenChange={setShowConfirmModal}
               >
-                {bidLoading ? "Placing..." : "Place Bid"}
-              </Button>
-            </BidConfirmationModal>
+                <Button
+                  onClick={handlePlaceBidClick}
+                  disabled={
+                    !bidAmount || !isAuthenticated || bidLoading || isBidTooHigh
+                  }
+                  className="w-1/2"
+                >
+                  {bidLoading ? "Placing..." : "Place Bid"}
+                </Button>
+              </BidConfirmationModal>
+            ) : (
+              <Link
+                href={`/signin?redirect=/products/${product.handle}`}
+                className="w-1/2"
+              >
+                <Button variant="default" className="w-full">
+                  Sign in to bid
+                </Button>
+              </Link>
+            )}
           </div>
           {isBidTooHigh && (
-            <div className="text-xs text-red-600 bg-red-50 p-2 rounded-md">
+            <div className="text-xs text-destructive bg-destructive/10 p-2 rounded-md">
               Maximum bid amount exceeded. Please enter a bid of ${maximumBid}{" "}
               or less.
             </div>
@@ -298,23 +317,9 @@ export function AuctionProductDescription({ product }: { product: Product }) {
 
       <Separator className="my-4" />
 
-      {!isAuthenticated && (
-        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-          <p className="text-sm text-yellow-800 mb-2">
-            You must be logged in to participate in auctions.
-          </p>
-          <Link
-            href={`/signin?redirect=/products/${product.handle}`}
-            className="text-blue-600 hover:underline text-sm"
-          >
-            Sign in to bid
-          </Link>
-        </div>
-      )}
-
       <div className="mt-4 flex flex-col gap-2.5 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
         <div
-          className={`flex flex-col gap-1 ${isAuctionEnded ? "text-destructive" : "text-orange-600"}`}
+          className={`flex flex-col gap-1 ${isAuctionEnded ? "text-destructive" : "text-primary"}`}
         >
           <div className="text-xs text-muted-foreground">
             {isAuctionEnded ? "🕕 Ended: " : "🕕 Ends: "}

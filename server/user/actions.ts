@@ -166,10 +166,14 @@ export const signUp = async (
     if (!response.ok) {
       const errorText = await response.text();
 
-      if (errorText.includes("User already exists")) {
+      if (
+        errorText.includes(
+          "An account with this email or phone number already exists",
+        )
+      ) {
         return {
           success: false,
-          error: "An account with this phone number already exists.",
+          error: "An account with this email or phone number already exists.",
         };
       }
 
@@ -537,10 +541,11 @@ export const requestForgotPassword = async (
     if (!response.ok) {
       const errorText = await response.text();
 
-      if (errorText.includes("User not found")) {
+      if (errorText.includes("Account not found")) {
         return {
           success: false,
-          error: "No account found with this email address.",
+          error:
+            "No account found with this email address. Please sign up or contact us.",
         };
       }
 
