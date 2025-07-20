@@ -5,7 +5,7 @@ export default function Page() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: "url(/mock-auth.webp)",
+            backgroundImage: "url(/about.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

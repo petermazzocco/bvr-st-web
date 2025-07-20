@@ -100,11 +100,11 @@ export default async function Page(props: {
             </div>
           </div>
         </div>
-        <div className="mx-auto max-w-screen-2xl px-4">
+        {/* <div className="mx-auto max-w-screen-2xl px-4">
           <Suspense fallback={null}>
             <RelatedProducts id={product.id} />
           </Suspense>
-        </div>
+        </div> */}
       </ProductProvider>
     </>
   );

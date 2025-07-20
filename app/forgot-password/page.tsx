@@ -11,7 +11,7 @@ export default function Page() {
 
       <div className="hidden md:block w-1/2 relative">
         <Image
-          src="/mock-auth.webp"
+          src="/auth.jpg"
           alt="Authentication illustration"
           fill
           className="object-cover"
@@ -20,7 +20,7 @@ export default function Page() {
 
       <div className="md:hidden relative w-full min-h-screen">
         <Image
-          src="/mock-auth.webp"
+          src="/auth.jpg"
           alt="Authentication illustration"
           fill
           className="object-cover blur-sm"

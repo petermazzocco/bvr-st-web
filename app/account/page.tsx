@@ -110,7 +110,7 @@ export default function ProfilePage() {
       const response = await createBillingPortalSession(
         userId!,
         window.location.href,
-        authToken!
+        authToken!,
       );
       return response;
     },
@@ -177,7 +177,7 @@ export default function ProfilePage() {
                 {user?.data?.isMember && (
                   <Badge variant="secondary" className="mt-1">
                     <Star className="w-3 h-3 mr-1" />
-                    Member since {user.data?.createdAt}
+                    Member since {new Date(user.data?.createdAt).toLocaleDateString()}
                   </Badge>
                 )}
               </div>
@@ -264,10 +264,13 @@ export default function ProfilePage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <p className="text-gray-900">
+                    <p className="text-muted-foreground">
                       {user?.data?.address?.street}
                     </p>
-                    <p className="text-gray-900">
+                    <p className="text-muted-foreground">
+                      {user?.data?.address?.apt}
+                    </p>
+                    <p className="text-muted-foreground">
                       {user?.data?.address?.city}, {user?.data?.address?.state}{" "}
                       {user?.data?.address?.zip}
                     </p>
@@ -321,13 +324,15 @@ export default function ProfilePage() {
                               {method.is_default && (
                                 <Badge variant="secondary">Default</Badge>
                               )}
-                              <Button 
-                                variant="ghost" 
+                              <Button
+                                variant="ghost"
                                 size="sm"
                                 onClick={() => billingPortalMutation.mutate()}
                                 disabled={billingPortalMutation.isPending}
                               >
-                                {billingPortalMutation.isPending ? "Loading..." : "Edit"}{" "}
+                                {billingPortalMutation.isPending
+                                  ? "Loading..."
+                                  : "Edit"}{" "}
                                 <ExternalLinkIcon className="w-4 h-4 ml-2" />
                               </Button>
                             </div>

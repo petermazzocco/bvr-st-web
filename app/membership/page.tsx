@@ -6,7 +6,11 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { updateUserAfterCheckout } from "@/server/stripe/actions";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import { useAuth, useAuthToken, useUserId } from "@/components/auth/auth-context";
+import {
+  useAuth,
+  useAuthToken,
+  useUserId,
+} from "@/components/auth/auth-context";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -30,7 +34,11 @@ export default function MembershipPage() {
       sessionId: string;
       authToken: string;
     }) => {
-      const result = await updateUserAfterCheckout(userId, sessionId, authToken);
+      const result = await updateUserAfterCheckout(
+        userId,
+        sessionId,
+        authToken,
+      );
       return { success: true, data: result };
     },
     {
@@ -40,7 +48,11 @@ export default function MembershipPage() {
           `Success! ${data.pointsAdded} points added to your account.`,
         );
         // Remove query params from URL
-        window.history.replaceState({}, document.title, window.location.pathname);
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname,
+        );
       },
       onError: (error) => {
         toast.error(error || "Failed to update user after checkout");
@@ -96,7 +108,7 @@ export default function MembershipPage() {
 
       <div className="hidden md:block w-1/2 relative">
         <Image
-          src="/mock-auth.webp"
+          src="/auth.jpg"
           alt="Authentication illustration"
           fill
           className="object-cover"
@@ -105,7 +117,7 @@ export default function MembershipPage() {
 
       <div className="md:hidden relative w-full min-h-screen">
         <Image
-          src="/mock-auth.webp"
+          src="/auth.jpg"
           alt="Authentication illustration"
           fill
           className="object-cover blur-sm"

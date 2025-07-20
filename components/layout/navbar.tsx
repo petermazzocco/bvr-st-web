@@ -2,7 +2,6 @@
 import { UserIcon } from "lucide-react";
 import { NavSideSheet } from "./side-sheet";
 import Link from "next/link";
-import { Search } from "./search";
 import { CartSheet } from "../cart/cart-sheet";
 import { NotificationDropdown } from "./notification";
 import { Collection } from "@/lib/shopify/types";
@@ -57,7 +56,6 @@ export function Navbar({ collections }: { collections: Collection[] }) {
         </Link>
       </div>
       <div className="flex items-center justify-end gap-4">
-        <Search />
         {isAuthenticated && <NotificationDropdown userPoints={userPoints} />}
         <Link href={isClient && isAuthenticated ? "/account" : "/signin"}>
           <UserIcon className="h-4" />
