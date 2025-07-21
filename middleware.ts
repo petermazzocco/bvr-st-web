@@ -18,6 +18,35 @@ function getUserIdFromToken(token: string): string | null {
   }
 }
 
+// Helper function to check if token is valid (properly formatted JWT)
+function isValidJWT(token: string): boolean {
+  try {
+    if (!token) return false;
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+    
+    // Try to decode the payload
+    JSON.parse(atob(parts[1]));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+// Helper function to clear invalid auth cookie and redirect to signin
+function clearCookieAndRedirect(request: NextRequest, redirectPath: string = "/signin"): NextResponse {
+  const signinUrl = new URL(redirectPath, request.url);
+  const response = NextResponse.redirect(signinUrl);
+  
+  // Clear the invalid cookie
+  response.cookies.set('bvrstrco_auth', '', {
+    expires: new Date(0),
+    path: '/',
+  });
+  
+  return response;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
@@ -37,7 +66,13 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(signinUrl);
     }
 
-    // User has auth token, allow access to protected routes
+    // Check if the token is valid (properly formatted JWT)
+    if (!isValidJWT(authToken)) {
+      // Invalid token format, clear cookie and redirect to signin
+      return clearCookieAndRedirect(request);
+    }
+
+    // User has valid auth token, allow access to protected routes
     return NextResponse.next();
   }
 
@@ -47,9 +82,20 @@ export async function middleware(request: NextRequest) {
   );
 
   if (isPublicRoute && authToken) {
-    // User is authenticated but trying to access signin/signup, redirect to account
-    const accountUrl = new URL("/account", request.url);
-    return NextResponse.redirect(accountUrl);
+    // Check if token is valid before redirecting to account
+    if (isValidJWT(authToken)) {
+      // User is authenticated but trying to access signin/signup, redirect to account
+      const accountUrl = new URL("/account", request.url);
+      return NextResponse.redirect(accountUrl);
+    } else {
+      // Invalid token, clear it and let them continue to signin/signup
+      const response = NextResponse.next();
+      response.cookies.set('bvrstrco_auth', '', {
+        expires: new Date(0),
+        path: '/',
+      });
+      return response;
+    }
   }
 
   // Handle /signup/verify-email route
