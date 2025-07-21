@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HIDDEN_PRODUCT_TAG } from "@/lib/constants";
 import { getProduct } from "@/lib/shopify";
+import { generateProductMetadata } from "@/lib/metadata";
 import { ProductProvider } from "@/components/product/product-provider";
 import { ProductDescription } from "@/components/product/product-description";
 import { Image } from "@/lib/shopify/types";
@@ -20,30 +21,26 @@ export async function generateMetadata(props: {
   const { url, width, height, altText: alt } = product.featuredImage || {};
   const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
 
-  return {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  
+  return generateProductMetadata({
     title: product.seo.title || product.title,
-    description: product.seo.description || product.description,
-    robots: {
-      index: indexable,
-      follow: indexable,
-      googleBot: {
-        index: indexable,
-        follow: indexable,
-      },
+    description: product.seo.description || product.description || `Shop ${product.title} at BVR STR CO. Premium streetwear and fashion with fast shipping and quality guarantee.`,
+    image: url ? {
+      url,
+      width,
+      height,
+      alt: alt || product.title,
+    } : undefined,
+    price: {
+      amount: product.priceRange.minVariantPrice.amount,
+      currency: product.priceRange.minVariantPrice.currencyCode,
     },
-    openGraph: url
-      ? {
-          images: [
-            {
-              url,
-              width,
-              height,
-              alt,
-            },
-          ],
-        }
-      : null,
-  };
+    availability: product.availableForSale,
+    sku: product.id,
+    canonical: `${siteUrl}/products/${params.handle}`,
+    noIndex: !indexable,
+  });
 }
 
 export default async function Page(props: {

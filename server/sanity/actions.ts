@@ -7,6 +7,7 @@ import {
   Doc,
   Post,
   HeroSection,
+  Career,
 } from "@/lib/types";
 
 /**
@@ -160,6 +161,43 @@ export const getTeamMembers = async (): Promise<ApiResult<Team[]>> => {
     };
   } catch (error) {
     console.error("Get team members error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+};
+
+/**
+ * Retrieves all career opportunities from the public API
+ * @returns Promise containing array of career opportunities or error
+ */
+export const getCareers = async (): Promise<ApiResult<Career[]>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/careers`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: "Failed to retrieve careers. Please try again.",
+      };
+    }
+
+    const body: Career[] = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get careers error:", error);
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",

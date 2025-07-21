@@ -1,7 +1,26 @@
 "use server";
 
 import { Order, UpdateUser, User, UserSignUp, ApiResult } from "@/lib/types";
-import Cookies from "js-cookie";
+import { cookies } from "next/headers";
+
+export const getAuthTokenServer = async (): Promise<string | null> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("bvrstrco_auth");
+  return token?.value || null;
+};
+
+export const getUserIdFromTokenServer = async (): Promise<string | null> => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("bvrstrco_auth");
+    if (!token?.value) return null;
+    const payload = JSON.parse(atob(token.value.split(".")[1]));
+    return payload.userid || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
 
 /**
  * Signs in a user using email and password
@@ -132,7 +151,8 @@ export const signInWithPhone = async (
 export const signOut = async (): Promise<ApiResult<{}>> => {
   try {
     // Remove the auth token cookie
-    Cookies.remove("bvrstrco_auth");
+    const cookieStore = await cookies();
+    cookieStore.delete("bvrstrco_auth");
     return { success: true, data: {} };
   } catch (error) {
     console.error("Sign out error:", error);
@@ -211,7 +231,7 @@ export const signUp = async (
  * @returns Promise containing user details or error
  */
 export const getUserDetails = async (
-  authToken: string | undefined,
+  authToken: string,
   userId: string,
 ): Promise<ApiResult<User>> => {
   try {
@@ -228,7 +248,7 @@ export const getUserDetails = async (
 
     if (!response.ok) {
       const errorText = await response.text();
-
+      console.error("Get user details error:", errorText);
       if (errorText.includes("Unauthorized")) {
         return {
           success: false,

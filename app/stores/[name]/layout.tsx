@@ -20,12 +20,12 @@ export default async function CollectionLayout({
   }
 
   return (
-    <div className="mx-auto min-h-screen max-w-screen-2xl">
+    <div className="min-h-screen max-w-screen">
       <div className="flex flex-col">
         <div className="relative w-full">
-          <AspectRatio ratio={12 / 3} className="w-full">
+          <AspectRatio ratio={3 / 1} className="w-full">
             <div
-              className="relative h-44 w-full overflow-hidden p-4 bg-cover bg-center"
+              className="relative h-full w-full overflow-hidden p-4 bg-cover bg-center"
               style={{
                 backgroundImage: store.data.banner
                   ? `url(${store.data.banner})`
@@ -36,16 +36,16 @@ export default async function CollectionLayout({
               <div className="absolute bottom-6 left-6 flex items-end gap-4">
                 <Avatar className="size-24 border-2 border-muted-foreground shadow-lg">
                   <AvatarImage src={store.data.logo} alt={store.data.name} />
-                  <AvatarFallback className="bg-white text-gray-900 text-xl font-bold">
+                  <AvatarFallback className="bg-background text-gray-900 text-xl font-bold">
                     {store.data.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </div>
               <div className="absolute bottom-6 right-6 max-w-md text-right">
-                <h1 className="text-3xl font-bold text-white drop-shadow-lg mb-2">
+                <h1 className="text-4xl font-bold text-background drop-shadow-lg mb-2">
                   {store.data.name}
                 </h1>
-                <p className="text-white/90 drop-shadow-md">
+                <p className="text-accent text-sm drop-shadow-md">
                   {store.data.description}
                 </p>
                 {store.data.shopLink && (

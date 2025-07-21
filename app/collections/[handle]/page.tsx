@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ProductProvider } from "@/components/product/product-provider";
 import { ProductImageHover } from "@/components/product/product-image-hover";
 import { getCollection, getCollectionProducts } from "@/lib/shopify";
+import { generateCollectionMetadata } from "@/lib/metadata";
 import { Suspense } from "react";
 import Link from "next/link";
 
@@ -16,23 +17,20 @@ export async function generateMetadata(props: {
   if (!collection) return notFound();
 
   const { url, width, height, altText: alt } = products[0]?.images[0] || {};
-
-  return {
-    title: collection.seo.title,
-    description: collection.seo.description || collection.description,
-    openGraph: url
-      ? {
-          images: [
-            {
-              url,
-              width,
-              height,
-              alt,
-            },
-          ],
-        }
-      : null,
-  };
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  
+  return generateCollectionMetadata({
+    title: collection.seo.title || collection.title,
+    description: collection.seo.description || collection.description || `Shop the ${collection.title} collection at BVR STR CO. Curated streetwear and fashion pieces.`,
+    image: url ? {
+      url,
+      width,
+      height,
+      alt: alt || `${collection.title} Collection`,
+    } : undefined,
+    productCount: products.length,
+    canonical: `${siteUrl}/collections/${params.handle}`,
+  });
 }
 
 export default async function Page(props: {

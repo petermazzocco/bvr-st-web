@@ -32,7 +32,7 @@ export function PartnerProductDescription({
 
   const { data: user } = useQuery({
     queryKey: ["user", userId],
-    queryFn: () => getUserDetails(authToken || undefined, userId!),
+    queryFn: () => getUserDetails(authToken!, userId!),
     enabled: !!userId && !!authToken && isAuthenticated,
   });
 

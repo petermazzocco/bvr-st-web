@@ -166,10 +166,10 @@ export function ContactCard() {
       <CardFooter className="text-center text-xs text-muted-foreground ">
         Or email us directly at{" "}
         <a
-          href="mailto:info@example.com"
+          href="mailto:info@bvrstrco.com"
           className="text-primary underline hover:text-primary/80 ml-1"
         >
-          info@example.com
+          info@bvrstrco.com
         </a>
       </CardFooter>
     </Card>

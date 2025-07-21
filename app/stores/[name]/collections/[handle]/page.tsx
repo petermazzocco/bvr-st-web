@@ -5,6 +5,7 @@ import { ProductImageHover } from "@/components/product/product-image-hover";
 import { Suspense } from "react";
 import Link from "next/link";
 import { getPartnerStoreCollectionByHandle } from "@/server/vendor/actions";
+import { generateCollectionMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string; handle: string }>;
@@ -19,11 +20,19 @@ export async function generateMetadata(props: {
     return notFound();
 
   const collection = collectionResponse.data.collectionByHandle;
-
-  return {
-    title: collection.title,
-    description: collection.description,
-  };
+  const productCount = collection.products.edges.length;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  
+  return generateCollectionMetadata({
+    title: `${collection.title} - ${params.name}`,
+    description: collection.description || `Shop the ${collection.title} collection from ${params.name}. Curated products from our partner store.`,
+    image: collection.image ? {
+      url: collection.image.url,
+      alt: collection.image.altText || `${collection.title} Collection`,
+    } : undefined,
+    productCount,
+    canonical: `${siteUrl}/stores/${params.name}/collections/${params.handle}`,
+  });
 }
 
 export default async function Page(props: {
@@ -62,6 +71,7 @@ export default async function Page(props: {
             <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
           }
         >
+          <h1 className="text-xl font-bold mb-4">Available Products</h1>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
             {products.map((product) => (
               <div key={product.id} className="group">

@@ -1,9 +1,6 @@
-import { PortableText, type SanityDocument } from "next-sanity";
-import { client } from "@/lib/sanity/client";
+import { PortableText } from "next-sanity";
 import { notFound } from "next/navigation";
-
-const DOC_QUERY = `*[_type == "legal" && slug.current == $slug][0]`;
-const options = { next: { revalidate: 30 } };
+import { getLegalDocBySlug } from "@/server/sanity/actions";
 
 export default async function Page({
   params,
@@ -11,29 +8,24 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const resolvedParams = await params;
-  const doc = await client.fetch<SanityDocument>(
-    DOC_QUERY,
-    resolvedParams,
-    options,
-  );
+  const doc = await getLegalDocBySlug(resolvedParams.slug);
 
-  // Handle case where document is not found
-  if (!doc) {
+  if (!doc.data) {
     notFound();
   }
 
   return (
     <main className="container mx-auto min-h-screen max-w-3xl p-8 flex flex-col gap-4">
-      <h1 className="text-4xl font-bold mb-8">{doc.title}</h1>
+      <h1 className="text-4xl font-bold mb-8">{doc.data.title}</h1>
       <div className="prose max-w-none">
-        {doc.updatedAt && (
+        {doc.data.updatedAt && (
           <p className="text-muted-foreground text-sm mb-6">
-            Updated: {new Date(doc.updatedAt).toLocaleDateString()}
+            Updated: {new Date(doc.data.updatedAt).toLocaleDateString()}
           </p>
         )}
-        {doc.body && Array.isArray(doc.body) && (
+        {doc.data.body && Array.isArray(doc.data.body) && (
           <PortableText
-            value={doc.body}
+            value={doc.data.body}
             components={{
               block: {
                 h1: ({ children }) => (
@@ -83,7 +75,7 @@ export default async function Page({
             }}
           />
         )}
-        {!doc.body && (
+        {!doc.data.body && (
           <p className="text-muted-foreground">No content available.</p>
         )}
       </div>

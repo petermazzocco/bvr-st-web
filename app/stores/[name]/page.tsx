@@ -6,6 +6,7 @@ import {
   getPartneredStore,
   getPartnerStoreCollections,
 } from "@/server/vendor/actions";
+import { generateStoreMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string }>;
@@ -15,10 +16,17 @@ export async function generateMetadata(props: {
 
   if (!store.success || !store.data) return notFound();
 
-  return {
-    title: store.data?.name,
-    description: store.data?.description,
-  };
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  
+  return generateStoreMetadata({
+    storeName: store.data.name,
+    description: store.data.description || `Discover unique products from ${store.data.name}`,
+    image: store.data.logo || store.data.banner ? {
+      url: store.data.logo || store.data.banner,
+      alt: `${store.data.name} - Partner Store Logo`,
+    } : undefined,
+    canonical: `${siteUrl}/stores/${params.name}`,
+  });
 }
 
 export default async function Page(props: {
@@ -63,7 +71,7 @@ export default async function Page(props: {
           __html: JSON.stringify(productJsonLd),
         }}
       />
-      <div className="mx-auto my-10 min-h-screen max-w-screen-2xl px-4">
+      <div className="mx-auto my-10 ">
         <div className="flex flex-col gap-24">
           <div className="h-full w-full basis-full lg:basis-4/6">
             <Suspense
@@ -71,7 +79,9 @@ export default async function Page(props: {
                 <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
               }
             >
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
+              {" "}
+              <h1 className="text-xl font-bold mb-4">Available Collections</h1>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-10 lg:grid-cols-4">
                 {collectionsData.length > 0 ? (
                   collectionsData.map((collection) => (
                     <div key={collection.id} className="group">
@@ -85,7 +95,7 @@ export default async function Page(props: {
                             <img
                               src={collection.image.url}
                               alt={collection.image.altText || collection.title}
-                              className="h-full w-full object-cover object-center group-hover:opacity-75"
+                              className="h-full w-full object-contain p-4 object-center group-hover:opacity-75 bg-muted "
                             />
                           </Link>
                         )}

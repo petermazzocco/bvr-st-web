@@ -5,6 +5,7 @@ import { ProductProvider } from "@/components/product/product-provider";
 import { PartnerProductDescription } from "@/components/product/partner-product-description";
 import { Gallery } from "@/components/product/product-gallery";
 import { getPartnerStoreProductByHandle } from "@/server/vendor/actions";
+import { generateProductMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string; handle: string; product: string }>;
@@ -18,11 +19,24 @@ export async function generateMetadata(props: {
   if (!productResult.success || !productResult.data) return notFound();
 
   const product = productResult.data.productByHandle;
-
-  return {
-    title: product.title,
-    description: product.description,
-  };
+  const featuredImage = product.featuredImage;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  
+  return generateProductMetadata({
+    title: `${product.title} - ${params.name}`,
+    description: product.description || `Shop ${product.title} from ${params.name} at BVR STR CO. Premium products from our trusted partner stores.`,
+    image: featuredImage ? {
+      url: featuredImage.url,
+      alt: featuredImage.altText || product.title,
+    } : undefined,
+    price: {
+      amount: product.priceRange.minVariantPrice.amount,
+      currency: product.priceRange.minVariantPrice.currencyCode,
+    },
+    availability: product.variants.edges.some(edge => edge.node.availableForSale),
+    sku: product.id,
+    canonical: `${siteUrl}/stores/${params.name}/collections/${params.handle}/products/${params.product}`,
+  });
 }
 
 export default async function Page(props: {

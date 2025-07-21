@@ -733,3 +733,11 @@ export interface CheckoutResponse {
     userErrors: any[];
   };
 }
+
+export interface Career {
+  _id: string;
+  title: string;
+  description: string;
+  pay: string;
+  createdAt: string;
+}

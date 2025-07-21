@@ -6,11 +6,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { updateUserAfterCheckout } from "@/server/stripe/actions";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import {
-  useAuth,
-  useAuthToken,
-  useUserId,
-} from "@/components/auth/auth-context";
+import { useAuthToken, useUserId } from "@/components/auth/auth-context";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -19,7 +15,6 @@ import { Separator } from "@/components/ui/separator";
 export default function MembershipPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
   const userId = useUserId();
   const authToken = useAuthToken();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);

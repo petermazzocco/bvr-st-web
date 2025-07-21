@@ -1,4 +1,3 @@
-"use client";
 import { ForgotPasswordCard } from "@/components/cards/forgot-password-card";
 import Image from "next/image";
 

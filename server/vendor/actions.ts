@@ -413,3 +413,76 @@ export const createCheckoutRequest = async (
     };
   }
 };
+
+/**
+ * Creates a new vendor request
+ * @param storeName - The name of the store to fetch products for
+ * @param storefrontAccessToken - The storefront access token for the store
+ * @param name - The name of the vendor
+ * @param logo - The logo of the vendor
+ * @param banner - The banner of the vendor
+ * @param description - The description of the vendor
+ * @param shopLink - The shop link of the vendor
+ * @param webhookSecret - The webhook secret of the vendor
+ * @returns Promise of data which includes message for request being sent
+ */
+export const newVendorRequest = async (
+  storeName: string,
+  storefrontAccessToken: string,
+  name: string,
+  logo: string,
+  banner: string,
+  description: string,
+  shopLink: string | undefined,
+  webhookSecret: string,
+): Promise<ApiResult<{ message: string }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/merch/new`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          storeName,
+          storefrontAccessToken,
+          name,
+          logo,
+          banner,
+          description,
+          shopLink,
+          webhookSecret,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Internal server error")) {
+        return {
+          success: false,
+          error: "An error occurred. Please try again.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "An error occurred. Please try again.",
+      };
+    }
+
+    const body: { message: string } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get product error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+};

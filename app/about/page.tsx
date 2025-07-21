@@ -1,3 +1,17 @@
+import type { Metadata } from "next";
+import { generateMetadata as createMetadata } from "@/lib/metadata";
+
+export const metadata: Metadata = createMetadata({
+  title: "About Us",
+  description:
+    "Learn about BVR STR CO's mission to curate the finest streetwear and independent fashion brands. Discover our story, values, and commitment to quality streetwear culture.",
+  canonical: "https://bvrstrco.com/about",
+  image: {
+    url: "https://bvrstrco.com/about.jpg",
+    alt: "BVR STR CO About Us",
+  },
+});
+
 export default function Page() {
   return (
     <div className="min-h-screen">
