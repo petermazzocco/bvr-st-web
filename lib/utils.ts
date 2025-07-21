@@ -38,7 +38,7 @@ export const removeAuthToken = () => {
  * Decodes the JWT payload and looks for the 'userid' claim
  * @returns The user ID from the token, or null if token is invalid/missing
  */
-export const getUserIdFromToken = (): string | null => {
+export const getUserIdFromToken = (): number | null => {
   try {
     const token = Cookies.get("bvrstrco_auth");
     if (!token) return null;

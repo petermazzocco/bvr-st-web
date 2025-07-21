@@ -25,7 +25,7 @@ export default function MembershipPage() {
       sessionId,
       authToken,
     }: {
-      userId: string;
+      userId: number;
       sessionId: string;
       authToken: string;
     }) => {
@@ -62,7 +62,7 @@ export default function MembershipPage() {
 
     if (stripeCheckout === "success" && sessionId && authToken) {
       // Use userId from params or fallback to userId from state
-      const finalUserId = userIdFromParams || userId;
+      const finalUserId = Number(userIdFromParams) || userId;
       if (finalUserId) {
         updateUser({ userId: finalUserId, sessionId, authToken });
       }

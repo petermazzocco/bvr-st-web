@@ -8,17 +8,17 @@ import {
 
 /**
  * Gets all payment methods for a customer
- * @param userID - The unique identifier for the user
+ * @param userId - The unique identifier for the user
  * @param authToken - Bearer token for API authentication
  * @returns Promise containing array of payment methods
  * @throws Error if the API request fails
  */
 export const getCustomerPaymentMethods = async (
-  userID: string,
+  userId: number,
   authToken: string,
 ): Promise<PaymentMethodInfo[]> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/stripe/payment-methods`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/payment-methods`,
     {
       method: "GET",
       headers: {
@@ -39,17 +39,17 @@ export const getCustomerPaymentMethods = async (
 
 /**
  * Gets comprehensive payment information for a user's subscription
- * @param userID - The unique identifier for the user
+ * @param userId - The unique identifier for the user
  * @param authToken - Bearer token for API authentication
  * @returns Promise containing subscription payment information
  * @throws Error if the API request fails
  */
 export const getSubscriptionPaymentInfo = async (
-  userID: string,
+  userId: number,
   authToken: string,
 ): Promise<SubscriptionPaymentInfo> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/stripe/subscription-payment-info`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/subscription-payment-info`,
     {
       method: "GET",
       headers: {
@@ -70,19 +70,19 @@ export const getSubscriptionPaymentInfo = async (
 
 /**
  * Gets payment history for a customer
- * @param userID - The unique identifier for the user
+ * @param userId - The unique identifier for the user
  * @param authToken - Bearer token for API authentication
  * @param limit - Optional limit for number of payments to return
  * @returns Promise containing array of payment history
  * @throws Error if the API request fails
  */
 export const getPaymentHistory = async (
-  userID: string,
+  userId: number,
   authToken: string,
   limit?: string,
 ): Promise<LastPaymentInfo[]> => {
   const url = new URL(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/stripe/payment-history`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/payment-history`,
   );
 
   if (limit) {
@@ -109,7 +109,7 @@ export const getPaymentHistory = async (
 // Export existing server actions for completeness
 /**
  * Creates a Stripe checkout session for a user
- * @param userID - The unique identifier for the user
+ * @param userId - The unique identifier for the user
  * @param successURL - URL to redirect to after successful payment
  * @param cancelURL - URL to redirect to if payment is cancelled
  * @param authToken - Bearer token for API authentication
@@ -117,13 +117,13 @@ export const getPaymentHistory = async (
  * @throws Error if the API request fails
  */
 export const createCheckoutSession = async (
-  userID: string,
+  userId: number,
   successURL: string,
   cancelURL: string,
   authToken: string,
 ) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/stripe/checkout-session`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/checkout-session`,
     {
       method: "POST",
       headers: {
@@ -131,7 +131,7 @@ export const createCheckoutSession = async (
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
-        userID,
+        userId,
         successURL,
         cancelURL,
       }),
@@ -147,19 +147,19 @@ export const createCheckoutSession = async (
 
 /**
  * Creates a Stripe billing portal session for customer management
- * @param userID - The unique identifier for the user
+ * @param userId - The unique identifier for the user
  * @param returnURL - URL to redirect to when exiting the billing portal
  * @param authToken - Bearer token for API authentication
  * @returns Promise containing the billing portal URL
  * @throws Error if the API request fails
  */
 export const createBillingPortalSession = async (
-  userID: string,
+  userId: number,
   returnURL: string,
   authToken: string,
 ) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/stripe/billing-portal-session`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/billing-portal-session`,
     {
       method: "POST",
       headers: {
@@ -167,7 +167,7 @@ export const createBillingPortalSession = async (
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
-        userID,
+        userId,
         returnURL,
       }),
     },
@@ -182,19 +182,19 @@ export const createBillingPortalSession = async (
 
 /**
  * Updates user after successful checkout
- * @param userID - The unique identifier for the user
+ * @param userId - The unique identifier for the user
  * @param sessionID - The Stripe session ID
  * @param authToken - Bearer token for API authentication
  * @returns Promise containing success message and points added
  * @throws Error if the API request fails
  */
 export const updateUserAfterCheckout = async (
-  userID: string,
+  userId: number,
   sessionID: string,
   authToken: string,
 ) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/stripe/${sessionID}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/${sessionID}`,
     {
       method: "POST",
       headers: {

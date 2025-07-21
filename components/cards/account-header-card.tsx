@@ -3,9 +3,19 @@ import { LogOut, Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { User } from "@/lib/types";
 import { signOut } from "@/server/user/actions";
+import { OTPCard } from "@/components/cards/otp-card";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export function AccountHeaderCard({ user }: { user: User | undefined }) {
   const router = useRouter();
@@ -44,6 +54,20 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4 ">
+            {!user?.emailVerified && (
+              <Dialog>
+                <DialogTrigger>
+                  <Button variant={"default"}>Verify Email</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle></DialogTitle>
+                    <DialogDescription></DialogDescription>
+                  </DialogHeader>
+                  <OTPCard />
+                </DialogContent>
+              </Dialog>
+            )}
             {!user?.isMember && (
               <Link href="/membership">
                 <Button variant="default">Become A Member</Button>

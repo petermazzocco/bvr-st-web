@@ -13,16 +13,16 @@ import {
 /**
  * Retrieves all active notifications for the authenticated user
  * @param authToken - Bearer token for authentication
- * @param userID - User ID for the authenticated user
+ * @param userId - User ID for the authenticated user
  * @returns Promise containing array of active, non-expired notifications or error
  */
 export const getUserNotifications = async (
   authToken: string | null,
-  userID: string,
+  userId: number,
 ): Promise<ApiResult<Notification[]>> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/sanity/notification`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/sanity/notification`,
       {
         method: "GET",
         headers: {
@@ -80,11 +80,11 @@ export const getUserNotifications = async (
 export const markNotificationAsRead = async (
   authToken: string | null,
   notificationId: string,
-  userID: string,
+  userId: number,
 ): Promise<ApiResult<Notification>> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/sanity/notification/${notificationId}/read`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/sanity/notification/${notificationId}/read`,
       {
         method: "POST",
         headers: {

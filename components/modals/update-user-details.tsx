@@ -47,7 +47,7 @@ type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
 
 interface UpdateUserModalProps {
   user: UpdateUser | undefined;
-  userId: string | undefined;
+  userId: number | undefined;
   trigger?: React.ReactNode;
 }
 
@@ -112,10 +112,6 @@ export function UpdateUserModal({
       });
     }
   }, [user, form]);
-
-  if (!user || !userId) {
-    return null;
-  }
 
   const onSubmit = (data: UpdateUserFormValues) => {
     if (!authToken) {

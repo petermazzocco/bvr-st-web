@@ -9,7 +9,7 @@ export const getAuthTokenServer = async (): Promise<string | null> => {
   return token?.value || null;
 };
 
-export const getUserIdFromTokenServer = async (): Promise<string | null> => {
+export const getUserIdFromTokenServer = async (): Promise<number | null> => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("bvrstrco_auth");
@@ -232,7 +232,7 @@ export const signUp = async (
  */
 export const getUserDetails = async (
   authToken: string,
-  userId: string,
+  userId: number,
 ): Promise<ApiResult<User>> => {
   try {
     const response = await fetch(
@@ -292,7 +292,7 @@ export const getUserDetails = async (
  */
 export const updateUserDetails = async (
   authToken: string | undefined,
-  userId: string,
+  userId: number,
   user: UpdateUser,
 ): Promise<ApiResult<User>> => {
   try {
@@ -355,7 +355,7 @@ export const updateUserDetails = async (
  */
 export const getUserOrders = async (
   authToken: string | undefined,
-  userId: string,
+  userId: number,
   page = 1,
   limit = 10,
 ): Promise<ApiResult<Order[]>> => {
@@ -416,7 +416,7 @@ export const getUserOrders = async (
  */
 export const getUserPoints = async (
   authToken: string | undefined,
-  userId: string,
+  userId: number,
 ): Promise<ApiResult<number>> => {
   try {
     const response = await fetch(
@@ -477,7 +477,7 @@ export const getUserPoints = async (
  */
 export const changeUserPassword = async (
   authToken: string | undefined,
-  userId: string,
+  userId: number,
   currentPassword: string,
   newPassword: string,
 ): Promise<ApiResult<{ message: string; success: boolean }>> => {
@@ -674,7 +674,7 @@ export const confirmForgotPassword = async (
  */
 export const deleteUser = async (
   authToken: string | undefined,
-  userId: string,
+  userId: number,
 ): Promise<ApiResult<{ message: string; success: boolean }>> => {
   try {
     const response = await fetch(
@@ -801,7 +801,7 @@ export const contactSubmission = async (
  * @returns Message containing confirmation of verification or error
  */
 export const verifyUserEmail = async (
-  userId: string,
+  userId: number,
   code: string,
   authToken: string,
 ): Promise<ApiResult<{ message: string; success: boolean }>> => {
@@ -869,7 +869,7 @@ export const verifyUserEmail = async (
  * @returns Message containing confirmation of verification or error
  */
 export const resendOTPCode = async (
-  userId: string,
+  userId: number,
   authToken: string,
 ): Promise<ApiResult<{ message: string; success: boolean }>> => {
   try {

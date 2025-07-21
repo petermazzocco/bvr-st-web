@@ -100,7 +100,7 @@ export function NotificationDropdown({
 
   const isNotificationRead = (
     notification: Notification,
-    userId: string | null,
+    userId: number | null,
   ): boolean => {
     if (!userId) return false;
     return (

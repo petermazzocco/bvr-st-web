@@ -29,7 +29,11 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { verifyUserEmail } from "@/server/user/actions";
-import { useAuth, useAuthToken, useUserId } from "@/components/auth/auth-context";
+import {
+  useAuth,
+  useAuthToken,
+  useUserId,
+} from "@/components/auth/auth-context";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { getAuthToken, getUserIdFromToken } from "@/lib/utils";
 
@@ -71,7 +75,7 @@ export function OTPCard() {
 
   const tokenFromStorage = getAuthToken();
   const userIdFromStorage = getUserIdFromToken();
-  
+
   if (!tokenFromStorage || !userIdFromStorage) {
     router.push("/signin");
     return null;

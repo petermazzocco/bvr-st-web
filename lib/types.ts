@@ -3,7 +3,7 @@
  */
 export interface User {
   /** Unique identifier for the user */
-  id: string;
+  id: number;
   /** User's firstName name */
   firstName: string;
   /** User's lastName name */
@@ -303,7 +303,7 @@ export interface Block {
  */
 export interface ReadRecord {
   /** ID of the user who read the notification */
-  userId: string;
+  userId: number;
   /** ISO timestamp when the notification was read */
   readAt: string;
 }

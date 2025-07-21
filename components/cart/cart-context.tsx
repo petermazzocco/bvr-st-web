@@ -36,7 +36,7 @@ type CartAction =
 type CartContextType = {
   cart: Cart | undefined;
   isGuestCheckout: boolean;
-  userId: string | null;
+  userId: number | null;
   isAuthenticated: boolean;
   updateCartItem: (merchandiseId: string, updateType: UpdateType) => void;
   addCartItem: (variant: ProductVariant, product: Product) => void;
@@ -227,7 +227,11 @@ export function CartProvider({
 
   // Clear cart when user logs out
   useEffect(() => {
-    if (auth?.isAuthenticated === false && optimisticCart && optimisticCart.lines.length > 0) {
+    if (
+      auth?.isAuthenticated === false &&
+      optimisticCart &&
+      optimisticCart.lines.length > 0
+    ) {
       // Only clear if we had items and user explicitly logged out
       // This prevents clearing on initial load
       startTransition(() => {
@@ -236,16 +240,22 @@ export function CartProvider({
     }
   }, [auth?.isAuthenticated, optimisticCart, updateOptimisticCart]);
 
-  const updateCartItem = useCallback((merchandiseId: string, updateType: UpdateType) => {
-    updateOptimisticCart({
-      type: "UPDATE_ITEM",
-      payload: { merchandiseId, updateType },
-    });
-  }, [updateOptimisticCart]);
+  const updateCartItem = useCallback(
+    (merchandiseId: string, updateType: UpdateType) => {
+      updateOptimisticCart({
+        type: "UPDATE_ITEM",
+        payload: { merchandiseId, updateType },
+      });
+    },
+    [updateOptimisticCart],
+  );
 
-  const addCartItem = useCallback((variant: ProductVariant, product: Product) => {
-    updateOptimisticCart({ type: "ADD_ITEM", payload: { variant, product } });
-  }, [updateOptimisticCart]);
+  const addCartItem = useCallback(
+    (variant: ProductVariant, product: Product) => {
+      updateOptimisticCart({ type: "ADD_ITEM", payload: { variant, product } });
+    },
+    [updateOptimisticCart],
+  );
 
   const clearCart = useCallback(() => {
     updateOptimisticCart({ type: "CLEAR_CART" });
@@ -261,7 +271,15 @@ export function CartProvider({
       addCartItem,
       clearCart,
     }),
-    [optimisticCart, isGuestCheckout, userId, isAuthenticated, updateCartItem, addCartItem, clearCart],
+    [
+      optimisticCart,
+      isGuestCheckout,
+      userId,
+      isAuthenticated,
+      updateCartItem,
+      addCartItem,
+      clearCart,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

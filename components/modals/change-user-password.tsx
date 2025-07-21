@@ -48,7 +48,7 @@ const changePasswordSchema = z
 type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
 
 interface ChangePasswordModalProps {
-  userId: string;
+  userId: number;
   trigger?: React.ReactNode;
 }
 
