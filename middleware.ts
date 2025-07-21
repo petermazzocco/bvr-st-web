@@ -33,6 +33,28 @@ function isValidJWT(token: string): boolean {
   }
 }
 
+// Helper function to validate user exists via API
+async function validateUserExists(userId: string, authToken: string): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    
+    // If response is not ok, user doesn't exist or auth is invalid
+    return response.ok;
+  } catch (error) {
+    console.error("Error validating user:", error);
+    return false;
+  }
+}
+
 // Helper function to clear invalid auth cookie and redirect to signin
 function clearCookieAndRedirect(request: NextRequest, redirectPath: string = "/signin"): NextResponse {
   const signinUrl = new URL(redirectPath, request.url);
@@ -72,7 +94,21 @@ export async function middleware(request: NextRequest) {
       return clearCookieAndRedirect(request);
     }
 
-    // User has valid auth token, allow access to protected routes
+    // Get user ID from token and validate user exists
+    const userId = getUserIdFromToken(authToken);
+    if (!userId) {
+      // No valid user ID in token, clear cookie and redirect
+      return clearCookieAndRedirect(request);
+    }
+
+    // Validate that the user actually exists
+    const userExists = await validateUserExists(userId, authToken);
+    if (!userExists) {
+      // User doesn't exist or token is invalid, clear cookie and redirect
+      return clearCookieAndRedirect(request);
+    }
+
+    // User has valid auth token and exists, allow access to protected routes
     return NextResponse.next();
   }
 
