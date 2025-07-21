@@ -65,11 +65,6 @@ export default async function Page(props: {
       />
       <div className="mx-auto my-10 min-h-screen max-w-screen-2xl px-4">
         <div className="flex flex-col gap-24">
-          <div className="flex max-w-3xl flex-col gap-4">
-            <h1 className="text-4xl font-bold uppercase">{store.data?.name}</h1>
-            <p className="text-base">{store.data?.description}</p>
-          </div>
-
           <div className="h-full w-full basis-full lg:basis-4/6">
             <Suspense
               fallback={

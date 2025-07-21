@@ -472,9 +472,11 @@ export interface Vendor {
   _id: string;
   storeName: string;
   name: string;
-  image: string;
+  logo: string;
+  banner: string;
   active: boolean;
   description: string;
+  shopLink: string;
 }
 
 export interface CreateCheckoutRequest {
