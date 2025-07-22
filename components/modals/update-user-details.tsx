@@ -140,9 +140,8 @@ export function UpdateUserModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="outline" size="sm">
-            <Edit className="w-4 h-4 mr-2" />
-            Edit Details
+          <Button variant="outline" size="sm" className="w-fit">
+            <Edit className="w-4 h-4" />
           </Button>
         )}
       </DialogTrigger>

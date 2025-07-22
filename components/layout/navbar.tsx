@@ -46,9 +46,9 @@ export function Navbar({ collections }: { collections: Collection[] }) {
   });
 
   return (
-    <nav className="grid grid-cols-3 items-center p-2 border-b w-full bg-background">
+    <nav className=" grid grid-cols-3 items-center p-2 w-full bg-background text-foreground ">
       <div className="flex items-center">
-        <NavSideSheet collections={collections} />
+        <NavSideSheet collections={collections} className="text-foreground" />
       </div>
       <div className="flex items-center justify-center">
         <Link href="/">

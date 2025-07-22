@@ -1,6 +1,5 @@
 import { User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UpdateUserModal } from "@/components/modals/update-user-details";
 import { User as TUser } from "@/lib/types";
 
 export function AccountInfoCard({ user }: { user: TUser | undefined }) {
@@ -39,16 +38,18 @@ export function AccountInfoCard({ user }: { user: TUser | undefined }) {
                 {user?.phone || "Not provided"}
               </p>
             </div>
-            <div>
+            <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">
-                Available Points
+                Shipping Address
               </label>
-              <p className="mt-1 text-foreground">
-                {user?.points || "Not provided"}
+              <p className="text-foreground">{user?.address?.street}</p>
+              <p className="text-foreground">{user?.address?.apt}</p>
+              <p className="text-foreground">
+                {user?.address?.city}, {user?.address?.state}{" "}
+                {user?.address?.zip}
               </p>
             </div>
           </div>
-          <UpdateUserModal user={user} userId={user?.id} />
         </CardContent>
       </Card>
     </div>

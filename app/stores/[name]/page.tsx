@@ -17,14 +17,19 @@ export async function generateMetadata(props: {
   if (!store.success || !store.data) return notFound();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
-  
+
   return generateStoreMetadata({
     storeName: store.data.name,
-    description: store.data.description || `Discover unique products from ${store.data.name}`,
-    image: store.data.logo || store.data.banner ? {
-      url: store.data.logo || store.data.banner,
-      alt: `${store.data.name} - Partner Store Logo`,
-    } : undefined,
+    description:
+      store.data.description ||
+      `Discover unique products from ${store.data.name}`,
+    image:
+      store.data.logo || store.data.banner
+        ? {
+            url: store.data.logo || store.data.banner,
+            alt: `${store.data.name} - Partner Store Logo`,
+          }
+        : undefined,
     canonical: `${siteUrl}/stores/${params.name}`,
   });
 }
@@ -95,7 +100,7 @@ export default async function Page(props: {
                             <img
                               src={collection.image.url}
                               alt={collection.image.altText || collection.title}
-                              className="h-full w-full object-contain p-4 object-center group-hover:opacity-75 bg-muted "
+                              className="h-full w-full object-contain p-4 object-center  bg-muted "
                             />
                           </Link>
                         )}
@@ -104,18 +109,15 @@ export default async function Page(props: {
                         <Link
                           href={`/stores/${params.name}/collections/${collection.handle}`}
                         >
-                          <h3 className="text-sm font-medium text-gray-900 hover:text-gray-700">
+                          <h3 className="text-sm font-medium text-foreground">
                             {collection.title}
                           </h3>
                         </Link>
                         {collection.description && (
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-muted-foreground">
                             {collection.description}
                           </p>
                         )}
-                        <p className="text-sm font-semibold text-gray-900">
-                          {collection.productCount} products
-                        </p>
                       </div>
                     </div>
                   ))

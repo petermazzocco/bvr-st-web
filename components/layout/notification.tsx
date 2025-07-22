@@ -115,10 +115,10 @@ export function NotificationDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="relative rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <button className="relative rounded-full p-2">
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
-            <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white" />
+            <span className="absolute top-0 right-0 block h-2 w-2 rounded-full" />
           )}
         </button>
       </DropdownMenuTrigger>
@@ -126,7 +126,7 @@ export function NotificationDropdown({
         <DropdownMenuLabel>
           Notifications
           {unreadCount > 0 && (
-            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-destructive">
               {unreadCount}
             </span>
           )}
@@ -177,14 +177,14 @@ export function NotificationDropdown({
                     {new Date(notification.createdAt).toLocaleDateString()}
                   </p>
                   {notification.minimumPoints > 0 && (
-                    <p className="text-xs text-blue-600">
+                    <p className="text-xs">
                       {notification.minimumPoints}+ points required
                     </p>
                   )}
                 </div>
                 {!isNotificationRead(notification, userId) && (
                   <div className="flex-shrink-0">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    <div className="w-2 h-2 rounded-full"></div>
                   </div>
                 )}
               </div>

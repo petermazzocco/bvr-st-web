@@ -767,3 +767,11 @@ export interface AdditionalDetails {
   features?: DetailItem[];
   additionalSpecs?: KeyValuePair[];
 }
+
+export interface AdditionalCollectionDetails {
+  _id: string;
+  collectionHandle: string;
+  banner: AdditionalImage;
+  addtionalImages: AdditionalImage[];
+  additionalSpecs?: KeyValuePair[];
+}

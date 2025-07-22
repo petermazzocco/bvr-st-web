@@ -30,7 +30,7 @@ export function ProductImageHover({ images }: ProductImageHoverProps) {
       alt={images[currentImageIndex]?.altText || images[0].altText}
       width={400}
       height={200}
-      className="h-full w-full object-cover transition-transform duration-300"
+      className="h-full w-full object-cover transition-transform duration-300 bg-accent"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     />

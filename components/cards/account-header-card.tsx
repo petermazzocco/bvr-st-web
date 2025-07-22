@@ -16,6 +16,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { UpdateUserModal } from "../modals/update-user-details";
 
 export function AccountHeaderCard({ user }: { user: User | undefined }) {
   const router = useRouter();
@@ -36,7 +37,7 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
   return (
     <div className=" border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4">
+        <div className="flex flex-row w-full justify-between items-center gap-4">
           <div className="flex items-center space-x-4">
             <div>
               <h1 className="text-2xl font-bold text-foreground">
@@ -73,10 +74,17 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
                 <Button variant="default">Become A Member</Button>
               </Link>
             )}
-            <Button variant="outline" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
+            <div className="flex justify-between items-center gap-2">
+              <UpdateUserModal user={user} userId={user?.id} />
+              <Button
+                variant="outline"
+                onClick={handleSignOut}
+                className="w-fit"
+                size={"sm"}
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

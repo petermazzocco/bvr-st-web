@@ -15,8 +15,10 @@ import { Separator } from "@/components/ui/separator";
 import { Collection } from "@/lib/shopify/types";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPartneredStores } from "@/server/vendor/actions";
+import clsx from "clsx";
 
 const helpLinks = [
+  { name: "Become A Partner", href: "/stores/docs" },
   { name: "Returns & Exchanges", href: "/legal/return-policy" },
   { name: "Terms of Service", href: "legal/terms" },
   { name: "Privacy Policy", href: "legal/privacy" },
@@ -25,8 +27,10 @@ const helpLinks = [
 
 export function NavSideSheet({
   collections,
+  className,
 }: {
   collections: Collection[] | undefined;
+  className?: string;
 }) {
   const [parentOpen, setParentOpen] = useState(false);
 
@@ -50,17 +54,17 @@ export function NavSideSheet({
   return (
     <Sheet open={parentOpen} onOpenChange={setParentOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" className={clsx(className)}>
           <Menu className="h-4 w-4" />
           <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="w-full sm:w-2/3 md:w-1/3 p-0 bg-background border-r shadow-lg"
+        className="w-full sm:w-2/4 md:w-1/4 p-0 bg-background border-r shadow-lg"
       >
         <div className="flex h-full w-full flex-col">
-          <SheetHeader className="p-6 pb-4">
+          <SheetHeader className="p-4 pb-4">
             <SheetTitle className="text-left text-xl font-bold">
               Collections
             </SheetTitle>
@@ -77,7 +81,7 @@ export function NavSideSheet({
                     href={collection.path}
                     id="collection-chosen-button"
                     data-umami-event="Collection chose button"
-                    className={`flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
+                    className={`flex items-center justify-between rounded-lg px-2 py-2 text-xs font-medium hover:underline ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
                     onClick={handleDirectLinkClick}
                   >
                     <div className="flex items-center gap-3">
@@ -90,7 +94,7 @@ export function NavSideSheet({
 
             {/* Partner Stores Section */}
             <div className="pt-4">
-              <h3 className="mb-3 p-4 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+              <h3 className="mb-2 p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Partner Stores
               </h3>
               <nav className="space-y-1">
@@ -109,7 +113,7 @@ export function NavSideSheet({
                     <a
                       key={vendor._id}
                       href={`/stores/${vendor.storeName}`}
-                      className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted text-foreground hover:text-foreground"
+                      className="flex items-center justify-between rounded-lg px-2 py-2 text-xs font-medium hover:underline"
                       onClick={handleDirectLinkClick}
                     >
                       <div className="flex items-center gap-3">
@@ -122,20 +126,15 @@ export function NavSideSheet({
             </div>
           </div>
 
-          <Separator className="mx-auto" />
-
           {/* Helper Links Section */}
           <div className="p-4 pt-4">
-            <h3 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-              Support
-            </h3>
             <nav className="space-y-1">
               {helpLinks.map((link) => {
                 return (
                   <a
                     key={link.name}
                     href={link.href}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                    className="flex items-center justify-between rounded-lg py-2 text-xs font-medium hover:underline"
                     onClick={() => setParentOpen(false)}
                   >
                     <span>{link.name}</span>

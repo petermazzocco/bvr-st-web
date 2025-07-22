@@ -9,6 +9,7 @@ import {
   HeroSection,
   Career,
   AdditionalDetails,
+  AdditionalCollectionDetails,
 } from "@/lib/types";
 
 /**
@@ -378,18 +379,17 @@ export const getBlogPostBySlug = async (
   }
 };
 
-// Server action (add this to your server actions file)
 /**
- * Retrieves additional merchandise details by handle
+ * Retrieves additional product details by handle
  * @param handle - Merchandise handle identifier
  * @returns Promise containing additional details or error
  */
-export const getAdditionalDetailsByHandle = async (
+export const getAdditionalProductDetailsByHandle = async (
   handle: string,
 ): Promise<ApiResult<AdditionalDetails>> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/merch/${handle}/details`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/merch/products/${handle}/details`,
       {
         method: "GET",
         headers: {
@@ -422,6 +422,62 @@ export const getAdditionalDetailsByHandle = async (
     }
 
     const body: AdditionalDetails = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get additional details error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+};
+
+/**
+ * Retrieves additional collection details by handle
+ * @param handle - Merchandise handle identifier
+ * @returns Promise containing additional details or error
+ */
+export const getAdditionalCollectionDetailsByHandle = async (
+  handle: string,
+): Promise<ApiResult<AdditionalCollectionDetails>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/merch/collections/${handle}/details`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("not found")) {
+        return {
+          success: false,
+          error: "Additional details not found for this merchandise.",
+        };
+      }
+
+      if (errorText.includes("Invalid handle")) {
+        return {
+          success: false,
+          error: "Invalid merchandise handle provided.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to retrieve additional details. Please try again.",
+      };
+    }
+
+    const body: AdditionalCollectionDetails = await response.json();
     return {
       success: true,
       data: body,

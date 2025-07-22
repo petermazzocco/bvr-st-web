@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { getPartnerStoreCollectionByHandle } from "@/server/vendor/actions";
 import { generateCollectionMetadata } from "@/lib/metadata";
+import { Price } from "@/components/product/product-price";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string; handle: string }>;
@@ -22,14 +23,18 @@ export async function generateMetadata(props: {
   const collection = collectionResponse.data.collectionByHandle;
   const productCount = collection.products.edges.length;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
-  
+
   return generateCollectionMetadata({
     title: `${collection.title} - ${params.name}`,
-    description: collection.description || `Shop the ${collection.title} collection from ${params.name}. Curated products from our partner store.`,
-    image: collection.image ? {
-      url: collection.image.url,
-      alt: collection.image.altText || `${collection.title} Collection`,
-    } : undefined,
+    description:
+      collection.description ||
+      `Shop the ${collection.title} collection from ${params.name}. Curated products from our partner store.`,
+    image: collection.image
+      ? {
+          url: collection.image.url,
+          alt: collection.image.altText || `${collection.title} Collection`,
+        }
+      : undefined,
     productCount,
     canonical: `${siteUrl}/stores/${params.name}/collections/${params.handle}`,
   });
@@ -71,7 +76,10 @@ export default async function Page(props: {
             <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
           }
         >
-          <h1 className="text-xl font-bold mb-4">Available Products</h1>
+          <h1 className="text-md font-bold mb-2">{collection.title}</h1>
+          <p className="text-sm text-foreground mb-4">
+            {collection.description}
+          </p>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
             {products.map((product) => (
               <div key={product.id} className="group">
@@ -100,13 +108,18 @@ export default async function Page(props: {
                   <Link
                     href={`/stores/${params.name}/collections/${params.handle}/products/${product.handle}`}
                   >
-                    <h3 className="text-sm font-medium text-gray-900 hover:text-gray-700">
+                    <h3 className="text-xs font-medium text-foreground">
                       {product.title}
                     </h3>
                   </Link>
-                  <p className="text-sm font-semibold text-gray-900">
-                    ${product.priceRange.minVariantPrice.amount}
-                  </p>
+
+                  <Price
+                    className="text-xs text-muted-foreground font-semibold"
+                    amount={product.priceRange.minVariantPrice.amount}
+                    currencyCode={
+                      product.priceRange.minVariantPrice.currencyCode
+                    }
+                  />
                 </div>
               </div>
             ))}

@@ -79,7 +79,7 @@ export function CartSheet() {
       >
         <SheetContent
           side="right"
-          className="flex h-full w-full flex-col border-l bg-background p-6 text-foreground backdrop-blur-xl  md:w-[490px]"
+          className="flex h-full w-full flex-col border-l bg-background p-2 text-foreground backdrop-blur-2xl  md:w-[490px]"
         >
           <SheetHeader className="flex flex-row items-center justify-between">
             <SheetTitle>Shopping Cart</SheetTitle>
@@ -87,8 +87,7 @@ export function CartSheet() {
 
           {!cart || cart.lines.length === 0 ? (
             <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
-              <ShoppingCart className="h-16" />
-              <p className="mt-2 text-center text-lg">Your cart is empty.</p>
+              <p className="mt-2 text-center text-sm">Your cart is empty.</p>
               <Link href="/products">
                 <Button className="mt-4">Shop Products Now</Button>
               </Link>

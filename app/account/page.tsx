@@ -5,7 +5,6 @@ import {
   getUserIdFromTokenServer,
 } from "@/server/user/actions";
 import { getCustomerPaymentMethods } from "@/server/stripe/actions";
-import { AccountAddressCard } from "@/components/cards/account-address-card";
 import { AccountHeaderCard } from "@/components/cards/account-header-card";
 import { AccountOrdersCard } from "@/components/cards/account-orders-card";
 import { AccountInfoCard } from "@/components/cards/account-info-card";
@@ -38,7 +37,6 @@ export default async function ProfilePage() {
           </div>
 
           <div className="flex flex-col md:flex-row gap-2">
-            <AccountAddressCard user={user?.data} />
             <AccountPaymentMethodsCard paymentMethods={paymentMethods} />
           </div>
         </div>

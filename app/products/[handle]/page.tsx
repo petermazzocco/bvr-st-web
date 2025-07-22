@@ -8,7 +8,7 @@ import { ProductDescription } from "@/components/product/product-description";
 import { Image } from "@/lib/shopify/types";
 import { Suspense } from "react";
 import { Gallery } from "@/components/product/product-gallery";
-import { getAdditionalDetailsByHandle } from "@/server/sanity/actions";
+import { getAdditionalProductDetailsByHandle } from "@/server/sanity/actions";
 import { AdditionalDetails } from "@/lib/types";
 
 export async function generateMetadata(props: {
@@ -221,7 +221,7 @@ export default async function Page(props: {
   if (!product) return notFound();
 
   // Fetch additional details
-  const additionalDetailsResult = await getAdditionalDetailsByHandle(
+  const additionalDetailsResult = await getAdditionalProductDetailsByHandle(
     params.handle,
   );
 
