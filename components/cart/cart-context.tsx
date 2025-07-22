@@ -16,7 +16,6 @@ import React, {
   useOptimistic,
   startTransition,
 } from "react";
-import { useOptionalAuth } from "@/components/auth/auth-context";
 
 type UpdateType = "plus" | "minus" | "delete";
 
@@ -35,9 +34,6 @@ type CartAction =
 
 type CartContextType = {
   cart: Cart | undefined;
-  isGuestCheckout: boolean;
-  userId: number | null;
-  isAuthenticated: boolean;
   updateCartItem: (merchandiseId: string, updateType: UpdateType) => void;
   addCartItem: (variant: ProductVariant, product: Product) => void;
   clearCart: () => void;
@@ -219,26 +215,6 @@ export function CartProvider({
     cartReducer,
   );
 
-  // Optional auth integration - works without auth context
-  const auth = useOptionalAuth();
-  const userId = auth?.userId || null;
-  const isAuthenticated = auth?.isAuthenticated || false;
-  const isGuestCheckout = !isAuthenticated;
-
-  // Clear cart when user logs out
-  useEffect(() => {
-    if (
-      auth?.isAuthenticated === false &&
-      optimisticCart &&
-      optimisticCart.lines.length > 0
-    ) {
-      // Only clear if we had items and user explicitly logged out
-      // This prevents clearing on initial load
-      startTransition(() => {
-        updateOptimisticCart({ type: "CLEAR_CART" });
-      });
-    }
-  }, [auth?.isAuthenticated, optimisticCart, updateOptimisticCart]);
 
   const updateCartItem = useCallback(
     (merchandiseId: string, updateType: UpdateType) => {
@@ -264,18 +240,12 @@ export function CartProvider({
   const value = useMemo(
     () => ({
       cart: optimisticCart,
-      isGuestCheckout,
-      userId,
-      isAuthenticated,
       updateCartItem,
       addCartItem,
       clearCart,
     }),
     [
       optimisticCart,
-      isGuestCheckout,
-      userId,
-      isAuthenticated,
       updateCartItem,
       addCartItem,
       clearCart,

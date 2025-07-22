@@ -24,7 +24,7 @@ import { OpenCartButton } from "@/components/cart/open-cart-button";
 import { ShoppingCart } from "lucide-react";
 
 export function CartSheet() {
-  const { cart, updateCartItem, isGuestCheckout, isAuthenticated } = useCart();
+  const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
 
@@ -204,7 +204,7 @@ export function CartSheet() {
                 </div>
               </div>
               <form action={redirectToCheckout}>
-                <CheckoutButton isGuestCheckout={isGuestCheckout} />
+                <CheckoutButton />
               </form>
             </div>
           )}
@@ -214,7 +214,7 @@ export function CartSheet() {
   );
 }
 
-function CheckoutButton({ isGuestCheckout }: { isGuestCheckout: boolean }) {
+function CheckoutButton() {
   const { pending } = useFormStatus();
 
   return (
@@ -224,11 +224,7 @@ function CheckoutButton({ isGuestCheckout }: { isGuestCheckout: boolean }) {
       type="submit"
       disabled={pending}
     >
-      {pending
-        ? "Processing..."
-        : isGuestCheckout
-          ? "Guest Checkout"
-          : "Proceed to Checkout"}
+      {pending ? "Processing..." : "Proceed to Checkout"}
     </Button>
   );
 }

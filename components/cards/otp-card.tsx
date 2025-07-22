@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,7 @@ import {
   InputOTPSlot,
   InputOTPSeparator,
 } from "@/components/ui/input-otp";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -28,7 +30,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { verifyUserEmail } from "@/server/user/actions";
+import { verifyUserEmail, resendOTPCode } from "@/server/user/actions";
 import {
   useAuth,
   useAuthToken,
@@ -36,6 +38,7 @@ import {
 } from "@/components/auth/auth-context";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { getAuthToken, getUserIdFromToken } from "@/lib/utils";
+import { User } from "@/lib/types";
 
 const otpSchema = z.object({
   code: z
@@ -46,11 +49,13 @@ const otpSchema = z.object({
 
 type OTPFormValues = z.infer<typeof otpSchema>;
 
-export function OTPCard() {
+export function OTPCard({ user }: { user: User | undefined }) {
   const router = useRouter();
   const { isAuthenticated, refreshAuth } = useAuth();
   const token = useAuthToken();
   const userId = useUserId();
+  const [otpSent, setOtpSent] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   const form = useForm<OTPFormValues>({
     resolver: zodResolver(otpSchema),
@@ -73,6 +78,20 @@ export function OTPCard() {
     },
   );
 
+  const { mutate: resendOTP, isPending: isResendingOTPCode } = useApiMutation(
+    () => resendOTPCode(userId!, token!),
+    {
+      onSuccess: () => {
+        toast.success("OTP code sent to your email");
+        setOtpSent(true);
+      },
+      onError: (error) => {
+        toast.error(error);
+        console.error("Error resending OTP code:", error);
+      },
+    },
+  );
+
   const tokenFromStorage = getAuthToken();
   const userIdFromStorage = getUserIdFromToken();
 
@@ -85,12 +104,59 @@ export function OTPCard() {
     verifyOTP(data);
   };
 
+  if (!otpSent) {
+    return (
+      <Card className="mx-auto min-w-md max-w-lg shadow-none border-none">
+        <CardHeader>
+          <CardTitle className="text-2xl">Verify Email</CardTitle>
+          <CardDescription>
+            Click the button below to send a verification code to your email
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {user ? (
+            <Button
+              onClick={() => resendOTP(user.email)}
+              className="w-full"
+              disabled={isResendingOTPCode}
+            >
+              {isResendingOTPCode ? "Sending..." : "Send Verification Code"}
+            </Button>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={userEmail}
+                onChange={(e) => setUserEmail(e.target.value)}
+                className="w-full"
+              />
+              <Button
+                onClick={() => resendOTP(userEmail)}
+                className="w-full"
+                disabled={isResendingOTPCode}
+              >
+                {isResendingOTPCode ? "Sending..." : "Send Verification Code"}
+              </Button>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter>
+          <p className="text-xs text-muted-foreground">
+            We'll send an 8-digit verification code to your registered email
+            address. Please check your inbox and spam folder.
+          </p>
+        </CardFooter>
+      </Card>
+    );
+  }
+
   return (
     <Card className="mx-auto min-w-md max-w-lg shadow-none border-none">
       <CardHeader>
         <CardTitle className="text-2xl">Verify Email</CardTitle>
         <CardDescription>
-          Enter the 6-digit code sent to your email
+          Enter the 8-digit code sent to your email
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -164,6 +230,35 @@ export function OTPCard() {
             </Button>
           </form>
         </Form>
+
+        <div className="mt-4">
+          {user ? (
+            <Button
+              onClick={() => resendOTP(user.email)}
+              className="w-full"
+              disabled={isResendingOTPCode}
+            >
+              {isResendingOTPCode ? "Sending..." : "Send Verification Code"}
+            </Button>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={userEmail}
+                onChange={(e) => setUserEmail(e.target.value)}
+                className="w-full"
+              />
+              <Button
+                onClick={() => resendOTP(userEmail)}
+                className="w-full"
+                disabled={isResendingOTPCode}
+              >
+                {isResendingOTPCode ? "Sending..." : "Send Verification Code"}
+              </Button>
+            </div>
+          )}
+        </div>
       </CardContent>
       <CardFooter>
         <p className="text-xs text-muted-foreground">

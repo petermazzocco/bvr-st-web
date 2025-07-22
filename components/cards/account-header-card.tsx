@@ -65,7 +65,7 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
                     <DialogTitle></DialogTitle>
                     <DialogDescription></DialogDescription>
                   </DialogHeader>
-                  <OTPCard />
+                  <OTPCard user={user} />
                 </DialogContent>
               </Dialog>
             )}

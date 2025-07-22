@@ -8,10 +8,11 @@ import { useCart } from "@/components/cart/cart-context";
 import Link from "next/link";
 import { isAuctionProduct } from "@/lib/utils";
 import { AuctionProductDescription } from "./auction-product-description";
+import { useAuth } from "../auth/auth-context";
 
 export function ProductDescription({ product }: { product: Product }) {
   // Call hooks at the top level, before any conditional logic
-  const { isAuthenticated } = useCart();
+  const { isAuthenticated } = useAuth();
 
   // Check if this is an auction product
   if (isAuctionProduct(product)) {
@@ -74,9 +75,9 @@ export function ProductDescription({ product }: { product: Product }) {
               Earn {earnedPoints} points +
               <Link
                 className="text-blue-600 cursor-pointer hover:underline ml-1"
-                href="/membership"
+                href="/signup"
               >
-                Become a member today and earn 100 points instantly.
+                Sign up for free and earn 100 points instantly.
               </Link>
             </>
           )}
