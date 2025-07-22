@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
@@ -62,16 +62,22 @@ type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignUpCard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { refreshAuth } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const name = searchParams.get("name") || "";
+  const email = searchParams.get("email") || "";
+  
+  const [firstName, lastName] = name.split(" ", 2);
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      firstName: firstName || "",
+      lastName: lastName || "",
+      email: email,
       phone: "",
       address: "",
       apt: "",
@@ -85,6 +91,17 @@ export function SignUpCard() {
       optInRewards: true,
     },
   });
+
+  useEffect(() => {
+    if (name) {
+      const [first, ...rest] = name.split(" ");
+      form.setValue("firstName", first || "");
+      form.setValue("lastName", rest.join(" ") || "");
+    }
+    if (email) {
+      form.setValue("email", email);
+    }
+  }, [name, email, form]);
 
   const { mutate: signUpMutation, isPending: isSigningUp } = useApiMutation(
     (data: UserSignUp) => signUp(data),

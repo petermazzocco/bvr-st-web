@@ -18,7 +18,7 @@ import { getAllPartneredStores } from "@/server/vendor/actions";
 import clsx from "clsx";
 
 const helpLinks = [
-  { name: "Become A Partner", href: "/stores/docs" },
+  { name: "Become A Partner", href: "/contact" },
   { name: "Returns & Exchanges", href: "/legal/return-policy" },
   { name: "Terms of Service", href: "legal/terms" },
   { name: "Privacy Policy", href: "legal/privacy" },

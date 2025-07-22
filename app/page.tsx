@@ -1,40 +1,31 @@
-"use client";
-
-import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { generateMetadata as createMetadata } from "@/lib/metadata";
 
 export default function Page() {
+
   return (
-    <div className="h-screen bg-[url('/hero.jpg')] bg-cover bg-center bg-no-repeat flex items-center justify-center">
-      <div className="relative z-10 text-center text-background">
-        <h1 className="text-8xl font-bold tracking-wider">BVR STR CO</h1>
-        <p>
-          <strong>
-            The culture shift Beaver fans have been waiting for.
-          </strong>
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button
-            variant="default"
-            size="lg"
-            asChild
-            className="flex items-center text-xl justify-center gap-2"
-          >
-            <Link href="/about">READ MORE</Link>
-          </Button>
-          <Button
-            variant="secondary"
-            size="lg"
-            asChild
-            className="flex items-center text-xl justify-center gap-2"
-          >
-            <Link href="/signup">SIGN UP</Link>
-          </Button>
+    <>
+      <div className="h-screen bg-[url('/hero.jpg')] bg-cover bg-center bg-no-repeat flex items-end justify-center pb-[25vh]">
+        <div className="z-10 gap-2 flex flex-col text-center text-background">
+          <h2 className="text-lg font-base tracking-wider">Introducing</h2>
+          <h1 className="text-3xl font-bold tracking-wider">BVR STR CO</h1>
+          <p className="text-md font-semibold">A New Culture.</p>
+          <Link href={"/about"}>
+            <Button variant={"outline"}>Learn More</Button>
+          </Link>
         </div>
       </div>
-    </div>
+      <div className="h-screen bg-[url('/auth.jpg')] bg-cover bg-center bg-no-repeat flex items-end justify-center pb-[25vh]">
+        <div className="z-10 gap-2 flex flex-col text-center text-background">
+          <h2 className="text-lg font-base tracking-wider">Now Live</h2>
+          <h1 className="text-3xl font-bold tracking-wider">
+            The Beaver State Tour
+          </h1>
+          <Link href={"/collections/shirts"}>
+            <Button variant={"outline"}>Shop Now</Button>
+          </Link>
+        </div>
+      </div>
+    </>
   );
 }

@@ -8,13 +8,10 @@ export function Footer() {
           {/* Left side - Logo, Name, Copyright */}
           <div className="flex flex-col space-y-4 lg:max-w-sm">
             <div className="flex items-center space-x-2">
-              <span className="text-lg font-bold">BVRSTR</span>
+              <span className="text-lg font-bold">BVR STR CO</span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              A fresh, new collective.
-            </p>
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} BVR STR Collective LLC. All rights
+              © {new Date().getFullYear()} Beaver Stree Co LLC. All rights
               reserved.
             </p>
           </div>
@@ -74,10 +71,10 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/careers"
+                    href="/faq"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Careers
+                    FAQ
                   </Link>
                 </li>
                 <li>

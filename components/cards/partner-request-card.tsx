@@ -143,7 +143,9 @@ export function PartnerRequestCard() {
                 <FormItem>
                   <FormLabel>Storefront Access Token</FormLabel>
                   <Link
-                    href={"/stores/docs#storefront-access-token"}
+                    href={
+                      "https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/getting-started"
+                    }
                     className="text-xs text-blue-500 underline"
                     target="_blank"
                   >
@@ -231,7 +233,9 @@ export function PartnerRequestCard() {
                 <FormItem>
                   <FormLabel>Webhook Secret</FormLabel>
                   <Link
-                    href={"/stores/docs#webhook-secret"}
+                    href={
+                      "https://help.shopify.com/en/manual/fulfillment/setup/notifications/webhooks"
+                    }
                     className="text-xs text-blue-500 underline"
                     target="_blank"
                   >

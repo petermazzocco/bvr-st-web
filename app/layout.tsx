@@ -11,6 +11,7 @@ import { CartProvider } from "@/components/cart/cart-context";
 import { AuthProvider } from "@/components/auth/auth-context";
 import { getCollections } from "@/lib/shopify";
 import Script from "next/script";
+import { SignupModalProvider } from "@/components/modals/signup-modal-provider";
 
 export const metadata: Metadata = {
   title: "BVR STR CO - Premium Streetwear & Independent Fashion",
@@ -59,16 +60,33 @@ const ibm = IBM_Plex_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
+const getUserIdFromServerToken = (token: string): number | null => {
+  try {
+    const payload = JSON.parse(Buffer.from(token.split(".")[1], 'base64').toString());
+    return payload.userid || null;
+  } catch (error) {
+    return null;
+  }
+};
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cartId = (await cookies()).get("cartId")?.value;
+  const cookieStore = await cookies();
+  const cartId = cookieStore.get("cartId")?.value;
+  const authToken = cookieStore.get("bvrstrco_auth")?.value;
+  const signupModalSeen = cookieStore.get("signup-modal-seen")?.value;
 
   const cart = getCart(cartId);
-
   const collections = await getCollections();
+  
+  // Server-side auth check
+  const isAuthenticated = !!(authToken && getUserIdFromServerToken(authToken));
+  
+  // Determine if modal should show
+  const shouldShowSignupModal = !isAuthenticated && signupModalSeen !== "true";
   return (
     <html lang="en">
       <body className={`${ibm.variable} antialiased min-h-screen`}>
@@ -81,6 +99,7 @@ export default async function RootLayout({
                 <Toaster closeButton />
               </main>
               <Footer />
+              <SignupModalProvider shouldShow={shouldShowSignupModal} />
             </CartProvider>
           </AuthProvider>
         </ReactQueryProvider>
