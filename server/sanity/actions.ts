@@ -8,6 +8,7 @@ import {
   Post,
   HeroSection,
   Career,
+  AdditionalDetails,
 } from "@/lib/types";
 
 /**
@@ -370,6 +371,63 @@ export const getBlogPostBySlug = async (
     };
   } catch (error) {
     console.error("Get blog post error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+};
+
+// Server action (add this to your server actions file)
+/**
+ * Retrieves additional merchandise details by handle
+ * @param handle - Merchandise handle identifier
+ * @returns Promise containing additional details or error
+ */
+export const getAdditionalDetailsByHandle = async (
+  handle: string,
+): Promise<ApiResult<AdditionalDetails>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/merch/${handle}/details`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("not found")) {
+        return {
+          success: false,
+          error: "Additional details not found for this merchandise.",
+        };
+      }
+
+      if (errorText.includes("Invalid handle")) {
+        return {
+          success: false,
+          error: "Invalid merchandise handle provided.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to retrieve additional details. Please try again.",
+      };
+    }
+
+    const body: AdditionalDetails = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get additional details error:", error);
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",

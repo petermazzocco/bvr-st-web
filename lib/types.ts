@@ -741,3 +741,29 @@ export interface Career {
   pay: string;
   createdAt: string;
 }
+
+// TypeScript types for Additional Details (add these to your lib/types.ts file)
+export interface AdditionalImage {
+  url: string;
+  hotspot?: boolean;
+}
+
+export interface DetailItem {
+  title: string;
+  description: string;
+}
+
+export interface KeyValuePair {
+  key: string;
+  value: string;
+}
+
+export interface AdditionalDetails {
+  _id: string;
+  merchHandle: string;
+  additionalImages?: AdditionalImage[];
+  fabricDetails?: DetailItem[];
+  careInstructions?: DetailItem[];
+  features?: DetailItem[];
+  additionalSpecs?: KeyValuePair[];
+}
