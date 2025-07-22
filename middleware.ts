@@ -22,9 +22,9 @@ function getUserIdFromToken(token: string): string | null {
 function isValidJWT(token: string): boolean {
   try {
     if (!token) return false;
-    const parts = token.split('.');
+    const parts = token.split(".");
     if (parts.length !== 3) return false;
-    
+
     // Try to decode the payload
     JSON.parse(atob(parts[1]));
     return true;
@@ -34,7 +34,10 @@ function isValidJWT(token: string): boolean {
 }
 
 // Helper function to validate user exists via API
-async function validateUserExists(userId: string, authToken: string): Promise<boolean> {
+async function validateUserExists(
+  userId: string,
+  authToken: string,
+): Promise<boolean> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
@@ -44,9 +47,9 @@ async function validateUserExists(userId: string, authToken: string): Promise<bo
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
-      }
+      },
     );
-    
+
     // If response is not ok, user doesn't exist or auth is invalid
     return response.ok;
   } catch (error) {
@@ -56,16 +59,19 @@ async function validateUserExists(userId: string, authToken: string): Promise<bo
 }
 
 // Helper function to clear invalid auth cookie and redirect to signin
-function clearCookieAndRedirect(request: NextRequest, redirectPath: string = "/signin"): NextResponse {
+function clearCookieAndRedirect(
+  request: NextRequest,
+  redirectPath: string = "/signin",
+): NextResponse {
   const signinUrl = new URL(redirectPath, request.url);
   const response = NextResponse.redirect(signinUrl);
-  
+
   // Clear the invalid cookie
-  response.cookies.set('bvrstrco_auth', '', {
+  response.cookies.set("bvrstrco_auth", "", {
     expires: new Date(0),
-    path: '/',
+    path: "/",
   });
-  
+
   return response;
 }
 
@@ -126,58 +132,12 @@ export async function middleware(request: NextRequest) {
     } else {
       // Invalid token, clear it and let them continue to signin/signup
       const response = NextResponse.next();
-      response.cookies.set('bvrstrco_auth', '', {
+      response.cookies.set("bvrstrco_auth", "", {
         expires: new Date(0),
-        path: '/',
+        path: "/",
       });
       return response;
     }
-  }
-
-  // Handle /signup/verify-email route
-  if (pathname === "/signup/verify-email") {
-    const otpToken = searchParams.get("token");
-
-    if (!otpToken) {
-      // No OTP token parameter, redirect to signin
-      const signinUrl = new URL("/signin", request.url);
-      return NextResponse.redirect(signinUrl);
-    }
-
-    if (otpToken === "expired") {
-      // OTP token is explicitly marked as expired
-      const signinUrl = new URL("/signin", request.url);
-      return NextResponse.redirect(signinUrl);
-    }
-
-    // Check OTP expiration via API call (30 minute expiration)
-    if (authToken) {
-      const userID = getUserIdFromToken(authToken);
-      if (userID) {
-        try {
-          const expired = await isOTPExpired(otpToken, userID);
-          if (expired) {
-            const signinUrl = new URL("/signin", request.url);
-            return NextResponse.redirect(signinUrl);
-          }
-        } catch (error) {
-          // If verification fails, redirect to signin for security
-          const signinUrl = new URL("/signin", request.url);
-          return NextResponse.redirect(signinUrl);
-        }
-      } else {
-        // No valid user ID in token, redirect to signin
-        const signinUrl = new URL("/signin", request.url);
-        return NextResponse.redirect(signinUrl);
-      }
-    } else {
-      // No auth token available, but OTP verification might not require it
-      // You may want to handle this case differently based on your flow
-      console.warn("No auth token available for OTP verification");
-    }
-
-    // OTP token exists and is valid, allow access
-    return NextResponse.next();
   }
 
   // For all other routes, continue normally

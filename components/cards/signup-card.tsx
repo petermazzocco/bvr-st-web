@@ -66,10 +66,10 @@ export function SignUpCard() {
   const { refreshAuth } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const name = searchParams.get("name") || "";
   const email = searchParams.get("email") || "";
-  
+
   const [firstName, lastName] = name.split(" ", 2);
 
   const form = useForm<SignUpFormValues>({
@@ -110,7 +110,7 @@ export function SignUpCard() {
         if (response?.token) {
           setAuthToken(response.token);
         }
-        router.push(`/signup/verify-email?token=${response?.token}`);
+        router.push(`/account`);
         toast.success(
           "Account created successfully! Please check your email for a verification code.",
         );
