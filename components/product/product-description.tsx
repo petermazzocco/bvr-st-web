@@ -63,21 +63,18 @@ export function ProductDescription({ product }: { product: Product }) {
 
       <AddToCartButton product={product} />
 
-      <div className="mt-4 flex flex-col gap-1 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
+      <div className="mt-4 flex uppercase flex-col gap-1 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
         <p>
           {isAuthenticated ? (
-            <>
-              Earn {earnedPoints} points
-              <span className="text-green-600 ml-1">(Member Bonus!)</span>
-            </>
+            <>Earn {Math.round(earnedPoints)} points</>
           ) : (
             <>
-              Earn {earnedPoints} points +
+              Earn {Math.round(earnedPoints)} points +
               <Link
                 className="text-blue-600 cursor-pointer hover:underline ml-1"
                 href="/signup"
               >
-                Sign up for free and earn 100 points instantly.
+                100 free points for signing up.
               </Link>
             </>
           )}
@@ -87,6 +84,20 @@ export function ProductDescription({ product }: { product: Product }) {
         >
           {stockStatus}
         </p>
+      </div>
+      <div className="pt-2 flex flex-row items-center justify-between">
+        <Link
+          className="text-xs text-muted-foreground cursor-pointer underline   "
+          href="/legal/return-policy"
+        >
+          Return Policy
+        </Link>
+        <Link
+          className="text-xs text-muted-foreground cursor-pointer underline   "
+          href="/contact"
+        >
+          Request Size
+        </Link>
       </div>
     </>
   );

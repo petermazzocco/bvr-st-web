@@ -1,4 +1,5 @@
 import { AdditionalDetails } from "@/lib/types";
+import { Separator } from "../ui/separator";
 
 export function AdditionalDetailsSection({
   details,
@@ -6,31 +7,30 @@ export function AdditionalDetailsSection({
   details: AdditionalDetails;
 }) {
   return (
-    <div className="mx-auto max-w-screen-2xl px-4 py-12">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div className="mx-auto max-w-screen">
+      <Separator />
+      <div className="flex flex-col-reverse md:flex-row justify-between  items-center">
         {/* Left Column - Text Content */}
-        <div className="space-y-8">
+        <div className="flex flex-col justify-center items-center w-full md:w-1/2">
           {details.fabricDetails && details.fabricDetails.length > 0 && (
-            <div>
-              <div className="space-y-4">
-                {details.fabricDetails.map((item, index) => (
-                  <div key={index}>
-                    <p className="text-foreground font-semibold">
-                      {item.title}
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
+            <div className="space-y-10">
+              {details.fabricDetails.map((item, index) => (
+                <div key={index}>
+                  <p className="text-foreground text-lg font-semibold">
+                    {item.title}
+                  </p>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
             </div>
           )}
         </div>
 
         {/* Right Column - Hero Image */}
         {details.additionalImages && details.additionalImages.length > 0 && (
-          <div className="lg:sticky lg:top-8">
+          <div className="lg:sticky lg:top-8 w-full md:w-1/2">
             <div className="aspect-[4/5] overflow-hidden bg-background">
               <img
                 src={details.additionalImages[0].url}
@@ -41,24 +41,21 @@ export function AdditionalDetailsSection({
           </div>
         )}
       </div>
-
+      <Separator />
       {/* Additional Images Gallery */}
       {details.additionalImages && details.additionalImages.length > 1 && (
-        <div className="mt-16">
+        <div className="">
           <div className="overflow-x-auto">
-            <div
-              className="flex gap-6 pb-4"
-              style={{ minWidth: "fit-content" }}
-            >
+            <div className="flex" style={{ minWidth: "fit-content" }}>
               {details.additionalImages.slice(1).map((image, index) => (
                 <div
                   key={index + 1}
-                  className="flex-shrink-0 w-full h-full overflow-hidden"
+                  className="flex-shrink-0 w-2/4 h-full overflow-hidden"
                 >
                   <img
                     src={image.url}
                     alt={`Additional view ${index + 2}`}
-                    className="h-full w-full object-cover object-center"
+                    className="h-full w-full object-cover"
                   />
                 </div>
               ))}

@@ -21,7 +21,7 @@ export function Gallery({
 
   return (
     <form>
-      <div className="relative aspect-square h-full max-h-full w-full overflow-hidden ">
+      <div className="relative aspect-square h-screen w-full overflow-hidden ">
         {images.length > 1 && (
           <>
             <button
@@ -30,7 +30,7 @@ export function Gallery({
                 updateURL(newState);
               }}
               aria-label="Previous product image"
-              className="absolute left-2 top-1/2 z-10 -translate-y-1/2 text-foreground"
+              className="absolute left-2 top-1/2 z-10   px-2 py-1 rounded text-sm -translate-y-1/2 text-foreground"
             >
               <ChevronLeftIcon className="h-5 w-5" />
             </button>
@@ -40,7 +40,7 @@ export function Gallery({
                 updateURL(newState);
               }}
               aria-label="Next product image"
-              className="absolute right-2 top-1/2 z-10 -translate-y-1/2 text-foreground"
+              className="absolute right-2 top-1/2 z-10 text-foreground px-2 py-1  text-sm rounded -translate-y-1/2 "
             >
               <ChevronRightIcon className="h-5 w-5" />
             </button>
@@ -53,6 +53,11 @@ export function Gallery({
             alt={images[imageIndex]?.altText as string}
             src={images[imageIndex]?.src as string}
           />
+        )}
+        {images.length > 1 && (
+          <div className="absolute bottom-4 left-4 z-10  text-foreground px-2 py-1 rounded text-sm">
+            {imageIndex + 1} / {images.length}
+          </div>
         )}
       </div>
     </form>

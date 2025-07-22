@@ -84,8 +84,8 @@ export default async function Page(props: {
             __html: JSON.stringify(productJsonLd),
           }}
         />
-        <div className="min-h-screen flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 h-full">
+        <div className="min-h-screen flex flex-col md:flex-row  ">
+          <div className="w-full md:w-1/2">
             <Suspense
               fallback={<div className="w-full h-full overflow-hidden" />}
             >
@@ -110,12 +110,6 @@ export default async function Page(props: {
         {additionalDetailsResult.success && additionalDetailsResult.data && (
           <AdditionalDetailsSection details={additionalDetailsResult.data} />
         )}
-
-        {/* <div className="mx-auto max-w-screen-2xl px-4">
-          <Suspense fallback={null}>
-            <RelatedProducts id={product.id} />
-          </Suspense>
-        </div> */}
       </ProductProvider>
     </>
   );
