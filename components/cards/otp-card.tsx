@@ -143,8 +143,8 @@ export function OTPCard({ user }: { user: User | undefined }) {
         </CardContent>
         <CardFooter>
           <p className="text-xs text-muted-foreground">
-            We'll send an 8-digit verification code to your registered email
-            address. Please check your inbox and spam folder.
+            We&apos;ll send an 8-digit verification code to your registered
+            email address. Please check your inbox and spam folder.
           </p>
         </CardFooter>
       </Card>
