@@ -1,4 +1,4 @@
-# SEO and Social Sharing Setup Guide
+# SEO and Social Sharing Setup Guide for BVR STR
 
 ## Overview
 This guide details the metadata improvements made to enhance SEO and social sharing across the BVR STR CO website.
@@ -45,7 +45,7 @@ You need to create and add these images to the `public` folder:
    - Should feature the BVR STR CO brand
    - Include tagline: "Premium Streetwear & Independent Fashion"
 
-2. **Hero Image**: `/public/hero.jpg` 
+2. **Hero Image**: `/public/hero.jpg`
    - Homepage hero background
    - Should be high-quality and represent the brand aesthetic
 
