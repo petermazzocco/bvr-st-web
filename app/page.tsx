@@ -11,7 +11,13 @@ export default function Page() {
           <h1 className="text-3xl font-bold tracking-wider">BVR STR CO</h1>
           <p className="text-md font-semibold">A New Culture.</p>
           <Link href={"/about"}>
-            <Button variant={"outline"}>Learn More</Button>
+            <Button 
+              variant={"outline"}
+              id="homepage-learn-more-button"
+              data-umami-event="Homepage learn more clicked"
+            >
+              Learn More
+            </Button>
           </Link>
         </div>
       </div>
@@ -22,7 +28,13 @@ export default function Page() {
             The Beaver State Tour
           </h1>
           <Link href={"/collections/shirts"}>
-            <Button variant={"outline"}>Shop Now</Button>
+            <Button 
+              variant={"outline"}
+              id="homepage-shop-now-button"
+              data-umami-event="Homepage shop now clicked"
+            >
+              Shop Now
+            </Button>
           </Link>
         </div>
       </div>

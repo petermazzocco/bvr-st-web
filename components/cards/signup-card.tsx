@@ -464,6 +464,8 @@ export function SignUpCard() {
             <Button
               type="submit"
               className="w-full"
+              id="signup-button"
+              data-umami-event="Signup button"
               disabled={isSigningUp || !isFormValid}
             >
               Sign Up

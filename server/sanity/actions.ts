@@ -10,6 +10,7 @@ import {
   Career,
   AdditionalDetails,
   AdditionalCollectionDetails,
+  CollectionLookbook,
 } from "@/lib/types";
 
 /**
@@ -478,6 +479,62 @@ export const getAdditionalCollectionDetailsByHandle = async (
     }
 
     const body: AdditionalCollectionDetails = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get additional details error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+};
+
+/**
+ * Retrieves additional collection details by handle
+ * @param handle - Merchandise handle identifier
+ * @returns Promise containing additional details or error
+ */
+export const getCollectionLookbookByHandle = async (
+  handle: string,
+): Promise<ApiResult<CollectionLookbook>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/merch/collections/${handle}/lookbook`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("not found")) {
+        return {
+          success: false,
+          error: "Lookbook not found for this merchandise.",
+        };
+      }
+
+      if (errorText.includes("Invalid handle")) {
+        return {
+          success: false,
+          error: "Invalid merchandise handle provided.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to retrieve lookbook. Please try again.",
+      };
+    }
+
+    const body: CollectionLookbook = await response.json();
     return {
       success: true,
       data: body,

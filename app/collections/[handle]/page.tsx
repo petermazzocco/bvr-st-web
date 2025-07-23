@@ -61,7 +61,12 @@ export default async function Page(props: {
   return (
     <>
       {details.data && (
-        <div className="relative w-full mb-20">
+        <Link
+          href={`/collections/${params.handle}/lookbook`}
+          className="relative w-full mb-20"
+          id="collection-lookbook-link"
+          data-umami-event="Collection lookbook viewed"
+        >
           <AspectRatio ratio={3 / 1} className="w-full">
             <div
               className="relative h-full w-full overflow-hidden p-4 bg-cover bg-center"
@@ -72,7 +77,7 @@ export default async function Page(props: {
               }}
             ></div>
           </AspectRatio>
-        </div>
+        </Link>
       )}
       <script
         type="application/ld+json"
@@ -111,7 +116,11 @@ export default async function Page(props: {
                     </div>
                     <div className="mt-3 space-y-1">
                       <div className="flex justify-between items-center">
-                        <Link href={`/products/${product.handle}`}>
+                        <Link 
+                          href={`/products/${product.handle}`}
+                          id="product-title-link"
+                          data-umami-event="Product title clicked"
+                        >
                           <h3 className="text-xs font-medium text-foreground">
                             {product.title}
                           </h3>

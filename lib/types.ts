@@ -296,6 +296,23 @@ export interface Slug {
 export interface Block {
   /** Type of the block content */
   _type: string;
+  /** Unique key for the block */
+  _key?: string;
+  /** Style of the block (normal, h1, h2, etc.) */
+  style?: string;
+  /** Children elements containing text and formatting */
+  children?: Array<{
+    _type: string;
+    _key?: string;
+    text: string;
+    marks?: string[];
+  }>;
+  /** Mark definitions for links and other formatting */
+  markDefs?: Array<{
+    _type: string;
+    _key?: string;
+    href?: string;
+  }>;
 }
 
 /**
@@ -774,4 +791,13 @@ export interface AdditionalCollectionDetails {
   banner: AdditionalImage;
   addtionalImages: AdditionalImage[];
   additionalSpecs?: KeyValuePair[];
+}
+
+export interface CollectionLookbook {
+  _id: string;
+  collectionHandle: string;
+  collectionTitle: string;
+  body: Block[];
+  images: AdditionalImage[];
+  credits?: KeyValuePair[];
 }

@@ -107,6 +107,8 @@ export default async function Page(props: {
                 <div className="mt-3 space-y-1">
                   <Link
                     href={`/stores/${params.name}/collections/${params.handle}/products/${product.handle}`}
+                    id="partner-product-title-link"
+                    data-umami-event="Partner product title clicked"
                   >
                     <h3 className="text-xs font-medium text-foreground">
                       {product.title}

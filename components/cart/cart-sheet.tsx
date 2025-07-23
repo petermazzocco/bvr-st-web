@@ -222,6 +222,8 @@ function CheckoutButton() {
       variant={"default"}
       className="w-full"
       type="submit"
+      id="checkout-button"
+      data-umami-event="Proceed to checkout button"
       disabled={pending}
     >
       {pending ? "Processing..." : "Proceed to Checkout"}

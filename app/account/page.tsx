@@ -1,18 +1,30 @@
 import {
   getUserDetails,
   getUserOrders,
-  getAuthTokenServer,
-  getUserIdFromTokenServer,
 } from "@/server/user/actions";
 import { getCustomerPaymentMethods } from "@/server/stripe/actions";
 import { AccountHeaderCard } from "@/components/cards/account-header-card";
 import { AccountOrdersCard } from "@/components/cards/account-orders-card";
 import { AccountInfoCard } from "@/components/cards/account-info-card";
 import { AccountPaymentMethodsCard } from "@/components/cards/account-payment-methods-card";
+import { cookies } from "next/headers";
 
 export default async function ProfilePage() {
-  const userId = await getUserIdFromTokenServer();
-  const authToken = await getAuthTokenServer();
+  // Get cookies directly in the component to maintain async context
+  const cookieStore = await cookies();
+  const authTokenCookie = cookieStore.get("bvrstrco_auth");
+  const authToken = authTokenCookie?.value || null;
+  
+  // Decode userId from token
+  let userId: number | null = null;
+  if (authToken) {
+    try {
+      const payload = JSON.parse(atob(authToken.split(".")[1]));
+      userId = payload.userid || null;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  }
 
   if (!userId || !authToken) {
     return <div>No user id or auth token</div>;
