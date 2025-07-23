@@ -5,6 +5,7 @@ import { generateCollectionMetadata } from "@/lib/metadata";
 import { getCollectionLookbookByHandle } from "@/server/sanity/actions";
 import { PortableText } from "@portabletext/react";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
@@ -155,10 +156,12 @@ export default async function Page(props: {
                 <div className=" lg:pb-8">
                   {lookbook.data.images.map((image, index) => (
                     <div key={index} className="relative">
-                      <img
+                      <Image
                         src={image.url}
                         alt={`Lookbook image ${index + 1}`}
                         className="w-full h-auto  object-cover"
+                        width={500}
+                        height={500}
                       />
                     </div>
                   ))}

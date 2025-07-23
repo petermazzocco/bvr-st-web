@@ -7,6 +7,7 @@ import {
   getPartnerStoreCollections,
 } from "@/server/vendor/actions";
 import { generateStoreMetadata } from "@/lib/metadata";
+import Image from "next/image";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string }>;
@@ -97,10 +98,12 @@ export default async function Page(props: {
                             id="collection-viewed-button"
                             data-umami-event="Collection viewed button"
                           >
-                            <img
+                            <Image
                               src={collection.image.url}
                               alt={collection.image.altText || collection.title}
                               className="h-full w-full object-contain p-4 object-center  bg-muted "
+                              width={500}
+                              height={500}
                             />
                           </Link>
                         )}

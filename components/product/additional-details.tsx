@@ -1,5 +1,6 @@
 import { AdditionalDetails } from "@/lib/types";
 import { Separator } from "../ui/separator";
+import Image from "next/image";
 
 export function AdditionalDetailsSection({
   details,
@@ -32,10 +33,12 @@ export function AdditionalDetailsSection({
         {details.additionalImages && details.additionalImages.length > 0 && (
           <div className="lg:sticky lg:top-8 w-full md:w-1/2">
             <div className="aspect-[4/5] overflow-hidden bg-background">
-              <img
+              <Image
                 src={details.additionalImages[0].url}
                 alt="Product hero image"
                 className="h-full w-full object-cover object-center"
+                width={500}
+                height={500}
               />
             </div>
           </div>
@@ -52,7 +55,7 @@ export function AdditionalDetailsSection({
                   key={index + 1}
                   className="flex-shrink-0 w-2/4 h-full overflow-hidden"
                 >
-                  <img
+                  <Image
                     src={image.url}
                     alt={`Additional view ${index + 2}`}
                     className="h-full w-full object-cover"
