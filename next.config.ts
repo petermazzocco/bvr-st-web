@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     loader: "custom",
-    loaderFile: "./lib/imageLoader.ts",
+    loaderFile: "lib/imageLoader.ts",
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
