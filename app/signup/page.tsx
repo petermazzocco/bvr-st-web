@@ -13,7 +13,6 @@ export default function Page() {
 
       <div className="hidden md:block w-1/2 relative">
         <Image
-          loader={cloudflareLoader}
           src="/auth.jpg"
           alt="Authentication illustration"
           fill
@@ -23,7 +22,6 @@ export default function Page() {
 
       <div className="md:hidden relative w-full min-h-screen">
         <Image
-          loader={cloudflareLoader}
           src="/auth.jpg"
           alt="Authentication illustration"
           fill

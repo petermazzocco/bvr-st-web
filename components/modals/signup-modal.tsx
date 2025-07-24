@@ -95,7 +95,6 @@ export function SignupModal({ open, onOpenChange }: SignupModalProps) {
           </DialogDescription>
           <AspectRatio ratio={16 / 9} className="bg-muted rounded-lg">
             <Image
-              loader={cloudflareLoader}
               src="/auth.jpg"
               alt="auth"
               fill

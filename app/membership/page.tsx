@@ -104,7 +104,6 @@ export default function MembershipPage() {
 
       <div className="hidden md:block w-1/2 relative">
         <Image
-          loader={cloudflareLoader}
           src="/auth.jpg"
           alt="Authentication illustration"
           fill
@@ -114,7 +113,6 @@ export default function MembershipPage() {
 
       <div className="md:hidden relative w-full min-h-screen">
         <Image
-          loader={cloudflareLoader}
           src="/auth.jpg"
           alt="Authentication illustration"
           fill

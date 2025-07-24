@@ -126,7 +126,6 @@ export function CartSheet() {
                           <div className="flex flex-row">
                             <div className="relative h-24 w-24 overflow-hidden">
                               <Image
-                                loader={cloudflareLoader}
                                 className="h-full w-full object-contain"
                                 width={200}
                                 height={200}

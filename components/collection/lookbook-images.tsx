@@ -10,7 +10,6 @@ export function LookbookImages({ images }: { images: AdditionalImage[] }) {
       {images.map((image, index) => (
         <div key={index} className="relative">
           <Image
-            loader={cloudflareLoader}
             src={image.url}
             alt={`Lookbook image ${index + 1}`}
             className="w-full h-auto  object-cover"

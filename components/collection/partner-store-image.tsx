@@ -19,7 +19,6 @@ export const PartnerStoreImage = ({
 }) => {
   return (
     <Image
-      loader={cloudflareLoader}
       src={collection?.image?.url || ""}
       alt={collection?.image?.altText || collection.title}
       className="h-full w-full object-contain p-4 object-center  bg-muted "

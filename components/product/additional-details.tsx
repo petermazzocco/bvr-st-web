@@ -37,7 +37,6 @@ export function AdditionalDetailsSection({
           <div className="lg:sticky lg:top-8 w-full md:w-1/2">
             <div className="aspect-[4/5] overflow-hidden bg-background">
               <Image
-                loader={cloudflareLoader}
                 src={details.additionalImages[0].url}
                 alt="Product hero image"
                 className="h-full w-full object-cover object-center"
@@ -60,7 +59,6 @@ export function AdditionalDetailsSection({
                   className="flex-shrink-0 w-2/4 h-full overflow-hidden"
                 >
                   <Image
-                    loader={cloudflareLoader}
                     src={image.url}
                     alt={`Additional view ${index + 2}`}
                     className="h-full w-full object-cover"

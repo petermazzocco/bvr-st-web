@@ -15,21 +15,7 @@ export default function cloudflareLoader({
     return `${src}?w=${width}`;
   }
   
-  // Handle external URLs (like Sanity CDN)
-  if (src.startsWith("http")) {
-    const params = [`width=${width}`];
-    if (quality) {
-      params.push(`quality=${quality}`);
-    }
-    const paramsString = params.join(",");
-    return `/cdn-cgi/image/${paramsString}/${src}`;
-  }
-  
-  // Handle relative URLs
-  const params = [`width=${width}`];
-  if (quality) {
-    params.push(`quality=${quality}`);
-  }
-  const paramsString = params.join(",");
-  return `/cdn-cgi/image/${paramsString}/${normalizeSrc(src)}`;
+  // For production, return original URLs since Cloudflare Image Resizing requires paid plan
+  // and Cloudflare Images requires pre-uploaded images
+  return src;
 }
