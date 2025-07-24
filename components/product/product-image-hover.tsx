@@ -28,7 +28,6 @@ export function ProductImageHover({ images }: ProductImageHoverProps) {
 
   return (
     <Image
-      loader={cloudflareLoader}
       src={images[currentImageIndex]?.url || images[0].url}
       alt={images[currentImageIndex]?.altText || images[0].altText}
       width={400}

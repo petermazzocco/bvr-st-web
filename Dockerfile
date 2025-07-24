@@ -32,6 +32,7 @@ RUN npm ci --only=production && npm cache clean --force
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.ts ./next.config.ts
+COPY --from=builder /app/lib ./lib
 
 # Expose the port
 EXPOSE 3000

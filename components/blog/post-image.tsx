@@ -11,7 +11,6 @@ export const PostImage = ({ post }: { post: ApiResult<Post> }) => {
     : null;
   return (
     <Image
-      loader={cloudflareLoader}
       src={postImageUrl || ""}
       alt={post.data?.title || ""}
       className="aspect-video rounded-xl"

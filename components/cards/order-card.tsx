@@ -61,7 +61,6 @@ export function OrderCard({ order }: { order: Order | undefined }) {
               className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg"
             >
               <Image
-                loader={cloudflareLoader}
                 src={item.image || "/placeholder.svg"}
                 alt={item.name}
                 width={60}
