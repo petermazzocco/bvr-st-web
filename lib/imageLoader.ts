@@ -14,6 +14,18 @@ export default function cloudflareLoader({
   if (process.env.NODE_ENV === "development") {
     return `${src}?w=${width}`;
   }
+  
+  // Handle external URLs (like Sanity CDN)
+  if (src.startsWith("http")) {
+    const params = [`width=${width}`];
+    if (quality) {
+      params.push(`quality=${quality}`);
+    }
+    const paramsString = params.join(",");
+    return `/cdn-cgi/image/${paramsString}/${src}`;
+  }
+  
+  // Handle relative URLs
   const params = [`width=${width}`];
   if (quality) {
     params.push(`quality=${quality}`);
