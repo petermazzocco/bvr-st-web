@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -35,12 +36,14 @@ const updateUserSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.email("Invalid email address"),
-  phone: z.string().min(1, "Phone number is required"),
+  phone: z.string().optional(),
   street: z.string().min(1, "Street address is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   apt: z.string().optional(),
   zip: z.string().min(1, "ZIP code is required"),
+  optInMarketing: z.boolean(),
+  optInRewards: z.boolean(),
 });
 
 type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
@@ -72,6 +75,8 @@ export function UpdateUserModal({
       state: user?.address?.state || "",
       apt: user?.address?.apt || "",
       zip: user?.address?.zip || "",
+      optInMarketing: user?.optInMarketing || false,
+      optInRewards: user?.optInRewards || false,
     },
   });
 
@@ -109,6 +114,8 @@ export function UpdateUserModal({
         state: user.address?.state || "",
         apt: user.address?.apt || "",
         zip: user.address?.zip || "",
+        optInMarketing: user.optInMarketing || false,
+        optInRewards: user.optInRewards || false,
       });
     }
   }, [user, form]);
@@ -131,6 +138,8 @@ export function UpdateUserModal({
         state: data.state,
         zip: data.zip,
       },
+      optInMarketing: data.optInMarketing,
+      optInRewards: data.optInRewards,
     };
 
     updateUserMutation(updateData);
@@ -303,6 +312,56 @@ export function UpdateUserModal({
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="optInMarketing"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex flex-col gap-4">
+                      <FormLabel className="text-right">
+                        Marketing Emails
+                      </FormLabel>
+                      <div className="col-span-3 flex items-center space-x-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <span className="text-sm text-muted-foreground">
+                          Receive promotional emails and updates
+                        </span>
+                        <FormMessage />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="optInRewards"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex flex-col gap-4">
+                      <FormLabel className="text-right">
+                        Rewards Program
+                      </FormLabel>
+                      <div className="col-span-3 flex items-center space-x-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <span className="text-sm text-muted-foreground">
+                          Receive rewards and exclusive offers
+                        </span>
                         <FormMessage />
                       </div>
                     </div>

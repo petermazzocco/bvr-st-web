@@ -3,7 +3,7 @@ import { LogOut, Star } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { User } from "@/lib/types";
+import { UpdateUser, User } from "@/lib/types";
 import { signOut } from "@/server/user/actions";
 import { OTPCard } from "@/components/cards/otp-card";
 import {
@@ -75,7 +75,7 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
               </Link>
             )}
             <div className="flex justify-between items-center gap-2">
-              <UpdateUserModal user={user} userId={user?.id} />
+              <UpdateUserModal user={user as UpdateUser} userId={user?.id} />
               <Button
                 variant="outline"
                 onClick={handleSignOut}

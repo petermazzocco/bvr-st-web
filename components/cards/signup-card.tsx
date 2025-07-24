@@ -50,8 +50,8 @@ const signUpSchema = z
     termsAccepted: z.boolean().refine((val) => val === true, {
       message: "You must accept the terms and conditions",
     }),
-    optInMarketing: z.boolean().optional(),
-    optInRewards: z.boolean().optional(),
+    optInMarketing: z.boolean(),
+    optInRewards: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -136,6 +136,8 @@ export function SignUpCard() {
         zip: data.zipCode,
       },
       password: data.password,
+      optInMarketing: data.optInMarketing,
+      optInRewards: data.optInRewards,
     };
 
     signUpMutation(userData);
@@ -152,7 +154,8 @@ export function SignUpCard() {
     watchedFields.zipCode &&
     watchedFields.password &&
     watchedFields.confirmPassword &&
-    watchedFields.termsAccepted;
+    watchedFields.termsAccepted &&
+    watchedFields.optInMarketing;
 
   return (
     <Card className="mx-auto min-w-md max-w-lg shadow-none border-none">
@@ -215,7 +218,7 @@ export function SignUpCard() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Phone Number (Optional)</FormLabel>
                   <FormControl>
                     <PhoneInput
                       value={field.value || ""}
