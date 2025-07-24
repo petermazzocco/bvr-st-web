@@ -6,6 +6,7 @@ import {
   useUpdateURL,
 } from "@/components/product/product-provider";
 import Image from "next/image";
+import cloudflareLoader from "@/lib/imageLoader";
 
 export function Gallery({
   images,
@@ -49,6 +50,7 @@ export function Gallery({
         )}
         {images[imageIndex] && (
           <Image
+            loader={cloudflareLoader}
             className="h-full w-full   object-cover"
             sizes="(min-width: 1024px) 66vw, 100vw"
             alt={images[imageIndex]?.altText as string}

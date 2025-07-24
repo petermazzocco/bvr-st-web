@@ -4,6 +4,7 @@ import { Price } from "@/components/product/product-price";
 import { DEFAULT_OPTION } from "@/lib/constants";
 import { createUrl } from "@/lib/utils";
 import Image from "next/image";
+import cloudflareLoader from "@/lib/imageLoader";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
@@ -125,6 +126,7 @@ export function CartSheet() {
                           <div className="flex flex-row">
                             <div className="relative h-24 w-24 overflow-hidden">
                               <Image
+                                loader={cloudflareLoader}
                                 className="h-full w-full object-contain"
                                 width={200}
                                 height={200}

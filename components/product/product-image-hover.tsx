@@ -1,5 +1,7 @@
 "use client";
 
+import cloudflareLoader from "@/lib/imageLoader";
+import Image from "next/image";
 import { useState } from "react";
 
 interface ProductImageHoverProps {
@@ -25,7 +27,8 @@ export function ProductImageHover({ images }: ProductImageHoverProps) {
   if (!images[0]) return null;
 
   return (
-    <img
+    <Image
+      loader={cloudflareLoader}
       src={images[currentImageIndex]?.url || images[0].url}
       alt={images[currentImageIndex]?.altText || images[0].altText}
       width={400}
