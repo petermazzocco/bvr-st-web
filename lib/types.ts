@@ -9,7 +9,7 @@ export interface User {
   /** User's lastName name */
   lastName: string;
   /** User's phone number */
-  phone: string;
+  phone?: string;
   /** User's physical address information */
   address: Address;
   /** User's email address */
@@ -110,11 +110,15 @@ export interface UpdateUser {
   /** User's lastName name */
   lastName: string;
   /** User's phone number */
-  phone: string;
+  phone?: string;
   /** User's physical address information */
   address: Address;
   /** User's email address */
   email: string;
+  /** Optin marketing */
+  optInMarketing: boolean;
+  /** Optin rewards */
+  optInRewards: boolean;
 }
 
 /**
@@ -134,6 +138,10 @@ export interface UserSignUp {
   email: string;
   /** User's password */
   password: string | undefined;
+  /** Optin marketing */
+  optInMarketing: boolean;
+  /** Optin rewards */
+  optInRewards: boolean;
 }
 
 /**
