@@ -1,6 +1,7 @@
 "use client";
 import { Bell } from "lucide-react";
 import Image from "next/image";
+import cloudflareLoader from "@/lib/imageLoader";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -159,6 +160,7 @@ export function NotificationDropdown({
                 {notification.image?.asset?.url && (
                   <div className="flex-shrink-0 w-12 h-12">
                     <Image
+                      loader={cloudflareLoader}
                       src={notification.image.asset.url}
                       alt={notification.title}
                       className="w-full h-full rounded-lg object-cover"

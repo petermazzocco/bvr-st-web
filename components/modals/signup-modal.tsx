@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Image from "next/image";
+import cloudflareLoader from "@/lib/imageLoader";
 
 const SIGNUP_MODAL_SEEN_COOKIE = "signup-modal-seen";
 
@@ -94,6 +95,7 @@ export function SignupModal({ open, onOpenChange }: SignupModalProps) {
           </DialogDescription>
           <AspectRatio ratio={16 / 9} className="bg-muted rounded-lg">
             <Image
+              loader={cloudflareLoader}
               src="/auth.jpg"
               alt="auth"
               fill

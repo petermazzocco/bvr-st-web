@@ -2,6 +2,7 @@
 
 import { MembershipCard } from "@/components/cards/membership-card";
 import Image from "next/image";
+import cloudflareLoader from "@/lib/imageLoader";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { updateUserAfterCheckout } from "@/server/stripe/actions";
@@ -103,6 +104,7 @@ export default function MembershipPage() {
 
       <div className="hidden md:block w-1/2 relative">
         <Image
+          loader={cloudflareLoader}
           src="/auth.jpg"
           alt="Authentication illustration"
           fill
@@ -112,6 +114,7 @@ export default function MembershipPage() {
 
       <div className="md:hidden relative w-full min-h-screen">
         <Image
+          loader={cloudflareLoader}
           src="/auth.jpg"
           alt="Authentication illustration"
           fill

@@ -1,5 +1,8 @@
+"use client";
+
 import { SignInCard } from "@/components/cards/signin-card";
 import Image from "next/image";
+import cloudflareLoader from "@/lib/imageLoader";
 
 export default function Page() {
   return (
@@ -10,6 +13,7 @@ export default function Page() {
 
       <div className="hidden md:block w-1/2 relative">
         <Image
+          loader={cloudflareLoader}
           src="/auth.jpg"
           alt="Authentication illustration"
           fill
@@ -19,6 +23,7 @@ export default function Page() {
 
       <div className="md:hidden relative w-full min-h-screen">
         <Image
+          loader={cloudflareLoader}
           src="/auth.jpg"
           alt="Authentication illustration"
           fill

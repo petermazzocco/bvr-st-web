@@ -3,7 +3,7 @@ import { getBlogPostBySlug } from "@/server/sanity/actions";
 import { notFound } from "next/navigation";
 import { urlFor } from "@/lib/sanity/image";
 import Link from "next/link";
-import Image from "next/image";
+import { PostImage } from "@/components/blog/post-image";
 
 export default async function PostPage({
   params,
@@ -26,15 +26,7 @@ export default async function PostPage({
       <Link href="/blog" className="hover:underline">
         ← Back to announcements
       </Link>
-      {postImageUrl && (
-        <Image
-          src={postImageUrl}
-          alt={post.data?.title || ""}
-          className="aspect-video rounded-xl"
-          width={550}
-          height={310}
-        />
-      )}
+      {postImageUrl && <PostImage post={post} />}
       <h1 className="text-4xl font-bold mb-8">{post.data?.title || ""}</h1>
       <div className="prose">
         <p className="text-muted-foreground">
