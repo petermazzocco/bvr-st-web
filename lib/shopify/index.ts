@@ -13,6 +13,7 @@ import {
   createCartMutation,
   editCartItemsMutation,
   removeFromCartMutation,
+  updateCartBuyerIdentityMutation,
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
 import {
@@ -336,22 +337,121 @@ export async function removeFromCart(
  * Updates quantities of existing items in a shopping cart
  * @param cartId - Unique identifier of the cart to update
  * @param lines - Array of line items with updated quantities
+ * @param buyerIdentity - Optional buyer identity data for checkout prepopulation
  * @returns Promise containing the updated cart object
  */
 export async function updateCart(
   cartId: string,
   lines: { id: string; merchandiseId: string; quantity: number }[],
+  buyerIdentity?: {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    address?: {
+      street: string;
+      apt?: string;
+      zip: string;
+      city: string;
+      state: string;
+      country: string;
+    };
+  },
 ): Promise<Cart> {
-  const res = await shopifyFetch<ShopifyUpdateCartOperation>({
-    query: editCartItemsMutation,
+  // If buyer identity is provided, update it first
+  if (buyerIdentity) {
+    try {
+      await updateCartBuyerIdentity(cartId, buyerIdentity);
+    } catch (error) {
+      console.error("Error updating cart buyer identity:", error);
+      // Continue with line updates even if buyer identity update fails
+    }
+  }
+
+  // Only update lines if there are any to update
+  if (lines.length > 0) {
+    const res = await shopifyFetch<ShopifyUpdateCartOperation>({
+      query: editCartItemsMutation,
+      variables: {
+        cartId,
+        lines,
+      },
+      cache: "no-store",
+    });
+
+    return reshapeCart(res.body.data.cartLinesUpdate.cart);
+  } else {
+    // If no lines to update, just return the current cart
+    const cart = await getCart(cartId);
+    return cart!;
+  }
+}
+
+/**
+ * Updates buyer identity information for checkout prepopulation
+ * @param cartId - Unique identifier of the cart to update
+ * @param buyerIdentity - Buyer identity data
+ * @returns Promise containing the updated cart object
+ */
+export async function updateCartBuyerIdentity(
+  cartId: string,
+  buyerIdentity: {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    address?: {
+      street: string;
+      apt?: string;
+      zip: string;
+      city: string;
+      state: string;
+      country: string;
+    };
+  },
+): Promise<Cart> {
+  const buyerIdentityInput: any = {};
+
+  if (buyerIdentity.email) {
+    buyerIdentityInput.email = buyerIdentity.email;
+  }
+
+  if (buyerIdentity.phone) {
+    buyerIdentityInput.phone = buyerIdentity.phone;
+  }
+
+  // Handle delivery address
+  if (buyerIdentity.address) {
+    buyerIdentityInput.deliveryAddressPreferences = [
+      {
+        deliveryAddress: {
+          address1: buyerIdentity.address.street,
+          address2: buyerIdentity.address.apt || "",
+          city: buyerIdentity.address.city,
+          province: buyerIdentity.address.state,
+          zip: buyerIdentity.address.zip,
+          country: buyerIdentity.address.country,
+          firstName: buyerIdentity.firstName || "",
+          lastName: buyerIdentity.lastName || "",
+        },
+      },
+    ];
+  }
+
+  const res = await shopifyFetch<any>({
+    query: updateCartBuyerIdentityMutation,
     variables: {
       cartId,
-      lines,
+      buyerIdentity: buyerIdentityInput,
     },
     cache: "no-store",
   });
 
-  return reshapeCart(res.body.data.cartLinesUpdate.cart);
+  if (res.body.data.cartBuyerIdentityUpdate.userErrors?.length > 0) {
+    console.error("Buyer identity update errors:", res.body.data.cartBuyerIdentityUpdate.userErrors);
+  }
+
+  return reshapeCart(res.body.data.cartBuyerIdentityUpdate.cart);
 }
 
 /**

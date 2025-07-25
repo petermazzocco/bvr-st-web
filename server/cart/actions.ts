@@ -10,6 +10,7 @@ import {
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getUserDetails, getAuthTokenServer, getUserIdFromTokenServer } from "@/server/user/actions";
 
 /**
  * Adds an item to the user's shopping cart
@@ -120,6 +121,7 @@ export async function updateItemQuantity(
 
 /**
  * Redirects the user to the checkout page for their current cart
+ * Automatically prepopulates user data if authenticated
  * Redirects to home page if no cart exists or cart is invalid
  * @returns Next.js redirect response to checkout URL or home page
  */
@@ -128,10 +130,44 @@ export async function redirectToCheckout() {
   if (!cartId) {
     return redirect("/");
   }
+  
   let cart = await getCart(cartId);
   if (!cart) {
     return redirect("/");
   }
+
+  // Try to get authenticated user data
+  const authToken = await getAuthTokenServer();
+  const userId = await getUserIdFromTokenServer();
+  
+  if (authToken && userId) {
+    try {
+      const userResult = await getUserDetails(authToken, userId);
+      if (userResult.success && userResult.data) {
+        const user = userResult.data;
+        
+        // Update cart with buyer identity for checkout prepopulation
+        const updatedCart = await updateCart(cartId, [], {
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
+          address: user.address ? {
+            ...user.address,
+            country: "US" // Default to US since user address doesn't include country
+          } : undefined
+        });
+        
+        if (updatedCart) {
+          cart = updatedCart;
+        }
+      }
+    } catch (error) {
+      console.error("Error prepopulating user data for checkout:", error);
+      // Continue with checkout even if user data prepopulation fails
+    }
+  }
+  
   redirect(cart.checkoutUrl);
 }
 
