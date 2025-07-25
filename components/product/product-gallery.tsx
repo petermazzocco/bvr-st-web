@@ -1,12 +1,13 @@
 "use client";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, X } from "lucide-react";
 
 import {
   useProduct,
   useUpdateURL,
 } from "@/components/product/product-provider";
 import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 export function Gallery({
   images,
@@ -23,7 +24,7 @@ export function Gallery({
 
   return (
     <form>
-      <div className="relative aspect-square h-screen w-full overflow-hidden ">
+      <div className="relative aspect-square h-fit md:h-screen w-full overflow-hidden ">
         {images.length > 1 && (
           <>
             <button
@@ -49,14 +50,16 @@ export function Gallery({
           </>
         )}
         {images[imageIndex] && (
-          <Image
-            className="h-full w-full   object-cover"
-            sizes="(min-width: 1024px) 66vw, 100vw"
-            alt={images[imageIndex]?.altText as string}
-            src={images[imageIndex]?.src as string}
-            width={1024}
-            height={1024}
-          />
+          <Zoom canSwipeToUnzoom={true} IconUnzoom={X}>
+            <Image
+              className="h-full w-full   object-cover"
+              sizes="(min-width: 1024px) 66vw, 100vw"
+              alt={images[imageIndex]?.altText as string}
+              src={images[imageIndex]?.src as string}
+              width={1024}
+              height={1024}
+            />
+          </Zoom>
         )}
         {images.length > 1 && (
           <div className="absolute bottom-4 left-4 z-10  text-foreground px-2 py-1 rounded text-sm">
