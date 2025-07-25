@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Page() {
-
   return (
     <>
       <div className="h-screen bg-[url('/hero.jpg')] bg-cover bg-center bg-no-repeat flex items-end justify-center pb-[25vh]">
@@ -11,7 +10,7 @@ export default function Page() {
           <h1 className="text-3xl font-bold tracking-wider">BVR STR CO</h1>
           <p className="text-md font-semibold">A New Culture.</p>
           <Link href={"/about"}>
-            <Button 
+            <Button
               variant={"outline"}
               id="homepage-learn-more-button"
               data-umami-event="Homepage learn more clicked"
@@ -27,8 +26,8 @@ export default function Page() {
           <h1 className="text-3xl font-bold tracking-wider">
             The Beaver State Tour
           </h1>
-          <Link href={"/collections/shirts"}>
-            <Button 
+          <Link href={"/collections/the-beaver-state-tour"}>
+            <Button
               variant={"outline"}
               id="homepage-shop-now-button"
               data-umami-event="Homepage shop now clicked"

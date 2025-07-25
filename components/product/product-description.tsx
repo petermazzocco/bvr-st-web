@@ -9,6 +9,7 @@ import Link from "next/link";
 import { isAuctionProduct } from "@/lib/utils";
 import { AuctionProductDescription } from "./auction-product-description";
 import { useAuth } from "../auth/auth-context";
+import SizeChartModal from "../modals/size-chart-modal";
 
 export function ProductDescription({ product }: { product: Product }) {
   // Call hooks at the top level, before any conditional logic
@@ -56,7 +57,7 @@ export function ProductDescription({ product }: { product: Product }) {
 
       <div className="mb-6 text-xs leading-tight text-muted-foreground flex flex-row items-center justify-between">
         <p>Model is 5&apos;10&quot; wearing a size Large</p>
-        <p className="cursor-pointer underline">Size Chart</p>
+        <SizeChartModal />
       </div>
 
       <Separator className="my-4" />

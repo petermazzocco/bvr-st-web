@@ -55,7 +55,7 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4 ">
-            {!user?.emailVerified && (
+            {/* {!user?.emailVerified && (
               <Dialog>
                 <DialogTrigger>
                   <Button variant={"default"}>Verify Email</Button>
@@ -68,7 +68,7 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
                   <OTPCard user={user} />
                 </DialogContent>
               </Dialog>
-            )}
+            )} */}
             {!user?.isMember && (
               <Link href="/membership">
                 <Button variant="default">Become A Member</Button>

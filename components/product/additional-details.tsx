@@ -17,7 +17,7 @@ export function AdditionalDetailsSection({
         {/* Left Column - Text Content */}
         <div className="flex flex-col justify-center items-center w-full md:w-1/2">
           {details.fabricDetails && details.fabricDetails.length > 0 && (
-            <div className="space-y-10">
+            <div className="space-y-10 py-10 lg:py-0">
               {details.fabricDetails.map((item, index) => (
                 <div key={index}>
                   <p className="text-foreground text-lg font-semibold">
@@ -34,7 +34,7 @@ export function AdditionalDetailsSection({
 
         {/* Right Column - Hero Image */}
         {details.additionalImages && details.additionalImages.length > 0 && (
-          <div className="lg:sticky lg:top-8 w-full md:w-1/2">
+          <div className="lg:sticky lg:top-8 w-full md:w-1/2 ">
             <div className="aspect-[4/5] overflow-hidden bg-background">
               <Image
                 src={details.additionalImages[0].url}
@@ -56,14 +56,13 @@ export function AdditionalDetailsSection({
               {details.additionalImages.slice(1).map((image, index) => (
                 <div
                   key={index + 1}
-                  className="flex-shrink-0 w-2/4 h-full overflow-hidden"
+                  className="flex-shrink-0 w-1/3 aspect-square overflow-hidden relative"
                 >
                   <Image
                     src={image.url}
                     alt={`Additional view ${index + 2}`}
-                    className="h-full w-full object-cover"
-                    width={500}
-                    height={500}
+                    className="object-cover"
+                    fill
                   />
                 </div>
               ))}
