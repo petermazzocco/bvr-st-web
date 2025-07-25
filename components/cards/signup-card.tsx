@@ -112,7 +112,7 @@ export function SignUpCard() {
         }
         router.push(`/account`);
         toast.success(
-          "Account created successfully! Please check your email for a verification code.",
+          "Account created successfully! Please check your email for your 10% off code!",
         );
       },
       onError: (error) => {
@@ -162,7 +162,8 @@ export function SignUpCard() {
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
-          Create your free BVR STR Collective account
+          Create your free BVR STR Collective account, earn 100 points and 10%
+          off your first purchase immediately!
         </CardDescription>
       </CardHeader>
       <CardContent>
