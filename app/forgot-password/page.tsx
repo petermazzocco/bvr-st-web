@@ -1,8 +1,7 @@
-"use client";
-
 import { ForgotPasswordCard } from "@/components/cards/forgot-password-card";
 import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
+
+export const dynamic = "force-static";
 
 export default function Page() {
   return (

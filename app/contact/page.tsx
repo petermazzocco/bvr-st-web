@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { ContactCard } from "@/components/cards/contact-card";
 import { PartnerRequestCard } from "@/components/cards/partner-request-card";
 import { generateMetadata as createMetadata } from "@/lib/metadata";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+export const dynamic = "force-static";
 
 export const metadata: Metadata = createMetadata({
   title: "Contact Us",
