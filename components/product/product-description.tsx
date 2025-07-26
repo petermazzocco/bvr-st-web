@@ -54,9 +54,7 @@ export function ProductDescription({ product }: { product: Product }) {
         </div>
       </div>
       <div className="mb-2 flex flex-row text-[0.6rem] items-center text-muted-foreground justify-end gap-1">
-        Make 4 interest free payments at $
-        {Number(product.priceRange.maxVariantPrice.amount) / 4} every 2 weeks
-        with{" "}
+        Make 4 interest free payments every 2 weeks with{" "}
         <Image
           src={
             "https://logos-world.net/wp-content/uploads/2024/10/Shop-Pay-Logo.png"

@@ -1,6 +1,5 @@
 "use client";
 
-import cloudflareLoader from "@/lib/imageLoader";
 import Image from "next/image";
 import { useState } from "react";
 

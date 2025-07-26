@@ -81,11 +81,11 @@ export function MembershipCard() {
       <CardContent>
         <div className="space-y-2">
           <ul className="space-y-1 text-sm">
+            <li>• 10% off all purchases</li>
             <li>• Access to all auctions</li>
             <li>• Receive monthly digital perks</li>
             <li>• Exclusive member-only events</li>
             <li>• Priority customer support</li>
-            <li>• Access to all new features</li>
           </ul>
         </div>
       </CardContent>
