@@ -10,6 +10,7 @@ import { isAuctionProduct } from "@/lib/utils";
 import { AuctionProductDescription } from "./auction-product-description";
 import { useAuth } from "../auth/auth-context";
 import SizeChartModal from "../modals/size-chart-modal";
+import Image from "next/image";
 
 export function ProductDescription({ product }: { product: Product }) {
   // Call hooks at the top level, before any conditional logic
@@ -52,7 +53,23 @@ export function ProductDescription({ product }: { product: Product }) {
           </div>
         </div>
       </div>
-
+      <div className="mb-2 flex flex-row text-[0.6rem] items-center text-muted-foreground justify-end gap-1">
+        Make 4 interest free payments at $
+        {Number(product.priceRange.maxVariantPrice.amount) / 4} every 2 weeks
+        with{" "}
+        <Image
+          src={
+            "https://logos-world.net/wp-content/uploads/2024/10/Shop-Pay-Logo.png"
+          }
+          alt="Shop PAY"
+          width={50}
+          height={50}
+          className="mt-0.5"
+        />
+        <Link href="/" className="underline">
+          Learn More
+        </Link>
+      </div>
       <VariantSelector options={product.options} variants={product.variants} />
 
       <div className="mb-6 text-xs leading-tight text-muted-foreground flex flex-row items-center justify-between">
