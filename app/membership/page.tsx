@@ -2,7 +2,6 @@
 
 import { MembershipCard } from "@/components/cards/membership-card";
 import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { updateUserAfterCheckout } from "@/server/stripe/actions";

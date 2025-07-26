@@ -1,5 +1,5 @@
 import { PortableText } from "next-sanity";
-import { getBlogPostBySlug } from "@/server/sanity/actions";
+import { getBlogPostBySlug, getBlogPosts } from "@/server/sanity/actions";
 import { notFound } from "next/navigation";
 import { urlFor } from "@/lib/sanity/image";
 import Link from "next/link";
