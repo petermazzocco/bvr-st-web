@@ -91,13 +91,6 @@ const SizeChartModal = () => {
         shoulder: { inch: "22.2", cm: "56.5" },
         sleeve: { inch: "9.6", cm: "24.5" },
       },
-      {
-        size: "3XL",
-        chest: { inch: "26.0", cm: "66" },
-        length: { inch: "31.9", cm: "81" },
-        shoulder: { inch: "22.8", cm: "58" },
-        sleeve: { inch: "10.0", cm: "25.5" },
-      },
     ],
   };
 
