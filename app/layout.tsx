@@ -11,12 +11,34 @@ import { CartProvider } from "@/components/cart/cart-context";
 import { AuthProvider } from "@/components/auth/auth-context";
 import { getCollections } from "@/lib/shopify";
 import Script from "next/script";
-import { SignupModalProvider } from "@/components/modals/signup-modal-provider";
 
 export const metadata: Metadata = {
-  title: "BVR STR CO - Premium Streetwear & Independent Fashion",
-  description: "Discover unique streetwear and fashion from independent brands and partner stores. Quality clothing, accessories, and lifestyle products curated for the modern streetwear enthusiast.",
-  keywords: ["streetwear", "fashion", "independent brands", "clothing", "accessories", "lifestyle", "urban fashion", "partner stores"],
+  title: "BVR STR CO",
+  description:
+    "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
+  keywords: [
+    "oregon state beavers",
+    "dam nation collective",
+    "oregon state collective",
+    "oregon state nil",
+    "oregon state beavers nil collective",
+    "dam nation nil",
+    "dam nation",
+    "nil oregon state beavers",
+    "beaver football nil",
+    "beaver football collective",
+    "beaver football",
+    "beaver baseball",
+    "oregon state streetwear",
+    "vintage oregon state",
+    "hypebeast",
+    "oregon state clothing",
+    "oregon state accessories",
+    "oregon state lifestyle",
+    "oregon state fashion",
+    "oregon state beavers clothing",
+    "oregon state beavers streetwear",
+  ],
   authors: [{ name: "BVR STR CO" }],
   creator: "BVR STR CO",
   publisher: "BVR STR CO",
@@ -25,8 +47,9 @@ export const metadata: Metadata = {
     index: true,
   },
   openGraph: {
-    title: "BVR STR CO - Premium Streetwear & Independent Fashion",
-    description: "Discover unique streetwear and fashion from independent brands and partner stores. Quality clothing, accessories, and lifestyle products curated for the modern streetwear enthusiast.",
+    title: "BVR STR CO",
+    description:
+      "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
     url: "https://bvrstrco.com",
     siteName: "BVR STR CO",
     locale: "en_US",
@@ -36,14 +59,15 @@ export const metadata: Metadata = {
         url: "https://bvrstrco.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "BVR STR CO - Premium Streetwear & Independent Fashion",
+        alt: "BVR STR CO",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "BVR STR CO - Premium Streetwear & Independent Fashion",
-    description: "Discover unique streetwear and fashion from independent brands and partner stores.",
+    title: "BVR STR CO",
+    description:
+      "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
     creator: "@bvrstrco",
     site: "@bvrstrco",
     images: ["https://bvrstrco.com/og-image.jpg"],
@@ -62,7 +86,9 @@ const ibm = IBM_Plex_Mono({
 
 const getUserIdFromServerToken = (token: string): number | null => {
   try {
-    const payload = JSON.parse(Buffer.from(token.split(".")[1], 'base64').toString());
+    const payload = JSON.parse(
+      Buffer.from(token.split(".")[1], "base64").toString(),
+    );
     return payload.userid || null;
   } catch (error) {
     return null;
@@ -81,12 +107,10 @@ export default async function RootLayout({
 
   const cart = getCart(cartId);
   const collections = await getCollections();
-  
+
   // Server-side auth check
   const isAuthenticated = !!(authToken && getUserIdFromServerToken(authToken));
-  
-  // Determine if modal should show
-  const shouldShowSignupModal = !isAuthenticated && signupModalSeen !== "true";
+
   return (
     <html lang="en">
       <body className={`${ibm.variable} antialiased min-h-screen`}>
@@ -99,7 +123,6 @@ export default async function RootLayout({
                 <Toaster closeButton />
               </main>
               <Footer />
-              <SignupModalProvider shouldShow={shouldShowSignupModal} />
             </CartProvider>
           </AuthProvider>
         </ReactQueryProvider>

@@ -24,8 +24,7 @@ export async function generateMetadata(props: {
   return generateStoreMetadata({
     storeName: store.data.name,
     description:
-      store.data.description ||
-      `Discover unique products from ${store.data.name}`,
+      store.data.description || `BVR STR CO | ${store.data.name} Store`,
     image:
       store.data.logo || store.data.banner
         ? {

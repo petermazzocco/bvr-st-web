@@ -6,11 +6,99 @@ import {
   getCart,
   removeFromCart,
   updateCart,
+  applyDiscountCode,
 } from "@/lib/shopify";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getUserDetails, getAuthTokenServer, getUserIdFromTokenServer } from "@/server/user/actions";
+import {
+  getUserDetails,
+  getAuthTokenServer,
+  getUserIdFromTokenServer,
+} from "@/server/user/actions";
+
+// Member discount code configuration
+const MEMBER_DISCOUNT_CODE =
+  process.env.MEMBER_DISCOUNT_CODE || "1340709601393";
+
+/**
+ * Checks if a customer is eligible for the member discount by querying the price rule
+ * @param shopifyCustomerId - The customer's Shopify ID
+ * @returns Promise<{isEligible: boolean, discountCode?: string}> indicating if the customer is eligible and the actual discount code to use
+ */
+async function isEligibleForMemberDiscount(
+  shopifyCustomerId: string | null | undefined,
+): Promise<{ isEligible: boolean; discountCode?: string }> {
+  if (!shopifyCustomerId) {
+    return { isEligible: false };
+  }
+
+  try {
+    const shopifyDomain = process.env.SHOPIFY_STORE_DOMAIN?.replace(/\/$/, ""); // Remove trailing slash
+
+    // The MEMBER_DISCOUNT_CODE is actually the price rule ID from the Shopify admin URL
+    const priceRuleId = MEMBER_DISCOUNT_CODE;
+    const priceRuleUrl = `${shopifyDomain}/admin/api/2023-10/price_rules/${priceRuleId}.json`;
+
+    // Get the price rule directly using the discount code as the price rule ID
+    const priceRuleResponse = await fetch(priceRuleUrl, {
+      headers: {
+        "X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN!,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!priceRuleResponse.ok) {
+      return { isEligible: false };
+    }
+
+    const priceRuleData = await priceRuleResponse.json();
+
+    // Now let's get the actual discount codes for this price rule
+    const discountCodesUrl = `${shopifyDomain}/admin/api/2023-10/price_rules/${priceRuleId}/discount_codes.json`;
+    const discountCodesResponse = await fetch(discountCodesUrl, {
+      headers: {
+        "X-Shopify-Access-Token": process.env.SHOPIFY_ADMIN_ACCESS_TOKEN!,
+        "Content-Type": "application/json",
+      },
+    });
+
+    let actualDiscountCode = MEMBER_DISCOUNT_CODE; // fallback to price rule ID
+
+    if (discountCodesResponse.ok) {
+      const discountCodesData = await discountCodesResponse.json();
+
+      // Use the first discount code if available
+      if (
+        discountCodesData.discount_codes &&
+        discountCodesData.discount_codes.length > 0
+      ) {
+        actualDiscountCode = discountCodesData.discount_codes[0].code;
+      }
+    }
+
+    const prerequisiteCustomerIds =
+      priceRuleData.price_rule?.prerequisite_customer_ids || [];
+
+    // Convert shopifyCustomerId to the format used in prerequisite_customer_ids (remove gid prefix if present)
+    const cleanCustomerId = shopifyCustomerId.replace(
+      "gid://shopify/Customer/",
+      "",
+    );
+
+    // Convert to number since Shopify stores customer IDs as numbers in prerequisite_customer_ids
+    const customerIdAsNumber = parseInt(cleanCustomerId, 10);
+
+    const isEligible = prerequisiteCustomerIds.includes(customerIdAsNumber);
+
+    return {
+      isEligible,
+      discountCode: isEligible ? actualDiscountCode : undefined,
+    };
+  } catch (error) {
+    return { isEligible: false };
+  }
+}
 
 /**
  * Adds an item to the user's shopping cart
@@ -127,10 +215,11 @@ export async function updateItemQuantity(
  */
 export async function redirectToCheckout() {
   let cartId = (await cookies()).get("cartId")?.value;
+
   if (!cartId) {
     return redirect("/");
   }
-  
+
   let cart = await getCart(cartId);
   if (!cart) {
     return redirect("/");
@@ -139,35 +228,58 @@ export async function redirectToCheckout() {
   // Try to get authenticated user data
   const authToken = await getAuthTokenServer();
   const userId = await getUserIdFromTokenServer();
-  
+
   if (authToken && userId) {
     try {
       const userResult = await getUserDetails(authToken, userId);
+
       if (userResult.success && userResult.data) {
         const user = userResult.data;
-        
+
         // Update cart with buyer identity for checkout prepopulation
         const updatedCart = await updateCart(cartId, [], {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
           phone: user.phone,
-          address: user.address ? {
-            ...user.address,
-            country: "US" // Default to US since user address doesn't include country
-          } : undefined
+          address: user.address
+            ? {
+                ...user.address,
+                country: "US", // Default to US since user address doesn't include country
+              }
+            : undefined,
         });
-        
+
         if (updatedCart) {
           cart = updatedCart;
         }
+
+        // Check if user is a member and eligible for member discount
+
+        if (user.isMember && user.shopifyCustomerID) {
+          const eligibilityResult = await isEligibleForMemberDiscount(
+            user.shopifyCustomerID,
+          );
+
+          if (eligibilityResult.isEligible && eligibilityResult.discountCode) {
+            try {
+              const cartWithDiscount = await applyDiscountCode(cartId, [
+                eligibilityResult.discountCode,
+              ]);
+              if (cartWithDiscount) {
+                cart = cartWithDiscount;
+              }
+            } catch (error) {
+              // Continue with checkout even if discount application fails
+            }
+          }
+        }
       }
     } catch (error) {
-      console.error("Error prepopulating user data for checkout:", error);
       // Continue with checkout even if user data prepopulation fails
     }
   }
-  
+
   redirect(cart.checkoutUrl);
 }
 

@@ -58,3 +58,18 @@ export const updateCartBuyerIdentityMutation = /* GraphQL */ `
   }
   ${cartFragment}
 `;
+
+export const applyDiscountCodeMutation = /* GraphQL */ `
+  mutation applyDiscountCode($cartId: ID!, $discountCodes: [String!]!) {
+    cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
+      cart {
+        ...cart
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+  ${cartFragment}
+`;

@@ -1,6 +1,7 @@
 "use client";
 
 import { Price } from "@/components/product/product-price";
+import { MemberPrice } from "@/components/product/member-price";
 import { DEFAULT_OPTION } from "@/lib/constants";
 import { createUrl } from "@/lib/utils";
 import Image from "next/image";
@@ -22,11 +23,13 @@ import { useCart } from "@/components/cart/cart-context";
 import { EditItemQuantityButton } from "@/components/cart/edit-item-quan-button";
 import { OpenCartButton } from "@/components/cart/open-cart-button";
 import { ShoppingCart } from "lucide-react";
+import { useMemberStatus } from "@/hooks/use-member-status";
 
 export function CartSheet() {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
+  const { isMember } = useMemberStatus();
 
   const openCart = () => {
     setIsOpen(true);
@@ -121,8 +124,8 @@ export function CartSheet() {
 
                     return (
                       <li key={i} className="flex w-full flex-col border-b ">
-                        <div className="relative flex w-full flex-col justify-between items-center px-1 py-4">
-                          <div className="flex flex-row">
+                        <div className="relative flex w-full flex-col justify-between items-start px-1 py-4">
+                          <div className="flex flex-row items-center">
                             <div className="relative h-24 w-24 overflow-hidden">
                               <Image
                                 className="h-full w-full object-contain"
@@ -153,10 +156,11 @@ export function CartSheet() {
                             </Link>
                           </div>
                           <div className="flex h-fit w-full flex-row items-center justify-between">
-                            <Price
-                              className="flex space-y-2 text-right text-sm text-foreground"
+                            <MemberPrice
+                              className="flex items-center flex-row space-y-0.5 text-right text-sm text-foreground"
                               amount={item.cost.totalAmount.amount}
                               currencyCode={item.cost.totalAmount.currencyCode}
+                              isMember={isMember}
                             />
                             <div className="ml-auto flex h-9 flex-row items-center rounded-md">
                               <EditItemQuantityButton
@@ -194,12 +198,24 @@ export function CartSheet() {
                   <p>Shipping</p>
                   <p className="text-right">Calculated at checkout</p>
                 </div>
+                {isMember && (
+                  <div className="mb-3 flex text-xs items-center justify-between text-foreground font-semibold">
+                    <p>Member Discount</p>
+                    <p className="text-right">
+                      -$
+                      {(
+                        parseFloat(cart.cost.subtotalAmount.amount) * 0.1
+                      ).toFixed(2)}
+                    </p>
+                  </div>
+                )}
                 <div className="mb-3 flex items-center justify-between  pb-1 pt-1">
                   <p>Total</p>
-                  <Price
+                  <MemberPrice
                     className="text-right text-base text-foreground"
-                    amount={cart.cost.totalAmount.amount}
+                    amount={cart.cost.subtotalAmount.amount}
                     currencyCode={cart.cost.totalAmount.currencyCode}
+                    isMember={isMember}
                   />
                 </div>
               </div>
