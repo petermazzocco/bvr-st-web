@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import Image from "next/image";
 
 export type Props = {
   title?: string;
@@ -19,12 +18,7 @@ export default async function OpengraphImage(
     (
       <div tw="flex h-full w-full flex-col items-center justify-center bg-black">
         <div tw="flex flex-none items-center justify-center border border-neutral-700 h-[160px] w-[160px] rounded-3xl">
-          <Image
-            src="/logo.png"
-            alt="Dam Nation Collective"
-            width={32}
-            height={28}
-          />
+          <img src="/logo.png" alt="BVR STR CO" width={32} height={28} />
         </div>
         <p tw="mt-12 text-6xl font-bold text-white">{title}</p>
       </div>
