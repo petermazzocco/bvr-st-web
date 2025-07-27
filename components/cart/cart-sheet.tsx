@@ -22,7 +22,6 @@ import {
 import { useCart } from "@/components/cart/cart-context";
 import { EditItemQuantityButton } from "@/components/cart/edit-item-quan-button";
 import { OpenCartButton } from "@/components/cart/open-cart-button";
-import { ShoppingCart } from "lucide-react";
 import { useMemberStatus } from "@/hooks/use-member-status";
 
 export function CartSheet() {
@@ -91,7 +90,7 @@ export function CartSheet() {
           {!cart || cart.lines.length === 0 ? (
             <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
               <p className="mt-2 text-center text-sm">Your cart is empty.</p>
-              <Link href="/products">
+              <Link href="/">
                 <Button className="mt-4">Shop Products Now</Button>
               </Link>
             </div>
