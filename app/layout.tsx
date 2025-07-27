@@ -11,6 +11,9 @@ import { CartProvider } from "@/components/cart/cart-context";
 import { AuthProvider } from "@/components/auth/auth-context";
 import { getCollections } from "@/lib/shopify";
 import Script from "next/script";
+import { comingSoonFlag, underConstructionFlag } from "@/lib/flags";
+import { UnderConstructionPage } from "@/components/utils/under-construction-page";
+import { ComingSoonPage } from "@/components/utils/coming-soon-page";
 
 export const metadata: Metadata = {
   title: "BVR STR CO",
@@ -84,17 +87,6 @@ const ibm = IBM_Plex_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
-const getUserIdFromServerToken = (token: string): number | null => {
-  try {
-    const payload = JSON.parse(
-      Buffer.from(token.split(".")[1], "base64").toString(),
-    );
-    return payload.userid || null;
-  } catch (error) {
-    return null;
-  }
-};
-
 export default async function RootLayout({
   children,
 }: {
@@ -102,14 +94,12 @@ export default async function RootLayout({
 }) {
   const cookieStore = await cookies();
   const cartId = cookieStore.get("cartId")?.value;
-  const authToken = cookieStore.get("bvrstrco_auth")?.value;
-  const signupModalSeen = cookieStore.get("signup-modal-seen")?.value;
 
   const cart = getCart(cartId);
   const collections = await getCollections();
 
-  // Server-side auth check
-  const isAuthenticated = !!(authToken && getUserIdFromServerToken(authToken));
+  const isUnderConstructionFlag = await underConstructionFlag();
+  const isComingSoonFlag = await comingSoonFlag();
 
   return (
     <html lang="en">
@@ -117,12 +107,20 @@ export default async function RootLayout({
         <ReactQueryProvider>
           <AuthProvider>
             <CartProvider cartPromise={cart}>
-              <Navbar collections={collections} />
-              <main>
-                {children}
-                <Toaster closeButton />
-              </main>
-              <Footer />
+              {isUnderConstructionFlag ? (
+                <UnderConstructionPage />
+              ) : !isUnderConstructionFlag && isComingSoonFlag ? (
+                <ComingSoonPage />
+              ) : (
+                <>
+                  <Navbar collections={collections} />
+                  <main>
+                    {children}
+                    <Toaster closeButton />
+                  </main>
+                  <Footer />
+                </>
+              )}
             </CartProvider>
           </AuthProvider>
         </ReactQueryProvider>
