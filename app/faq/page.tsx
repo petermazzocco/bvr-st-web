@@ -6,7 +6,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = createMetadata({
   title: "FAQ",
   description:
-    "Frequently asked questions about BVR STR CO. Find answers about ordering, shipping, returns, and more about our streetwear and Oregon State merchandise.",
+    "Frequently asked questions about BVR STR CO. Find answers about ordering, shipping, returns, partnerships, and more about our streetwear and Oregon State merchandise.",
   canonical: "https://bvrstrco.com/faq",
   image: {
     url: "https://bvrstrco.com/faq.jpg",

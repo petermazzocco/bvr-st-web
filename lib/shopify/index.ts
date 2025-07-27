@@ -14,6 +14,7 @@ import {
   editCartItemsMutation,
   removeFromCartMutation,
   updateCartBuyerIdentityMutation,
+  applyDiscountCodeMutation,
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
 import {
@@ -452,6 +453,32 @@ export async function updateCartBuyerIdentity(
   }
 
   return reshapeCart(res.body.data.cartBuyerIdentityUpdate.cart);
+}
+
+/**
+ * Applies discount codes to a shopping cart
+ * @param cartId - Unique identifier of the cart to apply discount to
+ * @param discountCodes - Array of discount codes to apply
+ * @returns Promise containing the updated cart object
+ */
+export async function applyDiscountCode(
+  cartId: string,
+  discountCodes: string[],
+): Promise<Cart> {
+  const res = await shopifyFetch<any>({
+    query: applyDiscountCodeMutation,
+    variables: {
+      cartId,
+      discountCodes,
+    },
+    cache: "no-store",
+  });
+
+  if (res.body.data.cartDiscountCodesUpdate.userErrors?.length > 0) {
+    console.error("Discount code application errors:", res.body.data.cartDiscountCodesUpdate.userErrors);
+  }
+
+  return reshapeCart(res.body.data.cartDiscountCodesUpdate.cart);
 }
 
 /**

@@ -1,12 +1,7 @@
-import {
-  getUserDetails,
-  getUserOrders,
-} from "@/server/user/actions";
-import { getCustomerPaymentMethods } from "@/server/stripe/actions";
+import { getUserDetails, getUserOrders } from "@/server/user/actions";
 import { AccountHeaderCard } from "@/components/cards/account-header-card";
 import { AccountOrdersCard } from "@/components/cards/account-orders-card";
 import { AccountInfoCard } from "@/components/cards/account-info-card";
-import { AccountPaymentMethodsCard } from "@/components/cards/account-payment-methods-card";
 import { cookies } from "next/headers";
 
 export default async function ProfilePage() {
@@ -14,7 +9,7 @@ export default async function ProfilePage() {
   const cookieStore = await cookies();
   const authTokenCookie = cookieStore.get("bvrstrco_auth");
   const authToken = authTokenCookie?.value || null;
-  
+
   // Decode userId from token
   let userId: number | null = null;
   if (authToken) {
@@ -33,7 +28,6 @@ export default async function ProfilePage() {
   // Fetch all data
   const user = await getUserDetails(authToken, userId);
   const orders = await getUserOrders(authToken, userId, 1, 10);
-  const paymentMethods = await getCustomerPaymentMethods(userId, authToken);
 
   if (!user.data || (user && !user.success)) {
     return <div>No user found</div>;
@@ -47,13 +41,7 @@ export default async function ProfilePage() {
           <div className="flex flex-col md:flex-row gap-4">
             <AccountInfoCard user={user?.data} />
           </div>
-
-          <div className="flex flex-col md:flex-row gap-2">
-            <AccountPaymentMethodsCard paymentMethods={paymentMethods} />
-          </div>
         </div>
-        {/*
-        <AccountPaymentHistoryCard paymentHistory={paymentHistory} /> */}
         <AccountOrdersCard orders={orders} />
       </div>
     </div>

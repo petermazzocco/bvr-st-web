@@ -43,9 +43,9 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
               <h1 className="text-2xl font-bold text-foreground">
                 {user?.firstName} {user?.lastName}
               </h1>
-              <p className="text-muted-foreground">
-                {user?.email || "Loading..."}
-              </p>
+              <Badge variant="outline" className="mt-1">
+                {user?.points || "Loading "} Points
+              </Badge>
               {user?.isMember && (
                 <Badge variant="secondary" className="mt-1">
                   <Star className="w-3 h-3 mr-1" />

@@ -23,6 +23,27 @@ export const getUserIdFromTokenServer = async (): Promise<number | null> => {
 };
 
 /**
+ * Gets the membership status for a user
+ * @param token - Authentication token
+ * @param userId - User ID
+ * @returns Promise<boolean> indicating if the user is a member
+ */
+export const getMembershipStatus = async (
+  token: string,
+  userId: number,
+): Promise<boolean> => {
+  try {
+    const userResult = await getUserDetails(token, userId);
+    if (userResult.success && userResult.data) {
+      return userResult.data.isMember || false;
+    }
+    return false;
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
  * Signs in a user using email and password
  * @param email - User's email address
  * @param password - User's password

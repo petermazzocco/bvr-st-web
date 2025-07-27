@@ -9,7 +9,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = createMetadata({
   title: "Contact Us",
   description:
-    "Get in touch with BVR STR CO. Send us a message or apply to become a partner store. We're here to help with any questions about our streetwear and fashion products.",
+    "Get in touch with BVR STR CO. Send us a message or apply to become a partner store. We're here to help with any questions.",
   canonical: "https://bvrstrco.com/contact",
 });
 

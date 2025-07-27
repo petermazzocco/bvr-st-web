@@ -1,6 +1,7 @@
 "use client";
 import { VariantSelector } from "@/components/product/variant-selector";
 import { Price } from "@/components/product/product-price";
+import { MemberPrice } from "@/components/product/member-price";
 import { Product } from "@/lib/shopify/types";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Separator } from "../ui/separator";
@@ -12,7 +13,7 @@ import { useAuth } from "../auth/auth-context";
 import SizeChartModal from "../modals/size-chart-modal";
 import Image from "next/image";
 
-export function ProductDescription({ product }: { product: Product }) {
+export function ProductDescription({ product, isMember }: { product: Product; isMember?: boolean }) {
   // Call hooks at the top level, before any conditional logic
   const { isAuthenticated } = useAuth();
 
@@ -46,9 +47,10 @@ export function ProductDescription({ product }: { product: Product }) {
         <h1 className=" text-sm font-semibold">{product.title}</h1>
         <div className="flex flex-col items-center gap-2">
           <div className="mr-auto w-auto p-2 text-sm font-semibold">
-            <Price
+            <MemberPrice
               amount={product.priceRange.maxVariantPrice.amount}
               currencyCode={product.priceRange.maxVariantPrice.currencyCode}
+              isMember={isMember}
             />
           </div>
         </div>
@@ -79,7 +81,7 @@ export function ProductDescription({ product }: { product: Product }) {
 
       <AddToCartButton product={product} />
 
-      <div className="mt-4 flex uppercase flex-col gap-1 bg-muted h-fit w-full rounded-md text-xs font-muted-foreground font-semibold p-2">
+      <div className="mt-4 text-xs flex uppercase flex-col gap-1 bg-muted h-fit w-full rounded-md font-muted-foreground font-semibold p-2">
         <p>
           {isAuthenticated ? (
             <>Earn {Math.round(earnedPoints)} points</>
@@ -87,10 +89,10 @@ export function ProductDescription({ product }: { product: Product }) {
             <>
               Earn {Math.round(earnedPoints)} points +
               <Link
-                className="text-blue-600 cursor-pointer hover:underline ml-1"
+                className="text-blue-600 cursor-pointer underline hover:underline ml-1"
                 href="/signup"
               >
-                100 free points for signing up.
+                100 free points for signing up + 10% off with a membership
               </Link>
             </>
           )}

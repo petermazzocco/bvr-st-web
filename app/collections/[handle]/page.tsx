@@ -27,7 +27,7 @@ export async function generateMetadata(props: {
     description:
       collection.seo.description ||
       collection.description ||
-      `Shop the ${collection.title} collection at BVR STR CO. Curated streetwear and fashion pieces.`,
+      `BVR STR CO | ${collection.title}`,
     image: url
       ? {
           url,
@@ -116,7 +116,7 @@ export default async function Page(props: {
                     </div>
                     <div className="mt-3 space-y-1">
                       <div className="flex justify-between items-center">
-                        <Link 
+                        <Link
                           href={`/products/${product.handle}`}
                           id="product-title-link"
                           data-umami-event="Product title clicked"

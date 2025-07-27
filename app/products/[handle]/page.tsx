@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import { Gallery } from "@/components/product/product-gallery";
 import { getAdditionalProductDetailsByHandle } from "@/server/sanity/actions";
 import { AdditionalDetailsSection } from "@/components/product/additional-details";
+import { getUserDetails, getAuthTokenServer, getUserIdFromTokenServer } from "@/server/user/actions";
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
@@ -26,7 +27,7 @@ export async function generateMetadata(props: {
     description:
       product.seo.description ||
       product.description ||
-      `Shop ${product.title} at BVR STR CO. Premium streetwear and fashion with fast shipping and quality guarantee.`,
+      `BVR STR CO | ${product.title}`,
     image: url
       ? {
           url,
@@ -57,6 +58,23 @@ export default async function Page(props: {
   const additionalDetailsResult = await getAdditionalProductDetailsByHandle(
     params.handle,
   );
+
+  // Get user membership status
+  let isMember = false;
+  try {
+    const authToken = await getAuthTokenServer();
+    const userId = await getUserIdFromTokenServer();
+    
+    if (authToken && userId) {
+      const userResult = await getUserDetails(authToken, userId);
+      if (userResult.success && userResult.data) {
+        isMember = userResult.data.isMember || false;
+      }
+    }
+  } catch (error) {
+    // Continue without membership status if error occurs
+    isMember = false;
+  }
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -100,7 +118,7 @@ export default async function Page(props: {
           <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8">
             <div className="w-full md:max-w-md lg:max-w-lg">
               <Suspense fallback={null}>
-                <ProductDescription product={product} />
+                <ProductDescription product={product} isMember={isMember} />
               </Suspense>
             </div>
           </div>

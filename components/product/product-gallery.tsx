@@ -53,7 +53,7 @@ export function Gallery({
           <Zoom canSwipeToUnzoom={true} IconUnzoom={X}>
             <Image
               className="h-full w-full   object-cover"
-              sizes="(min-width: 1024px) 66vw, 100vw"
+              sizes="(min-width: 1024px) 100vw, 100vw"
               alt={images[imageIndex]?.altText as string}
               src={images[imageIndex]?.src as string}
               width={1024}

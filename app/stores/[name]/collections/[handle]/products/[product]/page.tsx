@@ -21,19 +21,25 @@ export async function generateMetadata(props: {
   const product = productResult.data.productByHandle;
   const featuredImage = product.featuredImage;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
-  
+
   return generateProductMetadata({
     title: `${product.title} - ${params.name}`,
-    description: product.description || `Shop ${product.title} from ${params.name} at BVR STR CO. Premium products from our trusted partner stores.`,
-    image: featuredImage ? {
-      url: featuredImage.url,
-      alt: featuredImage.altText || product.title,
-    } : undefined,
+    description:
+      product.description ||
+      `BVR STR CO | ${product.title} from ${params.name}.`,
+    image: featuredImage
+      ? {
+          url: featuredImage.url,
+          alt: featuredImage.altText || product.title,
+        }
+      : undefined,
     price: {
       amount: product.priceRange.minVariantPrice.amount,
       currency: product.priceRange.minVariantPrice.currencyCode,
     },
-    availability: product.variants.edges.some(edge => edge.node.availableForSale),
+    availability: product.variants.edges.some(
+      (edge) => edge.node.availableForSale,
+    ),
     sku: product.id,
     canonical: `${siteUrl}/stores/${params.name}/collections/${params.handle}/products/${params.product}`,
   });
