@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { isOTPExpired } from "./server/user/actions";
+import { comingSoonFlag, underConstructionFlag } from "./lib/flags";
 
 // Define the routes that require authentication
 const PROTECTED_ROUTES = ["/account"];
@@ -76,7 +76,19 @@ function clearCookieAndRedirect(
 }
 
 export async function middleware(request: NextRequest) {
+  const isUnderConstructionFlag = await underConstructionFlag();
+  const isComingSoonFlag = await comingSoonFlag();
   const { pathname, searchParams } = request.nextUrl;
+
+  // First check if site is under construction
+  if (isUnderConstructionFlag === true && request.nextUrl.pathname !== "/") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Next, check if site is coming soon
+  if (isComingSoonFlag === true && request.nextUrl.pathname !== "/") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   // Get the authToken from cookies
   const authToken = request.cookies.get("bvrstrco_auth")?.value;
