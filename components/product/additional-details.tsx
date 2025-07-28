@@ -3,13 +3,13 @@
 import { AdditionalDetails } from "@/lib/types";
 import { Separator } from "../ui/separator";
 import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
 
 export function AdditionalDetailsSection({
   details,
 }: {
   details: AdditionalDetails;
 }) {
+  console.log(details);
   return (
     <div className="mx-auto max-w-screen">
       <Separator />

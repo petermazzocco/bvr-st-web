@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
 
 export const PartnerStoreImage = ({
   collection,

@@ -10,7 +10,11 @@ import { Suspense } from "react";
 import { Gallery } from "@/components/product/product-gallery";
 import { getAdditionalProductDetailsByHandle } from "@/server/sanity/actions";
 import { AdditionalDetailsSection } from "@/components/product/additional-details";
-import { getUserDetails, getAuthTokenServer, getUserIdFromTokenServer } from "@/server/user/actions";
+import {
+  getUserDetails,
+  getAuthTokenServer,
+  getUserIdFromTokenServer,
+} from "@/server/user/actions";
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
@@ -64,7 +68,7 @@ export default async function Page(props: {
   try {
     const authToken = await getAuthTokenServer();
     const userId = await getUserIdFromTokenServer();
-    
+
     if (authToken && userId) {
       const userResult = await getUserDetails(authToken, userId);
       if (userResult.success && userResult.data) {
@@ -118,7 +122,11 @@ export default async function Page(props: {
           <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8">
             <div className="w-full md:max-w-md lg:max-w-lg">
               <Suspense fallback={null}>
-                <ProductDescription product={product} isMember={isMember} />
+                <ProductDescription
+                  product={product}
+                  isMember={isMember}
+                  details={additionalDetailsResult.data}
+                />
               </Suspense>
             </div>
           </div>

@@ -2,7 +2,6 @@
 
 import { AdditionalImage } from "@/lib/types";
 import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
 
 export function LookbookImages({ images }: { images: AdditionalImage[] }) {
   return (

@@ -14,7 +14,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "../ui/button";
 
 const SizeChartModal = () => {
   const sleevelessData = {
@@ -195,54 +194,47 @@ const SizeChartModal = () => {
   );
 
   return (
-    <div className="p-8">
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant={"link"}
-            className="text-xs text-muted-foreground underline underline-offset-2 p-0"
-          >
-            Size Chart
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">Size Chart</DialogTitle>
-          </DialogHeader>
+    <Dialog>
+      <DialogTrigger className="p-0 text-xs text-muted-foreground underline">
+        Size Chart
+      </DialogTrigger>
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">Size Chart</DialogTitle>
+        </DialogHeader>
 
-          <div className="mt-6">
-            <Tabs defaultValue="sleeveless" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="sleeveless">Tanks Tops</TabsTrigger>
-                <TabsTrigger value="tshirt">T-Shirts</TabsTrigger>
-                <TabsTrigger value="hoodie">Hoodies</TabsTrigger>
-              </TabsList>
+        <div className="mt-6">
+          <Tabs defaultValue="sleeveless" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="sleeveless">Tanks Tops</TabsTrigger>
+              <TabsTrigger value="tshirt">T-Shirts</TabsTrigger>
+              <TabsTrigger value="hoodie">Hoodies</TabsTrigger>
+            </TabsList>
 
-              <TabsContent value="sleeveless" className="mt-6">
-                {renderSizeTable(sleevelessData)}
-              </TabsContent>
+            <TabsContent value="sleeveless" className="mt-6">
+              {renderSizeTable(sleevelessData)}
+            </TabsContent>
 
-              <TabsContent value="tshirt" className="mt-6">
-                {renderSizeTable(tshirtData)}
-              </TabsContent>
+            <TabsContent value="tshirt" className="mt-6">
+              {renderSizeTable(tshirtData)}
+            </TabsContent>
 
-              <TabsContent value="hoodie" className="mt-6">
-                {renderSizeTable(hoodieData)}
-              </TabsContent>
-            </Tabs>
-          </div>
+            <TabsContent value="hoodie" className="mt-6">
+              {renderSizeTable(hoodieData)}
+            </TabsContent>
+          </Tabs>
+        </div>
 
-          <div className="mt-6 ">
-            <p className="text-xs text-muted-foreground ">
-              <span className="font-medium">Note:</span> Each piece is
-              handcrafted, ensuring its uniqueness. Minor variations from
-              website images and size charts are natural and highlight its
-              artisanal quality.
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+        <div className="mt-6 ">
+          <p className="text-xs text-muted-foreground ">
+            <span className="font-medium">Note:</span> Each piece is
+            handcrafted, ensuring its uniqueness. Minor variations from website
+            images and size charts are natural and highlight its artisanal
+            quality.
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

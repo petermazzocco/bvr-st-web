@@ -5,7 +5,6 @@ import { generateCollectionMetadata } from "@/lib/metadata";
 import { getCollectionLookbookByHandle } from "@/server/sanity/actions";
 import { PortableText } from "@portabletext/react";
 import { Separator } from "@/components/ui/separator";
-import cloudflareLoader from "@/lib/imageLoader";
 import { LookbookImages } from "@/components/collection/lookbook-images";
 
 export async function generateMetadata(props: {

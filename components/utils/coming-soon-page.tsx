@@ -17,6 +17,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const newsletterSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -71,55 +80,79 @@ export function ComingSoonPage() {
               </p>
             </div>
           ) : (
-            <div className="bg-background rounded-md p-4">
-              <p className="text-sm text-foreground font-semibold mb-3">
-                Get notified when we launch
-              </p>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-3"
+            <Dialog>
+              <DialogTrigger asChild className="  cursor-pointer">
+                <Button
+                  variant="default"
+                  className="w-full hover:bg-opacity-100"
                 >
-                  <FormField
-                    control={form.control}
-                    name="fullName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            className="text-foreground"
-                            placeholder="Enter your full name"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-destructive text-left text-xs" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            className="text-foreground"
-                            placeholder="Enter your email"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-destructive text-left text-xs" />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full" disabled={isPending}>
-                    {isPending ? "Subscribing..." : "Notify Me"}
-                  </Button>
-                </form>
-              </Form>
-            </div>
+                  Notify Me
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] rounded-md">
+                <DialogHeader>
+                  <DialogTitle>Ready for a new experience?</DialogTitle>
+                  <DialogDescription>
+                    Get notified when we launch
+                  </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-3"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="fullName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              className="text-foreground"
+                              placeholder="Enter your full name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-destructive text-left text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              className="text-foreground"
+                              placeholder="Enter your email"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-destructive text-left text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={isPending}
+                    >
+                      {isPending ? "Subscribing..." : "Notify Me"}
+                    </Button>
+                  </form>
+                </Form>
+                <DialogFooter>
+                  <p className="text-[0.5rem] text-muted-foreground">
+                    By subscribing, you agree to allow us to send you emails
+                    about new products, promotions, and updates up to the date
+                    and time of launch.
+                  </p>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
       </div>

@@ -43,15 +43,17 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
               <h1 className="text-2xl font-bold text-foreground">
                 {user?.firstName} {user?.lastName}
               </h1>
-              <Badge variant="outline" className="mt-1">
-                {user?.points || "Loading "} Points
-              </Badge>
-              {user?.isMember && (
-                <Badge variant="secondary" className="mt-1">
-                  <Star className="w-3 h-3 mr-1" />
-                  Member since {new Date(user.createdAt).toLocaleDateString()}
+              <div className="flex flex-col items-start gap-2">
+                {user?.isMember && (
+                  <Badge variant="default" className="mt-1">
+                    <Star className="w-3 h-3 mr-1 fill-current" />
+                    Member since {new Date(user.createdAt).toLocaleDateString()}
+                  </Badge>
+                )}
+                <Badge variant="outline" className="mt-1">
+                  {user?.points || "Loading "} Points
                 </Badge>
-              )}
+              </div>
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4 ">
