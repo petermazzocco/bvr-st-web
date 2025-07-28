@@ -1162,3 +1162,66 @@ export const exchangeOAuthCode = async (
     };
   }
 };
+
+/**
+ * Add a user to the newsletter
+ * @param email - Email address of the user
+ * @param fullName - Full name of the user
+ * @returns Promise containing a success message or error
+ */
+export const addToNewsletter = async (
+  email: string,
+  fullName: string,
+): Promise<ApiResult<{ message: string }>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/newsletter`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          fullName,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      if (errorText.includes("Email already exists")) {
+        return {
+          success: false,
+          error: "This email is already subscribed to our newsletter.",
+        };
+      }
+
+      if (errorText.includes("Invalid email")) {
+        return {
+          success: false,
+          error: "Please enter a valid email address.",
+        };
+      }
+
+      return {
+        success: false,
+        error: "Failed to add to newsletter. Please try again.",
+      };
+    }
+
+    const body: { message: string } = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Add to newsletter error:", error);
+    return {
+      success: false,
+      error:
+        "An unexpected error occurred while adding to newsletter. Please try again.",
+    };
+  }
+};
