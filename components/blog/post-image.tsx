@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
 import { ApiResult, Post } from "@/lib/types";
 import { urlFor } from "@/lib/sanity/image";
 

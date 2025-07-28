@@ -12,8 +12,18 @@ import { AuctionProductDescription } from "./auction-product-description";
 import { useAuth } from "../auth/auth-context";
 import SizeChartModal from "../modals/size-chart-modal";
 import Image from "next/image";
+import { AdditionalDetails } from "@/lib/types";
+import { CareInstructionsModal } from "../modals/care-instructions-modal";
 
-export function ProductDescription({ product, isMember }: { product: Product; isMember?: boolean }) {
+export function ProductDescription({
+  product,
+  isMember,
+  details,
+}: {
+  product: Product;
+  isMember?: boolean;
+  details?: AdditionalDetails;
+}) {
   // Call hooks at the top level, before any conditional logic
   const { isAuthenticated } = useAuth();
 
@@ -73,7 +83,11 @@ export function ProductDescription({ product, isMember }: { product: Product; is
       <VariantSelector options={product.options} variants={product.variants} />
 
       <div className="mb-6 text-xs leading-tight text-muted-foreground flex flex-row items-center justify-between">
-        <p>Model is 5&apos;10&quot; wearing a size Large</p>
+        {details?.additionalSpecs?.map((spec, index) => (
+          <div key={index} className="flex flex-row items-center">
+            <span>{spec.value}</span>
+          </div>
+        ))}
         <SizeChartModal />
       </div>
 
@@ -103,13 +117,14 @@ export function ProductDescription({ product, isMember }: { product: Product; is
           {stockStatus}
         </p>
       </div>
-      <div className="pt-2 flex flex-row items-center justify-between">
+      <div className="pt-2 flex flex-row items-center justify-between mb-4">
         <Link
           className="text-xs text-muted-foreground cursor-pointer underline   "
           href="/legal/return-policy"
         >
           Return Policy
         </Link>
+        <CareInstructionsModal details={details} />
         <Link
           className="text-xs text-muted-foreground cursor-pointer underline   "
           href="/contact"
@@ -117,6 +132,7 @@ export function ProductDescription({ product, isMember }: { product: Product; is
           Request Size
         </Link>
       </div>
+      <div className="flex justify-start items-center"></div>
     </>
   );
 }

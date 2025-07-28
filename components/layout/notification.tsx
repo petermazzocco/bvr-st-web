@@ -1,7 +1,6 @@
 "use client";
 import { Bell } from "lucide-react";
 import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
 import {
   DropdownMenu,
   DropdownMenuContent,

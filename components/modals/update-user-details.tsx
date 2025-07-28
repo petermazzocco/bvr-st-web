@@ -154,7 +154,7 @@ export function UpdateUserModal({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Update User Details</DialogTitle>
           <DialogDescription>

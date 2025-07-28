@@ -7,8 +7,6 @@ import {
   getPartnerStoreCollections,
 } from "@/server/vendor/actions";
 import { generateStoreMetadata } from "@/lib/metadata";
-import Image from "next/image";
-import cloudflareLoader from "@/lib/imageLoader";
 import { PartnerStoreImage } from "@/components/collection/partner-store-image";
 
 export async function generateMetadata(props: {
