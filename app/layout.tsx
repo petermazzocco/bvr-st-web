@@ -125,6 +125,26 @@ export default async function RootLayout({
           </AuthProvider>
         </ReactQueryProvider>
       </body>
+      {/* UpPromote Pixel - Load the external script */}
+      <Script
+        src="https://static-pixel.uppromote.com/collect/v1/collect.js"
+        strategy="afterInteractive"
+      />
+
+      {/* UpPromote Pixel Configuration - Cart Tracking Only */}
+      <Script
+        id="uppromote-config"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.upDataLayer = window.upDataLayer || []
+            function upTag() { return upDataLayer.push(arguments) }
+            upTag('config', 'myshopify_domain', '1budtj-uz.myshopify.com')
+          `,
+        }}
+      />
+
+      {/* Umami Analytics */}
       <Script
         src="https://umami.bvrstrco.com/script.js"
         data-website-id="58e0fb69-5e77-4c91-b2af-f0dac2eddf69"

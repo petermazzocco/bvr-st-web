@@ -80,6 +80,31 @@ export async function middleware(request: NextRequest) {
   const isComingSoonFlag = await comingSoonFlag();
   const { pathname, searchParams } = request.nextUrl;
 
+  // Capture UpPromote affiliate tracking parameter
+  const response = NextResponse.next();
+  const scaRef = searchParams.get("sca_ref");
+
+  if (scaRef) {
+    // Set cookie with 30-day expiration for affiliate tracking
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 30);
+
+    response.cookies.set("affiliate_ref", scaRef, {
+      expires,
+      path: "/",
+      httpOnly: false, // Allow client-side access if needed
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
+
+    // Optional: Clean URL by removing the parameter for better UX
+    const url = request.nextUrl.clone();
+    url.searchParams.delete("sca_ref");
+    if (url.search !== request.nextUrl.search) {
+      return NextResponse.redirect(url);
+    }
+  }
+
   // First check if site is under construction
   if (isUnderConstructionFlag === true && request.nextUrl.pathname !== "/") {
     return NextResponse.redirect(new URL("/", request.url));
@@ -127,7 +152,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // User has valid auth token and exists, allow access to protected routes
-    return NextResponse.next();
+    return response;
   }
 
   // Check if user is authenticated and trying to access public auth routes
@@ -143,7 +168,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(accountUrl);
     } else {
       // Invalid token, clear it and let them continue to signin/signup
-      const response = NextResponse.next();
       response.cookies.set("bvrstrco_auth", "", {
         expires: new Date(0),
         path: "/",
@@ -153,7 +177,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // For all other routes, continue normally
-  return NextResponse.next();
+  return response;
 }
 
 // Configure which routes the middleware should run on
