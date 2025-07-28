@@ -215,6 +215,46 @@ export function CartProvider({
     cartReducer,
   );
 
+  // UpPromote cart tracking - send updates whenever cart changes
+  useEffect(() => {
+    if (optimisticCart && typeof window !== "undefined") {
+      // Type-safe access to upTag function
+      const upTag = (window as any).upTag;
+
+      if (upTag && typeof upTag === "function") {
+        // Only send tracking if cart has items or a valid ID
+        if (optimisticCart.id || optimisticCart.totalQuantity > 0) {
+          console.log("Sending cart update to UpPromote:", {
+            id: optimisticCart.id,
+            totalQuantity: optimisticCart.totalQuantity,
+          });
+          upTag("event", "cart_updated", {
+            id: optimisticCart.id,
+            checkoutUrl: optimisticCart.checkoutUrl,
+            totalQuantity: optimisticCart.totalQuantity,
+            cost: {
+              totalAmount: {
+                amount: optimisticCart.cost.totalAmount.amount,
+                currencyCode: optimisticCart.cost.totalAmount.currencyCode,
+              },
+            },
+            lines: optimisticCart.lines.map((line) => ({
+              id: line.id,
+              quantity: line.quantity,
+              merchandise: {
+                id: line.merchandise.id,
+                product: {
+                  id: line.merchandise.product.id,
+                  handle: line.merchandise.product.handle,
+                  title: line.merchandise.product.title,
+                },
+              },
+            })),
+          });
+        }
+      }
+    }
+  }, [optimisticCart]);
 
   const updateCartItem = useCallback(
     (merchandiseId: string, updateType: UpdateType) => {
@@ -244,12 +284,7 @@ export function CartProvider({
       addCartItem,
       clearCart,
     }),
-    [
-      optimisticCart,
-      updateCartItem,
-      addCartItem,
-      clearCart,
-    ],
+    [optimisticCart, updateCartItem, addCartItem, clearCart],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
