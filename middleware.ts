@@ -96,13 +96,6 @@ export async function middleware(request: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
     });
-
-    // Optional: Clean URL by removing the parameter for better UX
-    const url = request.nextUrl.clone();
-    url.searchParams.delete("sca_ref");
-    if (url.search !== request.nextUrl.search) {
-      return NextResponse.redirect(url);
-    }
   }
 
   // First check if site is under construction
