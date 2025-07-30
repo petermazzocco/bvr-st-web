@@ -11,7 +11,7 @@ import {
 import { Affiliate } from "@/lib/types";
 import { Skeleton } from "../ui/skeleton";
 import { useSearchParams, usePathname } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 export const AffiliateSelection = ({
   affiliates,
@@ -21,8 +21,23 @@ export const AffiliateSelection = ({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // Get current affiliate from URL params
-  const currentAffiliate = searchParams.get("affiliate");
+  // Get current affiliate from URL params, but only if it's valid
+  const rawAffiliate = searchParams.get("affiliate");
+  const currentAffiliate = affiliates.some(a => a.code.toString() === rawAffiliate) 
+    ? rawAffiliate 
+    : null;
+
+  // Remove invalid affiliate param from URL
+  useEffect(() => {
+    if (rawAffiliate && !currentAffiliate && affiliates.length > 0) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("affiliate");
+      const newUrl = params.toString() 
+        ? `${pathname}?${params.toString()}` 
+        : pathname;
+      window.history.replaceState({}, "", newUrl);
+    }
+  }, [rawAffiliate, currentAffiliate, affiliates, pathname, searchParams]);
 
   // On selection, set the affiliate code in the URL
   const createQueryString = useCallback(
