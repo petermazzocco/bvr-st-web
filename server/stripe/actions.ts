@@ -113,17 +113,19 @@ export const getPaymentHistory = async (
  * @param successURL - URL to redirect to after successful payment
  * @param cancelURL - URL to redirect to if payment is cancelled
  * @param authToken - Bearer token for API authentication
+ * @param affiliateCode - Optional affiliate code for tracking
  * @returns Promise containing session ID and checkout URL
  * @throws Error if the API request fails
  */
 export const createCheckoutSession = async (
-  userId: number,
+  userID: number,
   successURL: string,
   cancelURL: string,
   authToken: string,
+  affiliateCode?: string,
 ) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/checkout-session`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/stripe/checkout-session`,
     {
       method: "POST",
       headers: {
@@ -131,9 +133,10 @@ export const createCheckoutSession = async (
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
-        userId,
+        userID,
         successURL,
         cancelURL,
+        affiliateCode,
       }),
     },
   );

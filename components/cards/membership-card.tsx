@@ -13,6 +13,7 @@ import { Separator } from "../ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { createCheckoutSession } from "@/server/stripe/actions";
 import { useApiMutation } from "@/hooks/use-api-mutation";
+import { useQuery } from "@tanstack/react-query";
 import {
   useAuth,
   useAuthToken,
@@ -20,19 +21,30 @@ import {
 } from "@/components/auth/auth-context";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { AffiliateSelection } from "../utils/affiliate-selection";
+import { getAffiliates } from "@/server/sanity/actions";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export function MembershipCard() {
   const { isAuthenticated } = useAuth();
   const userId = useUserId();
   const authToken = useAuthToken();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const affiliateCode = searchParams.get("affiliate");
+
+  const { data: affiliates } = useQuery({
+    queryKey: ["affiliates"],
+    queryFn: getAffiliates,
+  });
 
   const { mutate: createCheckout, isPending } = useApiMutation(
     async () => {
       if (!userId || !authToken) {
         throw new Error("User authentication required");
       }
-
       const successURL = `${window.location.origin}/membership?stripe_checkout=success&user_id=${userId}&session_id={CHECKOUT_SESSION_ID}`;
       const cancelURL = `${window.location.origin}/membership`;
 
@@ -41,6 +53,7 @@ export function MembershipCard() {
         successURL,
         cancelURL,
         authToken,
+        affiliateCode || undefined,
       );
       return { success: true, data: result };
     },
@@ -89,7 +102,22 @@ export function MembershipCard() {
           </ul>
         </div>
       </CardContent>
-      <CardFooter className="w-full">
+      <CardFooter className="w-full flex flex-col gap-4">
+        {affiliates?.data && (
+          <div className="flex flex-col gap-2">
+            <p className="text-xs text-foreground">
+              This purchase will support:
+            </p>
+            <AffiliateSelection affiliates={affiliates.data} />
+
+            <Link
+              href="/about#pricing"
+              className="text-xs underline text-muted-foreground"
+            >
+              Learn more about our affiliate program and transparent pricing
+            </Link>
+          </div>
+        )}
         <Button
           className="w-full"
           onClick={handleStartMembership}
