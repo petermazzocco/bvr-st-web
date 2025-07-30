@@ -33,7 +33,10 @@ export default function Page() {
 
       <div className="bg-background py-16">
         <div className="max-w-4xl mx-auto px-4 text-left">
-          <h2 className="text-lg text-left font-bold mb-4 text-foreground">
+          <h2
+            id="mission"
+            className="text-lg text-left font-bold mb-4 text-foreground"
+          >
             Mission
           </h2>
           <div className="flex flex-col gap-4 text-xs text-muted-foreground leading-relaxed mb-16">
@@ -87,6 +90,67 @@ export default function Page() {
             </p>
             <p className="italic">
               We don&apos;t just rep the brand. We are the brand.
+            </p>
+          </div>
+
+          <h2
+            id="pricing"
+            className="text-lg text-left font-bold mb-4 text-foreground"
+          >
+            Transparent Pricing & Supporting Student-Athletes
+          </h2>
+          <div className="flex flex-col gap-4 text-xs text-muted-foreground leading-relaxed mb-16">
+            <p>
+              <strong>
+                Our pricing is designed to maximize financial benefits for
+                Oregon State student-athletes and keep prices as low as
+                possible.
+              </strong>
+            </p>
+            <p>Here&apos;s exactly how our commission structure works:</p>
+            <ul className="list-disc ml-6 space-y-2">
+              <li>
+                <strong>Affiliates receive:</strong> 40% of selling price
+              </li>
+              <li>
+                <strong>We maintain:</strong> 60% of selling price (50% covers
+                product cost + 10% buffer for fees/expenses)
+              </li>
+            </ul>
+            <p>
+              <strong>Example Price Breakdown:</strong>
+            </p>
+            <ul className="list-disc ml-6 space-y-1">
+              <li>Cost to make product: $20.00</li>
+              <li>
+                Selling price of product: $40.00 (calculated as $20.00 ÷ 0.50)
+              </li>
+              <li>Affiliate receives: $16.00 (40%)</li>
+              <li>We receive: $24.00 (60%)</li>
+              <li>After covering cost: $4.00 profit buffer (10%)</li>
+              <li>
+                If the 10% is not needed to cover any additional expenses, the
+                profit is put towards both operational expenses for the team and
+                marketing efforts that support the student-athletes who model
+                and promote our brand.
+              </li>
+            </ul>
+            <p>
+              This structure ensures student-athletes get a strong 40%
+              commission while maintaining profitability with a 10% buffer for
+              additional expenses.
+            </p>
+            <p>
+              <strong>
+                Don&apos;t have an affiliate code at checkout, but want the
+                athletes to earn as much as possible? No problem.
+              </strong>
+            </p>
+            <p>
+              The majority of our profits go directly into marketing efforts
+              that support the student-athletes who model and promote our brand.
+              Your purchase still benefits Oregon State student-athletes,
+              whether you use an affiliate code or not.
             </p>
           </div>
         </div>

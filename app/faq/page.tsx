@@ -106,6 +106,42 @@ export default function Page() {
             </div>
 
             <div>
+              <p id="pricing" className="font-bold text-foreground mb-2">
+                How is your pricing structured?
+              </p>
+              <p className="mb-3">
+                Our pricing is designed to maximize financial benefits for
+                Oregon State student-athletes through our transparent commission
+                structure:
+              </p>
+              <ul className="list-disc ml-6 space-y-1 mb-3">
+                <li>
+                  <strong>Affiliates receive:</strong> 40% of selling price
+                </li>
+                <li>
+                  <strong>We maintain:</strong> 60% of selling price (50% covers
+                  product cost + 10% buffer for fees/expenses)
+                </li>
+              </ul>
+              <p className="mb-2">
+                <strong>Example (Hoodie):</strong>
+              </p>
+              <ul className="list-disc ml-6 space-y-1 mb-3">
+                <li>Cost to make: $20.00</li>
+                <li>Selling price: $40.00</li>
+                <li>Affiliate receives: $16.00 (40%)</li>
+                <li>After covering costs: $4.00 profit buffer</li>
+              </ul>
+              <p>
+                You can read more about our transparent pricing{" "}
+                <a className="underline" href="/about#pricing">
+                  here
+                </a>
+                .
+              </p>
+            </div>
+
+            <div>
               <p className="font-bold text-foreground mb-2">
                 What are your shipping options?
               </p>

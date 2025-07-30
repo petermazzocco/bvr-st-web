@@ -809,3 +809,22 @@ export interface CollectionLookbook {
   images: AdditionalImage[];
   credits?: KeyValuePair[];
 }
+
+export interface Affiliate {
+  affiliateId: string;
+  name: string;
+  email: string;
+  sport: string;
+  address: string;
+  code: Code;
+  commissionPercentage: number;
+  discountPercentage: number;
+  isActive: boolean;
+}
+
+export interface Code {
+  id: string;
+  commission: number;
+  discount: number;
+  affiliateID: string;
+}

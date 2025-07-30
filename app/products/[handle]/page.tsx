@@ -8,7 +8,10 @@ import { ProductDescription } from "@/components/product/product-description";
 import { Image } from "@/lib/shopify/types";
 import { Suspense } from "react";
 import { Gallery } from "@/components/product/product-gallery";
-import { getAdditionalProductDetailsByHandle } from "@/server/sanity/actions";
+import {
+  getAdditionalProductDetailsByHandle,
+  getAffiliates,
+} from "@/server/sanity/actions";
 import { AdditionalDetailsSection } from "@/components/product/additional-details";
 import {
   getUserDetails,
@@ -56,6 +59,7 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const product = await getProduct(params.handle);
+  const affiliates = await getAffiliates();
   if (!product) return notFound();
 
   // Fetch additional details
@@ -125,6 +129,7 @@ export default async function Page(props: {
                 <ProductDescription
                   product={product}
                   isMember={isMember}
+                  affiliates={affiliates.data}
                   details={additionalDetailsResult.data}
                 />
               </Suspense>

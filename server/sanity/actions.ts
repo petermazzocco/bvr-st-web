@@ -11,6 +11,7 @@ import {
   AdditionalDetails,
   AdditionalCollectionDetails,
   CollectionLookbook,
+  Affiliate,
 } from "@/lib/types";
 
 /**
@@ -541,6 +542,46 @@ export const getCollectionLookbookByHandle = async (
     };
   } catch (error) {
     console.error("Get additional details error:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred. Please try again.",
+    };
+  }
+};
+
+/**
+ * Retrieves list of affiliates that are active
+ * @param handle - Merchandise handle identifier
+ * @returns Promise containing additional details or error
+ */
+export const getAffiliates = async (): Promise<ApiResult<Affiliate[]>> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/affiliates`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Get affiliates error:", errorText);
+      return {
+        success: false,
+        error: "Failed to retrieve affiliates. Please try again.",
+      };
+    }
+
+    const body: Affiliate[] = await response.json();
+    return {
+      success: true,
+      data: body,
+    };
+  } catch (error) {
+    console.error("Get affiliates error:", error);
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
