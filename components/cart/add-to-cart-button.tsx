@@ -8,6 +8,7 @@ import { Product, ProductVariant } from "@/lib/shopify/types";
 import { useActionState } from "react";
 import { useCart } from "./cart-context";
 import { Button } from "../ui/button";
+import { useSearchParams } from "next/navigation";
 
 function SubmitButton({
   availableForSale,
@@ -64,6 +65,7 @@ export function AddToCartButton({ product }: { product: Product }) {
   const { variants, availableForSale } = product;
   const { addCartItem } = useCart();
   const { state } = useProduct();
+  const searchParams = useSearchParams();
   const [message, formAction] = useActionState(addItem, null);
 
   const variant = variants.find((variant: ProductVariant) =>
@@ -73,16 +75,24 @@ export function AddToCartButton({ product }: { product: Product }) {
   );
   const defaultVariantId = variants.length === 1 ? variants[0]?.id : undefined;
   const selectedVariantId = variant?.id || defaultVariantId;
-  const actionWithVariant = formAction.bind(null, selectedVariantId);
+  
+  // Get affiliate from URL params
+  const affiliate = searchParams.get('affiliate');
   const finalVariant = variants.find(
     (variant) => variant.id === selectedVariantId,
   )!;
 
   return (
     <form
-      action={async () => {
+      action={async (formData) => {
+        // Add the selectedVariantId and affiliate to the formData
+        formData.set('selectedVariantId', selectedVariantId || '');
+        if (affiliate) {
+          formData.set('affiliate', affiliate);
+        }
+        
         addCartItem(finalVariant, product);
-        await actionWithVariant();
+        await formAction(formData);
       }}
     >
       <SubmitButton

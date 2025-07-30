@@ -12,27 +12,26 @@ import { AuctionProductDescription } from "./auction-product-description";
 import { useAuth } from "../auth/auth-context";
 import SizeChartModal from "../modals/size-chart-modal";
 import Image from "next/image";
-import { AdditionalDetails } from "@/lib/types";
+import { AdditionalDetails, Affiliate } from "@/lib/types";
 import { CareInstructionsModal } from "../modals/care-instructions-modal";
+import { AffiliateSelection } from "../utils/affiliate-selection";
 
 export function ProductDescription({
   product,
   isMember,
   details,
+  affiliates,
 }: {
   product: Product;
   isMember?: boolean;
   details?: AdditionalDetails;
+  affiliates?: Affiliate[] | undefined;
 }) {
-  // Call hooks at the top level, before any conditional logic
   const { isAuthenticated } = useAuth();
 
-  // Check if this is an auction product
   if (isAuctionProduct(product)) {
     return <AuctionProductDescription product={product} />;
   }
-
-  // Regular product flow (your existing code)
 
   const basePoints = Math.floor(
     Number(product.priceRange.maxVariantPrice.amount),
@@ -90,10 +89,26 @@ export function ProductDescription({
         ))}
         <SizeChartModal />
       </div>
-
       <Separator className="my-4" />
+      <div className="flex flex-col gap-4">
+        {affiliates && (
+          <div className="flex flex-col gap-2">
+            <p className="text-xs text-foreground">
+              This purchase will support:
+            </p>
+            <AffiliateSelection affiliates={affiliates} />
 
-      <AddToCartButton product={product} />
+            <Link
+              href="/about#pricing"
+              className="text-xs underline text-muted-foreground"
+            >
+              Learn more about our affiliate program and transparent pricing
+            </Link>
+          </div>
+        )}
+
+        <AddToCartButton product={product} />
+      </div>
 
       <div className="mt-4 text-xs flex uppercase flex-col gap-1 bg-muted h-fit w-full rounded-md font-muted-foreground font-semibold p-2">
         <p>

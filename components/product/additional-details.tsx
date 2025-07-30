@@ -9,7 +9,6 @@ export function AdditionalDetailsSection({
 }: {
   details: AdditionalDetails;
 }) {
-  console.log(details);
   return (
     <div className="mx-auto max-w-screen">
       <Separator />

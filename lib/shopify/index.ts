@@ -15,6 +15,7 @@ import {
   removeFromCartMutation,
   updateCartBuyerIdentityMutation,
   applyDiscountCodeMutation,
+  cartAttributesUpdateMutation,
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
 import {
@@ -449,7 +450,10 @@ export async function updateCartBuyerIdentity(
   });
 
   if (res.body.data.cartBuyerIdentityUpdate.userErrors?.length > 0) {
-    console.error("Buyer identity update errors:", res.body.data.cartBuyerIdentityUpdate.userErrors);
+    console.error(
+      "Buyer identity update errors:",
+      res.body.data.cartBuyerIdentityUpdate.userErrors,
+    );
   }
 
   return reshapeCart(res.body.data.cartBuyerIdentityUpdate.cart);
@@ -475,7 +479,10 @@ export async function applyDiscountCode(
   });
 
   if (res.body.data.cartDiscountCodesUpdate.userErrors?.length > 0) {
-    console.error("Discount code application errors:", res.body.data.cartDiscountCodesUpdate.userErrors);
+    console.error(
+      "Discount code application errors:",
+      res.body.data.cartDiscountCodesUpdate.userErrors,
+    );
   }
 
   return reshapeCart(res.body.data.cartDiscountCodesUpdate.cart);
@@ -796,7 +803,9 @@ export async function getAuctions(): Promise<any[]> {
  * @param auctionHandle - Handle/slug of the auction
  * @returns Promise containing array of products in the auction
  */
-export async function getAuctionProducts(auctionHandle: string): Promise<Product[]> {
+export async function getAuctionProducts(
+  auctionHandle: string,
+): Promise<Product[]> {
   const res = await shopifyFetch<any>({
     query: getAuctionProductsQuery,
     tags: [TAGS.products],
@@ -810,9 +819,37 @@ export async function getAuctionProducts(auctionHandle: string): Promise<Product
     return [];
   }
 
-  const productReferences = res.body.data.metaobject.fields.find(
-    (field: any) => field.key === 'products'
-  )?.references?.edges || [];
+  const productReferences =
+    res.body.data.metaobject.fields.find(
+      (field: any) => field.key === "products",
+    )?.references?.edges || [];
 
   return reshapeProducts(productReferences.map((edge: any) => edge.node));
+}
+
+/**
+ * Sets affiliate metafield on a shopping cart
+ * @param cartId - Unique identifier of the cart to set metafield on
+ * @param affiliateCode - Affiliate code to set as metafield value
+ * @returns Promise containing the updated cart object
+ */
+export async function setCartAttribute(
+  cartId: string,
+  affiliateCode: string,
+): Promise<Cart> {
+  const res = await shopifyFetch<any>({
+    query: cartAttributesUpdateMutation,
+    variables: {
+      cartId,
+      attributes: [
+        {
+          key: "affiliate_code",
+          value: affiliateCode,
+        },
+      ],
+    },
+    cache: "no-store",
+  });
+
+  return reshapeCart(res.body.data.cartAttributesUpdate.cart);
 }
