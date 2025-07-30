@@ -72,8 +72,8 @@ export default function MembershipPage() {
   const SuccessMessage = () => (
     <div className="flex flex-col items-center justify-center h-64 space-y-4">
       <div className="text-center">
-        <h2 className="text-2xl mb-2">You&apos;re now a Premium Member!</h2>
-        <p className="text-gray-600 mb-4">
+        <h2 className="text-md mb-2">You&apos;re now a Premium Member!</h2>
+        <p className="text-muted-foreground text-xs mb-4">
           Access your account and benefits now:
         </p>
         <Separator className="my-4" />
@@ -89,7 +89,7 @@ export default function MembershipPage() {
       <div className="hidden md:flex flex-col items-center justify-center w-1/2 py-2">
         {isPending ? (
           <div className="flex items-center justify-center h-64">
-            <div className="text-center">
+            <div className="text-center text-xs">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
               <p>Processing your membership...</p>
             </div>
@@ -128,13 +128,12 @@ export default function MembershipPage() {
           ) : showSuccessMessage ? (
             <div className="flex flex-col items-center justify-center h-64 space-y-4">
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-green-400 mb-2">
-                  🎉 Congratulations!
-                </h2>
-                <p className="text-lg mb-4 text-white">
+                <p className="text-md mb-2 text-background font-semibold">
                   You&apos;re now a premium member!
                 </p>
-                <p className="text-gray-200 mb-6">Access your account now</p>
+                <p className="text-muted text-xs mb-6">
+                  Access your account now
+                </p>
                 <Button
                   onClick={() => router.push("/account")}
                   className="px-6 py-2"
