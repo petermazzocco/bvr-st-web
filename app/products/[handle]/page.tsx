@@ -18,6 +18,7 @@ import {
   getAuthTokenServer,
   getUserIdFromTokenServer,
 } from "@/server/user/actions";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
@@ -113,7 +114,7 @@ export default async function Page(props: {
         <div className="min-h-screen flex flex-col md:flex-row  ">
           <div className="w-full md:w-1/2">
             <Suspense
-              fallback={<div className="w-full h-full overflow-hidden" />}
+              fallback={<Skeleton className="w-full h-full overflow-hidden" />}
             >
               <Gallery
                 images={product.images.slice(0, 5).map((image: Image) => ({
