@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Affiliate } from "@/lib/types";
 import { Skeleton } from "../ui/skeleton";
-import { useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
 export const AffiliateSelection = ({
@@ -19,7 +19,7 @@ export const AffiliateSelection = ({
   affiliates: Affiliate[];
 }) => {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const router = useRouter();
 
   // Get current affiliate from URL params, but only if it's valid
   const rawAffiliate = searchParams.get("affiliate");
@@ -33,21 +33,18 @@ export const AffiliateSelection = ({
       const params = new URLSearchParams(searchParams.toString());
       params.delete("affiliate");
       const newUrl = params.toString() 
-        ? `${pathname}?${params.toString()}` 
-        : pathname;
-      window.history.replaceState({}, "", newUrl);
+        ? `?${params.toString()}` 
+        : "";
+      router.replace(newUrl, { scroll: false });
     }
-  }, [rawAffiliate, currentAffiliate, affiliates, pathname, searchParams]);
+  }, [rawAffiliate, currentAffiliate, affiliates, router, searchParams]);
 
-  // On selection, set the affiliate code in the URL
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-      return params.toString();
-    },
-    [searchParams],
-  );
+  // Update URL function similar to variant selector
+  const updateURL = useCallback((affiliateCode: string) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("affiliate", affiliateCode);
+    router.push(`?${newParams.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
   // Don't render until we have data
   if (!affiliates || affiliates.length === 0) {
@@ -64,31 +61,32 @@ export const AffiliateSelection = ({
   );
 
   return (
-    <Select
-      value={currentAffiliate || ""} // Set current value from URL params
-      onValueChange={(value) => {
-        const queryString = createQueryString("affiliate", value);
-        window.location.href = `${pathname}?${queryString}`;
-      }}
-    >
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder="Support An Athlete">
-          {selectedAffiliate ? selectedAffiliate.name : "Support An Athlete"}
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Athletes</SelectLabel>
-          {affiliates.map((affiliate, index) => (
-            <SelectItem
-              key={affiliate?.code?.toString() || `affiliate-${index}`}
-              value={affiliate?.code?.toString() || `affiliate-${index}`}
-            >
-              {affiliate?.name || "Loading..."}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <form>
+      <Select
+        value={currentAffiliate || ""} // Set current value from URL params
+        onValueChange={(value) => {
+          updateURL(value);
+        }}
+      >
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Support An Athlete">
+            {selectedAffiliate ? selectedAffiliate.name : "Support An Athlete"}
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Athletes</SelectLabel>
+            {affiliates.map((affiliate, index) => (
+              <SelectItem
+                key={affiliate?.code?.toString() || `affiliate-${index}`}
+                value={affiliate?.code?.toString() || `affiliate-${index}`}
+              >
+                {affiliate?.name || "Loading..."}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </form>
   );
 };
