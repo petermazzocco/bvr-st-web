@@ -3,7 +3,6 @@ import { Navbar } from "@/components/layout/navbar";
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/layout/footer";
-import { ReactQueryProvider } from "@/components/providers/react-query-provider";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
 import { getCart } from "@/lib/shopify";
@@ -14,6 +13,10 @@ import Script from "next/script";
 import { comingSoonFlag, underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
 import { ComingSoonPage } from "@/components/utils/coming-soon-page";
+import {
+  getAllPartneredStores,
+  getPartneredStore,
+} from "@/server/vendor/actions";
 
 export const metadata: Metadata = {
   title: "BVR STR CO",
@@ -97,6 +100,7 @@ export default async function RootLayout({
 
   const cart = getCart(cartId);
   const collections = await getCollections();
+  const partners = await getAllPartneredStores();
 
   const isUnderConstructionFlag = await underConstructionFlag();
   const isComingSoonFlag = await comingSoonFlag();
@@ -104,26 +108,24 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${ibm.variable} antialiased min-h-screen`}>
-        <ReactQueryProvider>
-          <AuthProvider>
-            <CartProvider cartPromise={cart}>
-              {isUnderConstructionFlag ? (
-                <UnderConstructionPage />
-              ) : !isUnderConstructionFlag && isComingSoonFlag ? (
-                <ComingSoonPage />
-              ) : (
-                <>
-                  <Navbar collections={collections} />
-                  <main>
-                    {children}
-                    <Toaster closeButton />
-                  </main>
-                  <Footer />
-                </>
-              )}
-            </CartProvider>
-          </AuthProvider>
-        </ReactQueryProvider>
+        <AuthProvider>
+          <CartProvider cartPromise={cart}>
+            {isUnderConstructionFlag ? (
+              <UnderConstructionPage />
+            ) : !isUnderConstructionFlag && isComingSoonFlag ? (
+              <ComingSoonPage />
+            ) : (
+              <>
+                <Navbar collections={collections} partners={partners} />
+                <main>
+                  {children}
+                  <Toaster closeButton />
+                </main>
+                <Footer />
+              </>
+            )}
+          </CartProvider>
+        </AuthProvider>
       </body>
       {/* UpPromote Pixel - Load the external script */}
       <Script

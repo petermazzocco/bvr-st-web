@@ -1,8 +1,4 @@
-"use client";
-
-import { useState } from "react";
 import { Menu, ChevronRight } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -11,10 +7,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
 import { Collection } from "@/lib/shopify/types";
-import { useQuery } from "@tanstack/react-query";
-import { getAllPartneredStores } from "@/server/vendor/actions";
+import { Vendor } from "@/lib/types";
 import clsx from "clsx";
 
 const helpLinks = [
@@ -27,32 +21,15 @@ const helpLinks = [
 
 export function NavSideSheet({
   collections,
+  partners,
   className,
 }: {
   collections: Collection[] | undefined;
+  partners: Vendor[] | undefined;
   className?: string;
 }) {
-  const [parentOpen, setParentOpen] = useState(false);
-
-  const handleDirectLinkClick = () => {
-    // Close sheet when clicking on direct links
-    setParentOpen(false);
-  };
-
-  const {
-    data: partners,
-    isLoading: partnersLoading,
-    error: partnersError,
-  } = useQuery({
-    queryKey: ["partners"],
-    queryFn: async () => {
-      const result = await getAllPartneredStores();
-      return result;
-    },
-  });
-
   return (
-    <Sheet open={parentOpen} onOpenChange={setParentOpen}>
+    <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className={clsx(className)}>
           <Menu className="h-4 w-4" />
@@ -82,7 +59,6 @@ export function NavSideSheet({
                     id="collection-chosen-button"
                     data-umami-event="Collection chose button"
                     className={`flex items-center justify-between rounded-lg px-2 py-2 text-xs font-medium hover:underline ${collection.title === "Sale" ? "text-red-600 hover:text-red-700" : "text-foreground hover:text-foreground"}`}
-                    onClick={handleDirectLinkClick}
                   >
                     <div className="flex items-center gap-3">
                       <span>{collection.title}</span>
@@ -98,30 +74,18 @@ export function NavSideSheet({
                 Partner Stores
               </h3>
               <nav className="space-y-1">
-                {partnersLoading && (
-                  <div className="px-3 py-2 text-sm text-muted-foreground">
-                    Loading stores...
-                  </div>
-                )}
-                {partnersError && (
-                  <div className="px-3 py-2 text-sm text-red-600">
-                    Failed to load stores
-                  </div>
-                )}
-                {partners?.success &&
-                  partners.data?.map((vendor) => (
-                    <a
-                      key={vendor._id}
-                      href={`/stores/${vendor.storeName}`}
-                      className="flex items-center justify-between rounded-lg px-2 py-2 text-xs font-medium hover:underline"
-                      onClick={handleDirectLinkClick}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span>{vendor.name}</span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 opacity-50" />
-                    </a>
-                  ))}
+                {partners?.map((vendor) => (
+                  <a
+                    key={vendor._id}
+                    href={`/stores/${vendor.storeName}`}
+                    className="flex items-center justify-between rounded-lg px-2 py-2 text-xs font-medium hover:underline"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span>{vendor.name}</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 opacity-50" />
+                  </a>
+                ))}
               </nav>
             </div>
           </div>
@@ -135,7 +99,6 @@ export function NavSideSheet({
                     key={link.name}
                     href={link.href}
                     className="flex items-center justify-between rounded-lg py-2 text-xs font-medium hover:underline"
-                    onClick={() => setParentOpen(false)}
                   >
                     <span>{link.name}</span>
                   </a>

@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Card,
   CardContent,
@@ -12,68 +10,47 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { createCheckoutSession } from "@/server/stripe/actions";
-import { useApiMutation } from "@/hooks/use-api-mutation";
-import { useQuery } from "@tanstack/react-query";
-import {
-  useAuth,
-  useAuthToken,
-  useUserId,
-} from "@/components/auth/auth-context";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { getAuthTokenServer, getUserIdFromTokenServer } from "@/server/user/actions";
 import { AffiliateSelection } from "../utils/affiliate-selection";
 import { getAffiliates } from "@/server/sanity/actions";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
+import Form from "next/form";
 
-export function MembershipCard() {
-  const { isAuthenticated } = useAuth();
-  const userId = useUserId();
-  const authToken = useAuthToken();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+interface MembershipCardProps {
+  searchParams?: {
+    affiliate?: string;
+  };
+}
 
-  const affiliateCode = searchParams.get("affiliate");
+export async function MembershipCard({ searchParams }: MembershipCardProps = {}) {
+  const authToken = await getAuthTokenServer();
+  const userId = await getUserIdFromTokenServer();
+  const affiliateCode = searchParams?.affiliate;
 
-  const { data: affiliates } = useQuery({
-    queryKey: ["affiliates"],
-    queryFn: getAffiliates,
-  });
+  // Get affiliates data
+  const affiliatesResult = await getAffiliates();
+  const affiliates = affiliatesResult?.data;
 
-  const { mutate: createCheckout, isPending } = useApiMutation(
-    async () => {
-      if (!userId || !authToken) {
-        throw new Error("User authentication required");
-      }
-      const successURL = `${window.location.origin}/membership?stripe_checkout=success&user_id=${userId}&session_id={CHECKOUT_SESSION_ID}`;
-      const cancelURL = `${window.location.origin}/membership`;
-
-      const result = await createCheckoutSession(
-        userId,
-        successURL,
-        cancelURL,
-        authToken,
-        affiliateCode || undefined,
-      );
-      return { success: true, data: result };
-    },
-    {
-      onSuccess: (data) => {
-        // Redirect to Stripe checkout
-        window.location.href = data.url;
-      },
-      onError: (error) => {
-        toast.error(error || "Failed to create checkout session");
-      },
-    },
-  );
-
-  const handleStartMembership = () => {
-    if (!isAuthenticated) {
-      router.push("/signin?redirect=/membership");
+  const handleStartMembership = async (formData: FormData) => {
+    "use server";
+    
+    const authToken = await getAuthTokenServer();
+    const userId = await getUserIdFromTokenServer();
+    
+    if (!authToken || !userId) {
+      redirect("/signin?redirect=/membership");
       return;
     }
-    createCheckout(undefined);
+
+    // Add userId and affiliate code to form data
+    formData.append("userId", userId.toString());
+    if (affiliateCode) {
+      formData.append("affiliateCode", affiliateCode);
+    }
+
+    // This will redirect to Stripe checkout
+    await createCheckoutSession(formData);
   };
 
   return (
@@ -103,12 +80,12 @@ export function MembershipCard() {
         </div>
       </CardContent>
       <CardFooter className="w-full flex flex-col gap-4">
-        {affiliates?.data && (
+        {affiliates && (
           <div className="flex flex-col gap-2">
             <p className="text-xs text-foreground">
               This purchase will support:
             </p>
-            <AffiliateSelection affiliates={affiliates.data} />
+            <AffiliateSelection affiliates={affiliates} />
 
             <Link
               href="/about#pricing"
@@ -118,15 +95,16 @@ export function MembershipCard() {
             </Link>
           </div>
         )}
-        <Button
-          className="w-full"
-          onClick={handleStartMembership}
-          id="membership-button"
-          data-umami-event="Create membership intent button"
-          disabled={isPending}
-        >
-          {isPending ? "Processing..." : "Start Membership"}
-        </Button>
+        <Form action={handleStartMembership}>
+          <Button
+            type="submit"
+            className="w-full"
+            id="membership-button"
+            data-umami-event="Create membership intent button"
+          >
+            Start Membership
+          </Button>
+        </Form>
       </CardFooter>
     </Card>
   );

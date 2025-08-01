@@ -2,6 +2,7 @@
 
 import { Order, UpdateUser, User, UserSignUp, ApiResult } from "@/lib/types";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const getAuthTokenServer = async (): Promise<string | null> => {
   const cookieStore = await cookies();
@@ -50,59 +51,56 @@ export const getMembershipStatus = async (
  * @param callbackUrl - URL to redirect to after successful sign in
  * @returns Promise containing authentication token and callback URL or error
  */
-export const signInWithEmail = async (
-  email: string,
-  password: string,
-  callbackUrl: string,
-): Promise<ApiResult<{ token: string; callbackUrl: string }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/email`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, callbackUrl }),
+export async function signInWithEmail(formData: FormData) {
+  const requestData = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+    callbackUrl: formData.get("callbackUrl"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/email`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(requestData),
+    },
+  );
 
-    if (!response.ok) {
-      const errorText = await response.text();
+  const responseText = await response.text();
 
-      if (errorText.includes("Invalid credentials")) {
-        return {
-          success: false,
-          error: "Invalid email or password. Please try again.",
-        };
-      }
-
-      if (errorText.includes("User not found")) {
-        return {
-          success: false,
-          error: "No account found with this email address.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Sign in failed. Please try again.",
-      };
-    }
-
-    const body: { token: string; callbackUrl: string } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Sign in error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+  if (!response.ok) {
+    // Handle non-200 responses
+    console.error("Authentication failed:", response.status, responseText);
+    throw new Error(`Authentication failed: ${responseText}`);
   }
-};
+
+  let body: { token: string; callbackUrl: string };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  if (body.token) {
+    // Set the authentication token as a cookie
+    const cookieStore = await cookies();
+    cookieStore.set("bvrstrco_auth", body.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    // Redirect to callback URL or default dashboard
+    redirect(body.callbackUrl || "/account");
+  } else {
+    throw new Error("No token received");
+  }
+}
 
 /**
  * Signs in a user using phone number and password
@@ -111,76 +109,65 @@ export const signInWithEmail = async (
  * @param callback - URL to redirect to after successful sign in
  * @returns Promise containing authentication token and callback URL or error
  */
-export const signInWithPhone = async (
-  phone: string,
-  password: string,
-  callback: string,
-): Promise<ApiResult<{ token: string; callbackUrl: string }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/phone`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phone, password, callback }),
+export async function signInWithPhone(formData: FormData) {
+  const requestData = {
+    phone: formData.get("phone"),
+    password: formData.get("password"),
+    callbackUrl: formData.get("callbackUrl"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/phone`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(requestData),
+    },
+  );
 
-    if (!response.ok) {
-      const errorText = await response.text();
+  const responseText = await response.text();
 
-      if (errorText.includes("Invalid credentials")) {
-        return {
-          success: false,
-          error: "Invalid phone number or password. Please try again.",
-        };
-      }
-
-      if (errorText.includes("User not found")) {
-        return {
-          success: false,
-          error: "No account found with this phone number.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Sign in failed. Please try again.",
-      };
-    }
-
-    const body: { token: string; callbackUrl: string } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Sign in error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+  if (!response.ok) {
+    console.error("Authentication failed:", response.status, responseText);
+    throw new Error(`Authentication failed: ${responseText}`);
   }
-};
+
+  let body: { token: string; callbackUrl: string };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  if (body.token) {
+    const cookieStore = await cookies();
+    cookieStore.set("bvrstrco_auth", body.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    redirect(body.callbackUrl || "/account");
+  } else {
+    throw new Error("No token received");
+  }
+}
 
 /**
  * Signs out the current user by removing the authentication token cookie
  * @returns Promise containing success status and optional error information
  */
-export const signOut = async (): Promise<ApiResult<{}>> => {
+export const signOut = async () => {
   try {
-    // Remove the auth token cookie
     const cookieStore = await cookies();
     cookieStore.delete("bvrstrco_auth");
-    return { success: true, data: {} };
+    redirect("/");
   } catch (error) {
     console.error("Sign out error:", error);
-    return {
-      success: false,
-      error: "Failed to sign out. Please try again.",
-    };
   }
 };
 
@@ -189,61 +176,57 @@ export const signOut = async (): Promise<ApiResult<{}>> => {
  * @param user - A user sign up object containing phone, password, and callback URL
  * @returns Promise containing authentication token or error
  */
-export const signUp = async (
-  user: UserSignUp,
-): Promise<ApiResult<{ token: string }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
+export async function signUp(formData: FormData) {
+  const requestData = {
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    password: formData.get("password"),
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    callbackUrl: formData.get("callbackUrl"),
+    address: formData.get("address"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(requestData),
+    },
+  );
 
-    if (!response.ok) {
-      const errorText = await response.text();
+  const responseText = await response.text();
 
-      if (
-        errorText.includes(
-          "An account with this email or phone number already exists",
-        )
-      ) {
-        return {
-          success: false,
-          error: "An account with this email or phone number already exists.",
-        };
-      }
-
-      if (errorText.includes("Invalid phone")) {
-        return {
-          success: false,
-          error: "Please enter a valid phone number.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Sign up failed. Please try again.",
-      };
-    }
-
-    const body: { token: string } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Sign up error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+  if (!response.ok) {
+    console.error("Sign up failed:", response.status, responseText);
+    throw new Error(`Sign up failed: ${responseText}`);
   }
-};
+
+  let body: { token: string; callbackUrl?: string };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  if (body.token) {
+    const cookieStore = await cookies();
+    cookieStore.set("bvrstrco_auth", body.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    redirect(body.callbackUrl || "/account");
+  } else {
+    throw new Error("No token received");
+  }
+}
 
 /**
  * Retrieves detailed information for a specific user
@@ -305,66 +288,68 @@ export const getUserDetails = async (
 };
 
 /**
- * Updates user information with the provided data
- * @param authToken - Bearer token for authentication (optional)
- * @param userId - Unique identifier for the user to update
- * @param user - Updated user information object
- * @returns Promise containing updated user details or error
+ * Updates user information using server action pattern
+ * @param formData - FormData containing user information
+ * @returns Promise that redirects with success message or throws error on failure
  */
-export const updateUserDetails = async (
-  authToken: string | undefined,
-  userId: number,
-  user: UpdateUser,
-): Promise<ApiResult<User>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(user),
+export async function updateUserDetails(formData: FormData) {
+  const authToken = await getAuthTokenServer();
+  const userId = await getUserIdFromTokenServer();
+
+  if (!authToken || !userId) {
+    throw new Error("Authentication required");
+  }
+
+  const updateData: UpdateUser = {
+    firstName: formData.get("firstName") as string,
+    lastName: formData.get("lastName") as string,
+    email: formData.get("email") as string,
+    phone: formData.get("phone") as string,
+    address: formData.get("address") as string,
+    optInMarketing: formData.get("optInMarketing") === "on",
+    optInRewards: formData.get("optInRewards") === "on",
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
       },
-    );
+      body: JSON.stringify(updateData),
+    },
+  );
 
-    if (!response.ok) {
-      const errorText = await response.text();
+  const responseText = await response.text();
 
-      if (errorText.includes("Unauthorized")) {
-        return {
-          success: false,
-          error: "You are not authorized to update this user.",
-        };
-      }
+  if (!response.ok) {
+    console.error("Update user details failed:", response.status, responseText);
 
-      if (errorText.includes("Validation error")) {
-        return {
-          success: false,
-          error: "Invalid user information provided.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Failed to update user details. Please try again.",
-      };
+    if (responseText.includes("Unauthorized")) {
+      throw new Error("You are not authorized to update this user.");
     }
 
-    const body: User = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Update user details error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+    if (responseText.includes("Validation error")) {
+      throw new Error("Invalid user information provided.");
+    }
+
+    throw new Error("Failed to update user details. Please try again.");
   }
-};
+
+  let body: User;
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  // Redirect to account page with success message
+  const { redirect } = await import("next/navigation");
+  redirect("/account?updated=true");
+}
 
 /**
  * Retrieves a paginated list of orders for a specific user
@@ -489,133 +474,114 @@ export const getUserPoints = async (
 };
 
 /**
- * Changes a user's password after verifying the current password
- * @param authToken - Bearer token for authentication (optional)
- * @param userId - Unique identifier for the user
- * @param currentPassword - User's current password for verification
- * @param newPassword - New password to set
- * @returns Promise containing success message and status or error
+ * Changes a user's password using server action pattern
+ * @param formData - FormData containing current and new password
+ * @returns Promise that redirects with success message or throws error on failure
  */
-export const changeUserPassword = async (
-  authToken: string | undefined,
-  userId: number,
-  currentPassword: string,
-  newPassword: string,
-): Promise<ApiResult<{ message: string; success: boolean }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/change-password`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ currentPassword, newPassword }),
+export async function changeUserPassword(formData: FormData) {
+  const authToken = await getAuthTokenServer();
+  const userId = await getUserIdFromTokenServer();
+
+  if (!authToken || !userId) {
+    throw new Error("Authentication required");
+  }
+
+  const currentPassword = formData.get("currentPassword") as string;
+  const newPassword = formData.get("newPassword") as string;
+
+  if (!currentPassword || !newPassword) {
+    throw new Error("Current and new password are required");
+  }
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/change-password`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
       },
-    );
+      body: JSON.stringify({ currentPassword, newPassword }),
+    },
+  );
 
-    if (!response.ok) {
-      const errorText = await response.text();
+  const responseText = await response.text();
 
-      if (errorText.includes("Invalid current password")) {
-        return {
-          success: false,
-          error: "Current password is incorrect.",
-        };
-      }
+  if (!response.ok) {
+    console.error("Change password failed:", response.status, responseText);
 
-      if (errorText.includes("Password too weak")) {
-        return {
-          success: false,
-          error: "New password is too weak. Please choose a stronger password.",
-        };
-      }
-
-      if (errorText.includes("Unauthorized")) {
-        return {
-          success: false,
-          error: "You are not authorized to change this password.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Failed to change password. Please try again.",
-      };
+    if (responseText.includes("Invalid current password")) {
+      throw new Error("Current password is incorrect.");
     }
 
-    const body: { message: string; success: boolean } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Change password error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+    if (responseText.includes("Password too weak")) {
+      throw new Error(
+        "New password is too weak. Please choose a stronger password.",
+      );
+    }
+
+    if (responseText.includes("Unauthorized")) {
+      throw new Error("You are not authorized to change this password.");
+    }
+
+    throw new Error("Failed to change password. Please try again.");
   }
-};
+
+  let body: { message: string; success: boolean };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  // Redirect to account page with success message
+  const { redirect } = await import("next/navigation");
+  redirect("/account?password_changed=true");
+}
 
 /**
  * User has forgotten their password and needs to reset it. This is different from the changePassword function.
  * @param email - Email address of the user
  * @returns Promise containing success message and status or error
  */
-export const requestForgotPassword = async (
-  email: string,
-): Promise<ApiResult<{ message: string; success: boolean }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
+export async function requestForgotPassword(formData: FormData) {
+  const requestData = {
+    email: formData.get("email"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(requestData),
+    },
+  );
+
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    console.error(
+      "Forgot password request failed:",
+      response.status,
+      responseText,
     );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      if (errorText.includes("Account not found")) {
-        return {
-          success: false,
-          error:
-            "No account found with this email address. Please sign up or contact us.",
-        };
-      }
-
-      if (errorText.includes("Too many requests")) {
-        return {
-          success: false,
-          error: "Too many password reset requests. Please try again later.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Password reset request failed. Please try again.",
-      };
-    }
-
-    const body: { message: string; success: boolean } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Forgot password error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+    throw new Error(`Forgot password request failed: ${responseText}`);
   }
-};
+
+  let body: { message: string; success: boolean };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  return body;
+}
 
 /**
  * Accepts a otp to confirm the user received the email
@@ -624,68 +590,45 @@ export const requestForgotPassword = async (
  * @param newPassword - New password to be set for the user
  * @returns Promise containing success message of password change and status or error
  */
-export const confirmForgotPassword = async (
-  email: string,
-  code: string,
-  newPassword: string,
-): Promise<ApiResult<{ message: string; success: boolean }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password/confirm`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, code, newPassword }),
+export async function confirmForgotPassword(formData: FormData) {
+  const requestData = {
+    email: formData.get("email"),
+    code: formData.get("code"),
+    newPassword: formData.get("newPassword"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password/confirm`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(requestData),
+    },
+  );
+
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    console.error(
+      "Password reset confirmation failed:",
+      response.status,
+      responseText,
     );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      if (errorText.includes("verification code has already been used")) {
-        return {
-          success: false,
-          error:
-            "This verification code has already been used. Please request a new one.",
-        };
-      }
-
-      if (errorText.includes("Invalid verification code")) {
-        return {
-          success: false,
-          error: "Invalid verification code. Please try again.",
-        };
-      }
-
-      if (errorText.includes("expired")) {
-        return {
-          success: false,
-          error:
-            "This verification code has expired. Please request a new one.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Password reset confirmation failed. Please try again.",
-      };
-    }
-
-    const body: { message: string; success: boolean } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Confirm forgot password error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+    throw new Error(`Password reset confirmation failed: ${responseText}`);
   }
-};
+
+  let body: { message: string; success: boolean };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  redirect("/signin");
+}
 
 /**
  * Permanently deletes a user account
@@ -754,65 +697,44 @@ export const deleteUser = async (
  * @param message - Message submitted by the user
  * @returns Message containing confirmation of submission or error
  */
-export const contactSubmission = async (
-  name: string,
-  email: string,
-  subject: string,
-  message: string,
-): Promise<ApiResult<{ message: string; success: boolean }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/contact`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          subject,
-          message,
-        }),
+export async function contactSubmission(formData: FormData) {
+  const requestData = {
+    name: formData.get("name"),
+    email: formData.get("email"),
+    subject: formData.get("subject"),
+    message: formData.get("message"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/contact`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(requestData),
+    },
+  );
 
-    if (!response.ok) {
-      const errorText = await response.text();
+  const responseText = await response.text();
 
-      if (errorText.includes("Invalid email")) {
-        return {
-          success: false,
-          error: "Please enter a valid email address.",
-        };
-      }
-
-      if (errorText.includes("Message too long")) {
-        return {
-          success: false,
-          error: "Message is too long. Please keep it under 1000 characters.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Failed to send message. Please try again.",
-      };
-    }
-
-    const body: { message: string; success: boolean } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Contact submission error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+  if (!response.ok) {
+    console.error("Contact submission failed:", response.status, responseText);
+    throw new Error(`Contact submission failed: ${responseText}`);
   }
-};
+
+  let body: { message: string; success: boolean };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  // For server actions used in forms, we should redirect or return void
+  // Redirect to contact page with success message via URL params
+  redirect("/contact?success=true");
+}
 
 /**
  * Verify user email
@@ -821,127 +743,88 @@ export const contactSubmission = async (
  * @param authToken - Authentication token
  * @returns Message containing confirmation of verification or error
  */
-export const verifyUserEmail = async (
-  userId: number,
-  code: string,
-  authToken: string,
-): Promise<ApiResult<{ message: string; success: boolean }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ code }),
-      },
-    );
+export async function verifyUserEmail(formData: FormData) {
+  const userId = Number(formData.get("userId"));
+  const authToken = await getAuthTokenServer();
 
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      if (errorText.includes("verification code has already been used")) {
-        return {
-          success: false,
-          error:
-            "This verification code has already been used. Please request a new one.",
-        };
-      }
-
-      if (errorText.includes("Invalid verification code")) {
-        return {
-          success: false,
-          error: "Invalid verification code. Please try again.",
-        };
-      }
-
-      if (errorText.includes("expired")) {
-        return {
-          success: false,
-          error:
-            "This verification code has expired. Please request a new one.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Email verification failed. Please try again.",
-      };
-    }
-
-    const body: { message: string; success: boolean } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Email verification error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+  if (!userId || !authToken) {
+    throw new Error("Missing required data for email verification");
   }
-};
+
+  const requestData = {
+    code: formData.get("code"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify(requestData),
+    },
+  );
+
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    console.error("Email verification failed:", response.status, responseText);
+    throw new Error(`Email verification failed: ${responseText}`);
+  }
+
+  let body: { message: string; success: boolean };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  return body;
+}
 
 /**
  * Resend OTP code to user's email
  * @returns Message containing confirmation of verification or error
  */
-export const resendOTPCode = async (
-  userId: number,
-  authToken: string,
-): Promise<ApiResult<{ message: string; success: boolean }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email/resend`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      },
-    );
+export async function resendOTPCode(formData: FormData) {
+  const userId = Number(formData.get("userId"));
+  const authToken = await getAuthTokenServer();
 
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      if (errorText.includes("Too many requests")) {
-        return {
-          success: false,
-          error:
-            "Too many OTP requests. Please wait before requesting another code.",
-        };
-      }
-
-      if (errorText.includes("Unauthorized")) {
-        return {
-          success: false,
-          error: "You are not authorized to request an OTP code.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Failed to send OTP code. Please try again.",
-      };
-    }
-
-    const body: { message: string; success: boolean } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Resend OTP error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+  if (!userId || !authToken) {
+    throw new Error("Missing required data for OTP resend");
   }
-};
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/verify-email/resend`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    console.error("OTP resend failed:", response.status, responseText);
+    throw new Error(`OTP resend failed: ${responseText}`);
+  }
+
+  let body: { message: string; success: boolean };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  return body;
+}
 
 /**
  * Checks if the given OTP token is expired
@@ -998,48 +881,39 @@ export async function isOTPExpired(
 }
 
 /**
- * Initiates OAuth sign-in by redirecting to the OAuth provider
- * @param provider - OAuth provider name (e.g., 'google')
- * @param callbackUrl - URL to redirect to after successful OAuth authentication
- * @returns Promise containing redirect URL or error
+ * Initiates OAuth sign-in by redirecting to the OAuth provider using server action pattern
+ * @param formData - FormData containing provider and callbackUrl
+ * @returns Promise that redirects to OAuth provider or throws error on failure
  */
-export const signInWithOAuth = async (
-  provider: string,
-  callbackUrl?: string,
-): Promise<ApiResult<{ redirectUrl: string }>> => {
-  try {
-    // Validate provider
-    const supportedProviders = ["google"]; // Add more providers as needed
-    if (!supportedProviders.includes(provider.toLowerCase())) {
-      return {
-        success: false,
-        error: `Unsupported OAuth provider: ${provider}`,
-      };
-    }
+export async function signInWithOAuth(formData: FormData) {
+  const provider = formData.get("provider") as string;
+  const callbackUrl = formData.get("callbackUrl") as string;
 
-    // Build the OAuth initiation URL - make sure provider is lowercase
-    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/${provider.toLowerCase()}`;
-    const url = new URL(baseUrl);
-
-    // Add frontend callback URL as query parameter
-    const frontendCallback = callbackUrl
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback?redirect=${encodeURIComponent(callbackUrl)}`
-      : `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`;
-
-    url.searchParams.append("callback", frontendCallback);
-
-    return {
-      success: true,
-      data: { redirectUrl: url.toString() },
-    };
-  } catch (error) {
-    console.error("OAuth initiation error:", error);
-    return {
-      success: false,
-      error: "Failed to initiate OAuth sign-in. Please try again.",
-    };
+  if (!provider) {
+    throw new Error("OAuth provider is required");
   }
-};
+
+  // Validate provider
+  const supportedProviders = ["google"]; // Add more providers as needed
+  if (!supportedProviders.includes(provider.toLowerCase())) {
+    throw new Error(`Unsupported OAuth provider: ${provider}`);
+  }
+
+  // Build the OAuth initiation URL - make sure provider is lowercase
+  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/${provider.toLowerCase()}`;
+  const url = new URL(baseUrl);
+
+  // Add frontend callback URL as query parameter
+  const frontendCallback = callbackUrl
+    ? `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback?redirect=${encodeURIComponent(callbackUrl)}`
+    : `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`;
+
+  url.searchParams.append("callback", frontendCallback);
+
+  // Redirect to OAuth provider
+  const { redirect } = await import("next/navigation");
+  redirect(url.toString());
+}
 
 /**
  * Handles OAuth callback and extracts token from URL parameters
@@ -1093,135 +967,100 @@ export const handleOAuthCallback = async (
  * @param state - State parameter from OAuth provider (optional)
  * @returns Promise containing authentication token or error
  */
-export const exchangeOAuthCode = async (
-  provider: string,
-  code: string,
-  state?: string,
-): Promise<ApiResult<{ token: string }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/${provider}/callback`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          code,
-          state: state || undefined,
-        }),
+export async function exchangeOAuthCode(formData: FormData) {
+  const requestData = {
+    provider: formData.get("provider") as string,
+    code: formData.get("code") as string,
+    state: formData.get("state") as string | undefined,
+    callbackUrl: formData.get("callbackUrl") as string,
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/${requestData.provider}/callback`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        code: requestData.code,
+        state: requestData.state || undefined,
+      }),
+    },
+  );
 
-    if (!response.ok) {
-      const errorText = await response.text();
+  const responseText = await response.text();
 
-      // Handle specific OAuth errors
-      if (errorText.includes("account_exists_with_password")) {
-        const errorData = JSON.parse(errorText);
-        return {
-          success: false,
-          error:
-            errorData.message ||
-            "An account with this email already exists. Please sign in with your email and password instead.",
-        };
-      }
-
-      if (errorText.includes("Invalid authorization code")) {
-        return {
-          success: false,
-          error: "Invalid authorization code. Please try signing in again.",
-        };
-      }
-
-      if (errorText.includes("OAuth provider error")) {
-        return {
-          success: false,
-          error:
-            "Authentication failed with the OAuth provider. Please try again.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "OAuth authentication failed. Please try again.",
-      };
-    }
-
-    const body: { token: string } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("OAuth code exchange error:", error);
-    return {
-      success: false,
-      error:
-        "An unexpected error occurred during OAuth authentication. Please try again.",
-    };
+  if (!response.ok) {
+    console.error("OAuth code exchange failed:", response.status, responseText);
+    throw new Error(`OAuth code exchange failed: ${responseText}`);
   }
-};
+
+  let body: { token: string; callbackUrl?: string };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  if (body.token) {
+    const cookieStore = await cookies();
+    cookieStore.set("bvrstrco_auth", body.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    redirect(requestData.callbackUrl || body.callbackUrl || "/account");
+  } else {
+    throw new Error("No token received");
+  }
+}
 
 /**
- * Add a user to the newsletter
- * @param email - Email address of the user
- * @param fullName - Full name of the user
- * @returns Promise containing a success message or error
+ * Add a user to the newsletter using server action pattern
+ * @param formData - FormData containing email and fullName
+ * @returns Promise that redirects with success message or throws error on failure
  */
-export const addToNewsletter = async (
-  email: string,
-  fullName: string,
-): Promise<ApiResult<{ message: string }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/newsletter`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          fullName,
-        }),
+export async function addToNewsletter(formData: FormData) {
+  const requestData = {
+    email: formData.get("email"),
+    fullName: formData.get("fullName"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/newsletter`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(requestData),
+    },
+  );
+
+  const responseText = await response.text();
+
+  if (!response.ok) {
+    console.error(
+      "Newsletter subscription failed:",
+      response.status,
+      responseText,
     );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      if (errorText.includes("Email already exists")) {
-        return {
-          success: false,
-          error: "This email is already subscribed to our newsletter.",
-        };
-      }
-
-      if (errorText.includes("Invalid email")) {
-        return {
-          success: false,
-          error: "Please enter a valid email address.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "Failed to add to newsletter. Please try again.",
-      };
-    }
-
-    const body: { message: string } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Add to newsletter error:", error);
-    return {
-      success: false,
-      error:
-        "An unexpected error occurred while adding to newsletter. Please try again.",
-    };
+    throw new Error(`Newsletter subscription failed: ${responseText}`);
   }
-};
+
+  let body: { message: string };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  // Redirect to current page with success parameter
+  const { redirect } = await import("next/navigation");
+  redirect("/?newsletter=true");
+}

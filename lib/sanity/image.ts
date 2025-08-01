@@ -4,23 +4,33 @@ import { client } from "./client";
 const builder = imageUrlBuilder(client);
 
 export function urlFor(source: any) {
-  if (!source || !source.asset || !source.asset._ref || source.asset._ref === 'image-') {
+  if (
+    !source ||
+    !source.asset ||
+    !source.asset._ref ||
+    source.asset._ref === "image-"
+  ) {
     return null;
   }
   try {
     return builder.image(source);
   } catch (error) {
-    console.warn('Invalid image source:', source, error);
+    console.warn("Invalid image source:", source, error);
     return null;
   }
 }
 
 // Alternative with more control
 export function getImageUrl(source: any, width?: number, height?: number) {
-  if (!source || !source.asset || !source.asset._ref || source.asset._ref === 'image-') {
+  if (
+    !source ||
+    !source.asset ||
+    !source.asset._ref ||
+    source.asset._ref === "image-"
+  ) {
     return null;
   }
-  
+
   try {
     let url = builder.image(source);
 
@@ -34,7 +44,7 @@ export function getImageUrl(source: any, width?: number, height?: number) {
 
     return url.url();
   } catch (error) {
-    console.warn('Invalid image source:', source, error);
+    console.warn("Invalid image source:", source, error);
     return null;
   }
 }

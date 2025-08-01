@@ -1,9 +1,3 @@
-"use client";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,143 +10,22 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { UpdateUser } from "@/lib/types";
 import { updateUserDetails } from "@/server/user/actions";
-import { useQueryClient } from "@tanstack/react-query";
-import { useApiMutation } from "@/hooks/use-api-mutation";
 import { Edit } from "lucide-react";
-import { toast } from "sonner";
-import { useAuthToken } from "@/components/auth/auth-context";
-
-const updateUserSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.email("Invalid email address"),
-  phone: z.string().optional(),
-  street: z.string().min(1, "Street address is required"),
-  city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "State is required"),
-  apt: z.string().optional(),
-  zip: z.string().min(1, "ZIP code is required"),
-  optInMarketing: z.boolean(),
-  optInRewards: z.boolean(),
-});
-
-type UpdateUserFormValues = z.infer<typeof updateUserSchema>;
+import Form from "next/form";
 
 interface UpdateUserModalProps {
   user: UpdateUser | undefined;
-  userId: number | undefined;
-  trigger?: React.ReactNode;
 }
 
-export function UpdateUserModal({
-  user,
-  userId,
-  trigger,
-}: UpdateUserModalProps) {
-  const [open, setOpen] = useState(false);
-  const queryClient = useQueryClient();
-  const authToken = useAuthToken();
-
-  const form = useForm<UpdateUserFormValues>({
-    resolver: zodResolver(updateUserSchema),
-    defaultValues: {
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
-      email: user?.email || "",
-      phone: user?.phone || "",
-      street: user?.address?.street || "",
-      city: user?.address?.city || "",
-      state: user?.address?.state || "",
-      apt: user?.address?.apt || "",
-      zip: user?.address?.zip || "",
-      optInMarketing: user?.optInMarketing || false,
-      optInRewards: user?.optInRewards || false,
-    },
-  });
-
-  const { mutate: updateUserMutation, isPending } = useApiMutation(
-    (data: UpdateUser) => {
-      if (!authToken || !userId) {
-        throw new Error("Authentication token or userID is required");
-      }
-      return updateUserDetails(authToken, userId, data);
-    },
-    {
-      onSuccess: () => {
-        toast.success("User details updated successfully!");
-        setOpen(false);
-        // Invalidate and refetch user data
-        queryClient.invalidateQueries({ queryKey: ["user"] });
-      },
-      onError: (error) => {
-        toast.error("Failed to update user details");
-        console.error("Update error:", error);
-      },
-    },
-  );
-
-  // Reset form when user data changes
-  React.useEffect(() => {
-    if (user) {
-      form.reset({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        email: user.email || "",
-        phone: user.phone || "",
-        street: user.address?.street || "",
-        city: user.address?.city || "",
-        state: user.address?.state || "",
-        apt: user.address?.apt || "",
-        zip: user.address?.zip || "",
-        optInMarketing: user.optInMarketing || false,
-        optInRewards: user.optInRewards || false,
-      });
-    }
-  }, [user, form]);
-
-  const onSubmit = (data: UpdateUserFormValues) => {
-    if (!authToken) {
-      toast.error("Please sign in to update your details");
-      return;
-    }
-
-    const updateData: UpdateUser = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      address: {
-        street: data.street,
-        apt: data.apt,
-        city: data.city,
-        state: data.state,
-        zip: data.zip,
-      },
-      optInMarketing: data.optInMarketing,
-      optInRewards: data.optInRewards,
-    };
-
-    updateUserMutation(updateData);
-  };
-
+export function UpdateUserModal({ user }: UpdateUserModalProps) {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" size="sm" className="w-fit">
-            <Edit className="w-4 h-4" />
-          </Button>
-        )}
+        <Button variant="outline" size="sm" className="w-fit">
+          <Edit className="w-4 h-4" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
@@ -162,232 +35,107 @@ export function UpdateUserModal({
             you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <Form action={updateUserDetails}>
+          <div className="space-y-4">
             <div className="grid gap-4 py-4">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">First Name</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Last Name</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Email</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input type="email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Phone</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="street"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Street</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="apt"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Apt/Unit</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input placeholder="Optional" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">City</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">State</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="zip"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">ZIP</FormLabel>
-                      <div className="col-span-3">
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="optInMarketing"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex flex-col gap-4">
-                      <FormLabel className="text-right">
-                        Marketing Emails
-                      </FormLabel>
-                      <div className="col-span-3 flex items-center space-x-2">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <span className="text-sm text-muted-foreground">
-                          Receive promotional emails and updates
-                        </span>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="optInRewards"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex flex-col gap-4">
-                      <FormLabel className="text-right">
-                        Rewards Program
-                      </FormLabel>
-                      <div className="col-span-3 flex items-center space-x-2">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <span className="text-sm text-muted-foreground">
-                          Receive rewards and exclusive offers
-                        </span>
-                        <FormMessage />
-                      </div>
-                    </div>
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-right text-sm font-medium">
+                  First Name
+                </label>
+                <div className="col-span-3">
+                  <Input
+                    name="firstName"
+                    defaultValue={user?.firstName || ""}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-right text-sm font-medium">
+                  Last Name
+                </label>
+                <div className="col-span-3">
+                  <Input
+                    name="lastName"
+                    defaultValue={user?.lastName || ""}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-right text-sm font-medium">Email</label>
+                <div className="col-span-3">
+                  <Input
+                    type="email"
+                    name="email"
+                    defaultValue={user?.email || ""}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-right text-sm font-medium">Phone</label>
+                <div className="col-span-3">
+                  <Input name="phone" defaultValue={user?.phone || ""} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-right text-sm font-medium">
+                  Address
+                </label>
+                <div className="col-span-3">
+                  <Input
+                    name="address"
+                    defaultValue={user?.address || ""}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <label className="text-right text-sm font-medium">
+                  Marketing Emails
+                </label>
+                <div className="col-span-3 flex items-center space-x-2">
+                  <Checkbox
+                    name="optInMarketing"
+                    defaultChecked={user?.optInMarketing || false}
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    Receive promotional emails and updates
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <label className="text-right text-sm font-medium">
+                  Rewards Program
+                </label>
+                <div className="col-span-3 flex items-center space-x-2">
+                  <Checkbox
+                    name="optInRewards"
+                    defaultChecked={user?.optInRewards || false}
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    Receive rewards and exclusive offers
+                  </span>
+                </div>
+              </div>
             </div>
             <DialogFooter>
               <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={isPending}
-              >
-                Cancel
-              </Button>
-              <Button
                 type="submit"
-                disabled={isPending || !authToken}
                 id="update-user-button"
                 data-umami-event="Update user button"
               >
-                {isPending ? "Saving..." : "Save changes"}
+                Save changes
               </Button>
             </DialogFooter>
-          </form>
+          </div>
         </Form>
       </DialogContent>
     </Dialog>

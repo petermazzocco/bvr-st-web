@@ -5,6 +5,7 @@ import { getProduct } from "@/lib/shopify";
 import { generateProductMetadata } from "@/lib/metadata";
 import { ProductProvider } from "@/components/product/product-provider";
 import { ProductDescription } from "@/components/product/product-description";
+import { AuctionProductDescription } from "@/components/product/auction-product-description";
 import { Image } from "@/lib/shopify/types";
 import { Suspense } from "react";
 import { Gallery } from "@/components/product/product-gallery";
@@ -127,12 +128,19 @@ export default async function Page(props: {
           <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8">
             <div className="w-full md:max-w-md lg:max-w-lg">
               <Suspense fallback={null}>
-                <ProductDescription
-                  product={product}
-                  isMember={isMember}
-                  affiliates={affiliates.data}
-                  details={additionalDetailsResult.data}
-                />
+                {product.tags.includes("product_auction") ? (
+                  <AuctionProductDescription
+                    product={product}
+                    isMember={isMember}
+                  />
+                ) : (
+                  <ProductDescription
+                    product={product}
+                    isMember={isMember}
+                    affiliates={affiliates.data}
+                    details={additionalDetailsResult.data}
+                  />
+                )}
               </Suspense>
             </div>
           </div>

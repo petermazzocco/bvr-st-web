@@ -1,11 +1,23 @@
-import { ForgotPasswordEmailCard } from "@/components/cards/forgot-password-email-card";
+import { ForgotPasswordOTPCard } from "@/components/cards/forgot-password-otp-card";
+import { redirect } from "next/navigation";
 import Image from "next/image";
 
-export default function ForgotPasswordPage() {
+interface VerifyPageProps {
+  searchParams: Promise<{ email?: string }>;
+}
+
+export default async function VerifyPage({ searchParams }: VerifyPageProps) {
+  const params = await searchParams;
+  const email = params.email;
+
+  if (!email) {
+    redirect("/forgot-password");
+  }
+
   return (
     <div className="flex min-h-screen w-full">
       <div className="hidden md:flex flex-col items-center justify-center w-1/2 py-2">
-        <ForgotPasswordEmailCard />
+        <ForgotPasswordOTPCard email={decodeURIComponent(email)} />
       </div>
 
       <div className="hidden md:block w-1/2 relative">
@@ -25,7 +37,7 @@ export default function ForgotPasswordPage() {
           className="object-cover blur-sm"
         />
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen py-2">
-          <ForgotPasswordEmailCard />
+          <ForgotPasswordOTPCard email={decodeURIComponent(email)} />
         </div>
       </div>
     </div>

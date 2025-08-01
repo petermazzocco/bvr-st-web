@@ -1,154 +1,64 @@
-"use client";
-
 import { Badge } from "../ui/badge";
 import { Product } from "@/lib/shopify/types";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { useState, useEffect } from "react";
-import { getAuction, placeBid } from "@/server/auction/actions";
-import { Auction } from "@/lib/types";
-import { toast } from "sonner";
-import {
-  useAuth,
-  useAuthToken,
-  useUserId,
-} from "@/components/auth/auth-context";
-import { getUserDetails } from "@/server/user/actions";
-import { useQuery } from "@tanstack/react-query";
+import { getAuction, placeBidAction } from "@/server/auction/actions";
 import { AuctionClock } from "@/components/utils/auction-clock";
 import { Input } from "../ui/input";
-import { cn } from "@/lib/utils";
-import { BidConfirmationModal } from "@/components/modals/bid-confirmation-modal";
 import { Lock } from "lucide-react";
+import { cookies } from "next/headers";
+import { getUserDetails } from "@/server/user/actions";
+import Form from "next/form";
 
-export function AuctionProductDescription({ product }: { product: Product }) {
-  const { isAuthenticated } = useAuth();
-  const userId = useUserId();
-  const authToken = useAuthToken();
-  const [bidAmount, setBidAmount] = useState("");
-  const [auctionData, setAuctionData] = useState<Auction | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [bidLoading, setBidLoading] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+interface AuctionProductDescriptionProps {
+  product: Product;
+  isMember: boolean;
+}
+
+export async function AuctionProductDescription({
+  product,
+  isMember,
+}: AuctionProductDescriptionProps) {
+  const cookieStore = await cookies();
+  const authTokenCookie = cookieStore.get("bvrstrco_auth");
+  const authToken = authTokenCookie?.value || null;
+
+  // Decode userId from token
+  let userId: number | null = null;
+  let isAuthenticated = false;
+  if (authToken) {
+    try {
+      const payload = JSON.parse(atob(authToken.split(".")[1]));
+      userId = payload.userid || null;
+      isAuthenticated = !!userId;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  }
 
   const productId = product.id.split("/").pop() || "";
 
-  const { data: user } = useQuery({
-    queryKey: ["user", userId],
-    queryFn: () => getUserDetails(authToken!, userId!),
-    enabled: !!userId && !!authToken && isAuthenticated,
-  });
-
-  // Fetch auction data on component mount
-  useEffect(() => {
-    const fetchAuctionData = async () => {
-      try {
-        const result = await getAuction(productId);
-        if (result.success) {
-          setAuctionData(result?.data || null);
-        } else {
-          toast.error(result.error);
-        }
-      } catch (error) {
-        console.error("Failed to fetch auction data:", error);
-        toast.error("Failed to load auction data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAuctionData();
-  }, [productId]);
-
-  const handlePlaceBidClick = () => {
-    if (!isAuthenticated) {
-      toast.error("Please sign in to place a bid");
-      return;
-    }
-
-    if (!bidAmount || !auctionData) {
-      toast.error("Please enter a valid bid amount");
-      return;
-    }
-
-    const minimumBid =
-      auctionData.auction.highest_bid +
-      auctionData.auction.minimum_bid_increment;
-    if (parseFloat(bidAmount) < minimumBid) {
-      toast.error(`Bid must be at least ${minimumBid}`);
-      return;
-    }
-
-    setShowConfirmModal(true);
-  };
-
-  const handleConfirmBid = async () => {
-    setBidLoading(true);
-    setShowConfirmModal(false);
-
-    try {
-      if (!user) {
-        toast.error("Please sign in to place a bid");
-        return;
-      }
-
-      const bidRequest = {
-        bid: bidAmount,
-        currency: "USD",
-        customer_email: user?.data?.email,
-        customer_id: user?.data?.shopifyCustomerID,
-        customer_first_name: user?.data?.firstName || "",
-        customer_last_name: user?.data?.lastName || "",
-        shopify_product_id: productId,
-      };
-
-      const result = await placeBid(bidRequest);
-
-      if (result.success) {
-        toast.success(`Bid placed successfully for ${result?.data?.bid}!`);
-        setBidAmount("");
-
-        // Refresh auction data to show updated bid
-        const updatedAuction = await getAuction(productId);
-        if (updatedAuction.success) {
-          setAuctionData(updatedAuction.data || null);
-        }
-      } else {
-        toast.error(result.error);
-      }
-    } catch (error) {
-      console.error("Failed to place bid:", error);
-      toast.error("An unexpected error occurred");
-    } finally {
-      setBidLoading(false);
-    }
-  };
-
-  if (loading) {
+  // Fetch auction data
+  const auctionResult = await getAuction(productId);
+  if (!auctionResult.success || !auctionResult.data) {
     return (
-      <div className="animate-pulse">
-        <div className="mb-2 flex flex-row items-center justify-between">
-          <div className="h-4 bg-muted rounded w-1/2"></div>
-          <div className="h-6 bg-muted rounded w-20"></div>
-        </div>
-        <div className="mb-4 p-3 bg-muted rounded-md h-20"></div>
-        <div className="mb-4 space-y-3">
-          <div className="h-20 bg-muted rounded"></div>
-          <div className="h-10 bg-muted rounded"></div>
-          <div className="h-10 bg-muted rounded"></div>
-        </div>
+      <div className="text-center p-4">
+        <p className="text-destructive mb-2">Failed to load auction data</p>
+        <p className="text-sm text-muted-foreground">{auctionResult.error}</p>
       </div>
     );
   }
 
-  if (!auctionData) {
-    return (
-      <div className="text-center p-4">
-        <p className="text-destructive mb-2">Failed to load auction data</p>
-        <Button onClick={() => window.location.reload()}>Try Again</Button>
-      </div>
-    );
+  const auctionData = auctionResult.data;
+
+  // Get user data if authenticated
+  let user = null;
+  if (isAuthenticated && userId && authToken) {
+    const userResult = await getUserDetails(authToken, userId);
+    if (userResult.success) {
+      user = userResult.data;
+    }
   }
 
   const getTimeUntilEnd = (endDate: string) => {
@@ -173,12 +83,11 @@ export function AuctionProductDescription({ product }: { product: Product }) {
   const maximumBid = minimumBid + auctionData.auction.maximum_bid_increment;
 
   const isAuctionEnded = new Date() > new Date(auctionData.auction.end_date);
-  const isBidTooHigh = bidAmount ? parseFloat(bidAmount) > maximumBid : false;
-  const isBidTooLow = bidAmount ? parseFloat(bidAmount) < minimumBid : false;
+  const canBid = isAuthenticated && user?.isMember && !isAuctionEnded;
 
   return (
     <>
-      {!isAuthenticated && !user?.data?.isMember ? (
+      {!isAuthenticated || !user?.isMember ? (
         <div className="mb-2 flex flex-row items-center justify-between">
           <h1 className="text-sm font-semibold text-destructive">
             Member Only Auction
@@ -186,6 +95,7 @@ export function AuctionProductDescription({ product }: { product: Product }) {
           <Lock className="h-4 w-4 text-destructive" />
         </div>
       ) : null}
+
       <div className="mb-2 flex flex-row items-center justify-between">
         <h1 className="text-sm font-semibold">{product.title}</h1>
         <Badge
@@ -253,49 +163,36 @@ export function AuctionProductDescription({ product }: { product: Product }) {
       {/* Bidding Section */}
       {!isAuctionEnded ? (
         <div className="mb-4 space-y-3">
-          <div className="flex gap-2">
-            <Input
-              type="number"
-              value={bidAmount}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === "" || parseFloat(value) >= minimumBid) {
-                  setBidAmount(value);
-                }
-              }}
-              placeholder={`Min: ${minimumBid}`}
-              min={minimumBid}
-              max={maximumBid}
-              step={auctionData.auction.minimum_bid_increment}
-              className={cn(
-                (isBidTooHigh || isBidTooLow) &&
-                  "ring-2 ring-destructive border-destructive",
-                "w-1/2",
-              )}
-            />
-            {isAuthenticated && user?.data?.isMember ? (
-              <BidConfirmationModal
-                bidAmount={bidAmount}
-                onConfirm={handleConfirmBid}
-                isLoading={bidLoading}
-                open={showConfirmModal}
-                onOpenChange={setShowConfirmModal}
-              >
-                <Button
-                  onClick={handlePlaceBidClick}
-                  disabled={
-                    !bidAmount ||
-                    !isAuthenticated ||
-                    bidLoading ||
-                    isBidTooHigh ||
-                    isBidTooLow
-                  }
-                  className="w-1/2"
-                >
-                  {bidLoading ? "Placing..." : "Bid Now"}
-                </Button>
-              </BidConfirmationModal>
-            ) : !isAuthenticated ? (
+          {canBid ? (
+            <Form action={placeBidAction} className="flex gap-2">
+              <input type="hidden" name="productId" value={productId} />
+              <input
+                type="hidden"
+                name="productHandle"
+                value={product.handle}
+              />
+              <Input
+                type="number"
+                name="bidAmount"
+                placeholder={`Min: ${minimumBid}`}
+                min={minimumBid}
+                max={maximumBid}
+                step={auctionData.auction.minimum_bid_increment}
+                className="w-1/2"
+                required
+              />
+              <Button type="submit" className="w-1/2">
+                Bid Now
+              </Button>
+            </Form>
+          ) : !isAuthenticated ? (
+            <div className="flex gap-2">
+              <Input
+                type="number"
+                placeholder={`Min: ${minimumBid}`}
+                className="w-1/2"
+                disabled
+              />
               <Link
                 href={`/signin?redirect=/products/${product.handle}`}
                 className="w-1/2"
@@ -304,26 +201,29 @@ export function AuctionProductDescription({ product }: { product: Product }) {
                   Sign In To Bid
                 </Button>
               </Link>
-            ) : (
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <Input
+                type="number"
+                placeholder={`Min: ${minimumBid}`}
+                className="w-1/2"
+                disabled
+              />
               <Link href={`/membership`} className="w-1/2">
                 <Button variant="default" className="w-full">
                   Become a Member
                 </Button>
               </Link>
-            )}
+            </div>
+          )}
+
+          <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded-md">
+            <p>
+              Bid range: ${minimumBid} - ${maximumBid}
+            </p>
+            <p>Increment: ${auctionData.auction.minimum_bid_increment}</p>
           </div>
-          {isBidTooHigh && (
-            <div className="text-xs text-destructive bg-destructive/10 p-2 rounded-md">
-              Maximum bid amount exceeded. Please enter a bid of ${maximumBid}{" "}
-              or less.
-            </div>
-          )}
-          {isBidTooLow && (
-            <div className="text-xs text-destructive bg-destructive/10 p-2 rounded-md">
-              Minimum bid amount not met. Please enter a bid of ${minimumBid} or
-              more.
-            </div>
-          )}
         </div>
       ) : (
         <div className="mb-4 p-4 bg-accent rounded-md text-center">

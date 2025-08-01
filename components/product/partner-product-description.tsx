@@ -6,13 +6,6 @@ import { ExternalLink, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { createCheckoutRequest } from "@/server/vendor/actions";
-import { useQuery } from "@tanstack/react-query";
-import { getUserDetails } from "@/server/user/actions";
-import {
-  useAuth,
-  useAuthToken,
-  useUserId,
-} from "@/components/auth/auth-context";
 
 interface PartnerProductDescriptionProps {
   product: ProductByHandle;
@@ -26,15 +19,6 @@ export function PartnerProductDescription({
   const [selectedVariant, setSelectedVariant] = useState(
     product.variants.edges[0]?.node,
   );
-  const { isAuthenticated } = useAuth();
-  const userId = useUserId();
-  const authToken = useAuthToken();
-
-  const { data: user } = useQuery({
-    queryKey: ["user", userId],
-    queryFn: () => getUserDetails(authToken!, userId!),
-    enabled: !!userId && !!authToken && isAuthenticated,
-  });
 
   const handleVariantChange = (variantId: string) => {
     const variant = product.variants.edges.find(
@@ -55,11 +39,11 @@ export function PartnerProductDescription({
           quantity: 1,
         },
       ],
-      email: user?.data?.email || "",
+      email: "",
       attributes: {},
       buyer_identity: {
-        email: user?.data?.email || "",
-        phone: user?.data?.phone || "",
+        email: "",
+        phone: "",
         country_code: "US",
         customer_access_token: "",
       },
@@ -183,12 +167,6 @@ export function PartnerProductDescription({
         >
           {selectedVariant?.availableForSale ? "In Stock" : "Out of Stock"}
         </p>
-        {isAuthenticated && (
-          <p className="text-muted-foreground">
-            Earn {product.priceRange.minVariantPrice.amount} points for this
-            purchase
-          </p>
-        )}
       </div>
 
       {/* Product Description */}

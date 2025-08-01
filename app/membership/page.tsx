@@ -1,85 +1,82 @@
-"use client";
-
+import type { Metadata } from "next";
 import { MembershipCard } from "@/components/cards/membership-card";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { updateUserAfterCheckout } from "@/server/stripe/actions";
-import { useApiMutation } from "@/hooks/use-api-mutation";
-import { useAuthToken, useUserId } from "@/components/auth/auth-context";
-import { toast } from "sonner";
+import { generateMetadata as createMetadata } from "@/lib/metadata";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
+import { updateUserAfterCheckout } from "@/server/stripe/actions";
+import { getAuthTokenServer, getUserIdFromTokenServer } from "@/server/user/actions";
+import { redirect } from "next/navigation";
+import Form from "next/form";
 
-export default function MembershipPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const userId = useUserId();
-  const authToken = useAuthToken();
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+export const dynamic = "force-dynamic";
 
-  const { mutate: updateUser, isPending } = useApiMutation(
-    async ({
-      userId,
-      sessionId,
-      authToken,
-    }: {
-      userId: number;
-      sessionId: string;
-      authToken: string;
-    }) => {
-      const result = await updateUserAfterCheckout(
-        userId,
-        sessionId,
-        authToken,
-      );
-      return { success: true, data: result };
-    },
-    {
-      onSuccess: (data) => {
-        setShowSuccessMessage(true);
-        toast.success(
-          `Success! ${data.pointsAdded} points added to your account.`,
-        );
-        // Remove query params from URL
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname,
-        );
-      },
-      onError: (error) => {
-        toast.error(error || "Failed to update user after checkout");
-      },
-    },
-  );
+export const metadata: Metadata = createMetadata({
+  title: "Premium Membership",
+  description: "Get instant access to all premium features with BVR STR CO membership. 10% off all purchases, exclusive events, and more.",
+  canonical: "https://bvrstrco.com/membership",
+});
 
-  useEffect(() => {
-    const stripeCheckout = searchParams.get("stripe_checkout");
-    const sessionId = searchParams.get("session_id");
-    const userIdFromParams = searchParams.get("user_id");
+interface MembershipPageProps {
+  searchParams: Promise<{ 
+    stripe_checkout?: string; 
+    session_id?: string; 
+    user_id?: string;
+    success?: string;
+    points?: string;
+    affiliate?: string;
+  }>;
+}
 
-    if (stripeCheckout === "success" && sessionId && authToken) {
-      // Use userId from params or fallback to userId from state
-      const finalUserId = Number(userIdFromParams) || userId;
-      if (finalUserId) {
-        updateUser({ userId: finalUserId, sessionId, authToken });
-      }
+export default async function MembershipPage({ searchParams }: MembershipPageProps) {
+  const params = await searchParams;
+  const authToken = await getAuthTokenServer();
+  const userId = await getUserIdFromTokenServer();
+
+  // Handle Stripe checkout success
+  const stripeCheckout = params.stripe_checkout;
+  const sessionId = params.session_id;
+  const userIdFromParams = params.user_id;
+  
+  // Show success message if explicitly set
+  const showSuccess = params.success === "true";
+  const pointsAdded = params.points;
+
+  // If we have successful stripe checkout params, process them
+  if (stripeCheckout === "success" && sessionId && authToken) {
+    const finalUserId = Number(userIdFromParams) || userId;
+    if (finalUserId) {
+      // Create a form data object to pass to the server action
+      const formData = new FormData();
+      formData.append("userId", finalUserId.toString());
+      formData.append("sessionId", sessionId);
+      
+      // This will redirect to membership page with success message
+      await updateUserAfterCheckout(formData);
     }
-  }, [searchParams, authToken, userId, updateUser]);
+  }
 
   const SuccessMessage = () => (
     <div className="flex flex-col items-center justify-center h-64 space-y-4">
       <div className="text-center">
         <h2 className="text-md mb-2">You&apos;re now a Premium Member!</h2>
+        {pointsAdded && (
+          <p className="text-muted-foreground text-xs mb-2">
+            {pointsAdded} points added to your account!
+          </p>
+        )}
         <p className="text-muted-foreground text-xs mb-4">
           Access your account and benefits now:
         </p>
         <Separator className="my-4" />
-        <Button onClick={() => router.push("/account")} className="w-full">
-          Go to Account
-        </Button>
+        <Form action={async () => {
+          "use server";
+          redirect("/account");
+        }}>
+          <Button type="submit" className="w-full">
+            Go to Account
+          </Button>
+        </Form>
       </div>
     </div>
   );
@@ -87,17 +84,10 @@ export default function MembershipPage() {
   return (
     <div className="flex min-h-screen w-full">
       <div className="hidden md:flex flex-col items-center justify-center w-1/2 py-2">
-        {isPending ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center text-xs">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
-              <p>Processing your membership...</p>
-            </div>
-          </div>
-        ) : showSuccessMessage ? (
+        {showSuccess ? (
           <SuccessMessage />
         ) : (
-          <MembershipCard />
+          <MembershipCard searchParams={{ affiliate: params.affiliate }} />
         )}
       </div>
 
@@ -118,32 +108,32 @@ export default function MembershipPage() {
           className="object-cover blur-sm"
         />
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen py-2">
-          {isPending ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-                <p className="text-white">Processing your membership...</p>
-              </div>
-            </div>
-          ) : showSuccessMessage ? (
+          {showSuccess ? (
             <div className="flex flex-col items-center justify-center h-64 space-y-4">
               <div className="text-center">
                 <p className="text-md mb-2 text-background font-semibold">
                   You&apos;re now a premium member!
                 </p>
+                {pointsAdded && (
+                  <p className="text-muted text-xs mb-2">
+                    {pointsAdded} points added to your account!
+                  </p>
+                )}
                 <p className="text-muted text-xs mb-6">
                   Access your account now
                 </p>
-                <Button
-                  onClick={() => router.push("/account")}
-                  className="px-6 py-2"
-                >
-                  Go to Account
-                </Button>
+                <Form action={async () => {
+                  "use server";
+                  redirect("/account");
+                }}>
+                  <Button type="submit" className="px-6 py-2">
+                    Go to Account
+                  </Button>
+                </Form>
               </div>
             </div>
           ) : (
-            <MembershipCard />
+            <MembershipCard searchParams={{ affiliate: params.affiliate }} />
           )}
         </div>
       </div>

@@ -298,12 +298,6 @@ export async function redirectToCheckout() {
           firstName: user.firstName,
           lastName: user.lastName,
           phone: user.phone,
-          address: user.address
-            ? {
-                ...user.address,
-                country: "US", // Default to US since user address doesn't include country
-              }
-            : undefined,
         });
 
         if (updatedCart) {

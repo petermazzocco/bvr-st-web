@@ -42,12 +42,7 @@ export function AccountInfoCard({ user }: { user: TUser | undefined }) {
               <label className="text-sm font-medium text-muted-foreground">
                 Shipping Address
               </label>
-              <p className="text-foreground">{user?.address?.street}</p>
-              <p className="text-foreground">{user?.address?.apt}</p>
-              <p className="text-foreground">
-                {user?.address?.city}, {user?.address?.state}{" "}
-                {user?.address?.zip}
-              </p>
+              <p className="text-foreground">{user?.address}</p>
             </div>
           </div>
         </CardContent>
