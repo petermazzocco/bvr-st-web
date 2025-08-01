@@ -1,11 +1,6 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { signInWithOAuth } from "@/server/user/actions";
-import { useApiMutation } from "@/hooks/use-api-mutation";
-import { useAuth } from "@/components/auth/auth-context";
+import { Button } from "@/components/ui/button";
+import Form from "next/form";
 
 interface SignInOAuthButtonProps {
   provider: string;
@@ -20,74 +15,49 @@ interface SignInOAuthButtonProps {
     | "link";
   size?: "default" | "sm" | "lg" | "icon";
   disabled?: boolean;
+  callbackUrl?: string;
 }
 
-export function SignInOAuthButton({
+export async function SignInOAuthButton({
   provider,
   children,
   className,
   variant = "outline",
   size = "default",
   disabled = false,
+  callbackUrl,
 }: SignInOAuthButtonProps) {
-  const searchParams = useSearchParams();
-  const { refreshAuth } = useAuth();
-
   // Capitalize provider name for display
   const providerDisplayName =
     provider.charAt(0).toUpperCase() + provider.slice(1).toLowerCase();
 
-  const { mutate: signInOAuthMutation, isPending: isSigningInWithOAuth } =
-    useApiMutation(
-      (data: { provider: string; callbackUrl: string }) =>
-        signInWithOAuth(data.provider, data.callbackUrl),
-      {
-        onSuccess: (data) => {
-          // data is guaranteed to be defined here and is the actual response data
-          if (data?.redirectUrl) {
-            // Redirect to OAuth provider
-            window.location.href = data.redirectUrl;
-          } else {
-            // If no redirect URL, refresh auth state in case we got a token
-            refreshAuth();
-          }
-        },
-        onError: (error) => {
-          toast.error(error);
-          console.error(`Error signing in with ${provider}:`, error);
-        },
-      },
-    );
+  const handleOAuthSignIn = async (formData: FormData) => {
+    "use server";
+    
+    const finalCallbackUrl = callbackUrl || "/account";
+    
+    formData.append("provider", provider.toLowerCase());
+    formData.append("callbackUrl", finalCallbackUrl);
 
-  const handleOAuthSignIn = () => {
-    const redirect = searchParams.get("redirect");
-    const callbackUrl = redirect
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}${redirect}`
-      : `${process.env.NEXT_PUBLIC_BASE_URL}/account`;
-
-    signInOAuthMutation({
-      provider: provider.toLowerCase(),
-      callbackUrl,
-    });
+    await signInWithOAuth(formData);
   };
 
   // If no children provided, use default dynamic text
   const buttonContent = children || `Continue with ${providerDisplayName}`;
 
   return (
-    <Button
-      type="button"
-      variant={variant}
-      size={size}
-      className={className}
-      onClick={handleOAuthSignIn}
-      disabled={disabled || isSigningInWithOAuth}
-      data-umami-event={`Signin ${provider} button`}
-    >
-      {isSigningInWithOAuth
-        ? `Signing in with ${providerDisplayName}...`
-        : buttonContent}
-    </Button>
+    <Form action={handleOAuthSignIn}>
+      <Button
+        type="submit"
+        variant={variant}
+        size={size}
+        className={className}
+        disabled={disabled}
+        data-umami-event={`Signin ${provider} button`}
+      >
+        {buttonContent}
+      </Button>
+    </Form>
   );
 }
 
@@ -97,6 +67,7 @@ export function GoogleSignInButton({
   variant = "outline",
   size = "default",
   disabled = false,
+  callbackUrl,
 }: Omit<SignInOAuthButtonProps, "provider" | "children">) {
   return (
     <SignInOAuthButton
@@ -105,6 +76,7 @@ export function GoogleSignInButton({
       variant={variant}
       size={size}
       disabled={disabled}
+      callbackUrl={callbackUrl}
     >
       <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
         <path

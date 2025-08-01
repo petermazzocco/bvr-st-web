@@ -1,8 +1,4 @@
-"use client";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import Form from "next/form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,59 +9,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 import { contactSubmission } from "@/server/user/actions";
-import { useApiMutation } from "@/hooks/use-api-mutation";
-
-const contactSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.email("Invalid email address"),
-  subject: z.string().min(1, "Subject is required"),
-  message: z.string().min(1, "Message is required"),
-});
-
-type ContactFormValues = z.infer<typeof contactSchema>;
 
 export function ContactCard() {
-  const form = useForm<ContactFormValues>({
-    resolver: zodResolver(contactSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    },
-  });
-
-  const { mutate: contactMutation, isPending } = useApiMutation(
-    (data: ContactFormValues) =>
-      contactSubmission(data.name, data.email, data.subject, data.message),
-    {
-      onSuccess: () => {
-        toast.success("Message sent successfully!");
-        form.reset();
-      },
-      onError: (error) => {
-        toast.error("Failed to send message. Please try again.");
-        console.error("Error submitting contact form:", error);
-      },
-    },
-  );
-
-  const onSubmit = (data: ContactFormValues) => {
-    contactMutation(data);
-  };
-
   return (
     <Card className="mx-auto max-w-2xl border-none">
       <CardHeader>
@@ -75,95 +22,75 @@ export function ContactCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input type="text" placeholder="Your name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
+        <Form action={contactSubmission} className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label
+                htmlFor="name"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Name
+              </label>
+              <Input type="text" name="name" placeholder="Your name" required />
+            </div>
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Email
+              </label>
+              <Input
+                type="email"
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="your@email.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                placeholder="your@email.com"
+                required
               />
             </div>
+          </div>
 
-            <FormField
-              control={form.control}
-              name="subject"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Subject</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="What's this about?"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="message"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Message</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Tell us more..."
-                      rows={5}
-                      className={cn(
-                        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none resize-y min-h-[120px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-                        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-                        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-                      )}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button
-              type="submit"
-              className="w-full"
-              id="contact-submission-button"
-              data-umami-event="Contact submission button"
-              disabled={isPending}
+          <div className="space-y-2">
+            <label
+              htmlFor="subject"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              {isPending ? "Sending..." : "Send Message"}
-            </Button>
-          </form>
+              Subject
+            </label>
+            <Input
+              type="text"
+              name="subject"
+              placeholder="What's this about?"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="message"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Message
+            </label>
+            <Textarea
+              name="message"
+              placeholder="Tell us more..."
+              rows={5}
+              className="resize-y min-h-[120px]"
+              required
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
+            id="contact-submission-button"
+            data-umami-event="Contact submission button"
+          >
+            Send Message
+          </Button>
         </Form>
       </CardContent>
-      <CardFooter className="text-center text-xs text-muted-foreground ">
+      <CardFooter className="text-center text-xs text-muted-foreground">
         Or email us directly at{" "}
         <a
           href="mailto:info@bvrstrco.com"

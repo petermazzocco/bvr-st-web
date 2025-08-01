@@ -106,47 +106,80 @@ export const getPaymentHistory = async (
   return body;
 };
 
-// Export existing server actions for completeness
 /**
- * Creates a Stripe checkout session for a user
- * @param userId - The unique identifier for the user
- * @param successURL - URL to redirect to after successful payment
- * @param cancelURL - URL to redirect to if payment is cancelled
- * @param authToken - Bearer token for API authentication
- * @param affiliateCode - Optional affiliate code for tracking
- * @returns Promise containing session ID and checkout URL
- * @throws Error if the API request fails
+ * Creates a Stripe checkout session for a user using server action pattern
+ * @param formData - FormData containing userId, affiliate code, and redirect URLs
+ * @returns Promise that redirects to Stripe checkout or throws error on failure
  */
-export const createCheckoutSession = async (
-  userID: number,
-  successURL: string,
-  cancelURL: string,
-  authToken: string,
-  affiliateCode?: string,
-) => {
+export async function createCheckoutSession(formData: FormData) {
+  // Get authentication token from server
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  const token = cookieStore.get("bvrstrco_auth");
+  
+  if (!token?.value) {
+    throw new Error("Authentication required");
+  }
+
+  const userId = Number(formData.get("userId"));
+  const affiliateCode = formData.get("affiliateCode") as string | undefined;
+
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
+  // Build success and cancel URLs
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const successURL = `${baseUrl}/membership?stripe_checkout=success&user_id=${userId}&session_id={CHECKOUT_SESSION_ID}`;
+  const cancelURL = `${baseUrl}/membership`;
+
+  const requestData: {
+    userID: string;
+    successURL: string;
+    cancelURL: string;
+    affiliateCode?: string;
+  } = {
+    userID: userId.toString(),
+    successURL,
+    cancelURL,
+  };
+
+  // Only include affiliateCode if it has a value
+  if (affiliateCode) {
+    requestData.affiliateCode = affiliateCode;
+  }
+
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/stripe/checkout-session`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/checkout-session`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${token.value}`,
       },
-      body: JSON.stringify({
-        userID,
-        successURL,
-        cancelURL,
-        affiliateCode,
-      }),
+      body: JSON.stringify(requestData),
     },
   );
+
+  const responseText = await response.text();
+
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    console.error("Checkout session creation failed:", response.status, responseText);
+    throw new Error(`Checkout session creation failed: ${responseText}`);
   }
-  const body: { sessionID: string; url: string } = await response.json();
-  return body;
-};
+
+  let body: { sessionID: string; url: string };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  // Redirect to Stripe checkout
+  const { redirect } = await import("next/navigation");
+  redirect(body.url);
+}
 
 /**
  * Creates a Stripe billing portal session for customer management
@@ -184,32 +217,54 @@ export const createBillingPortalSession = async (
 };
 
 /**
- * Updates user after successful checkout
- * @param userId - The unique identifier for the user
- * @param sessionID - The Stripe session ID
- * @param authToken - Bearer token for API authentication
- * @returns Promise containing success message and points added
- * @throws Error if the API request fails
+ * Updates user after successful checkout using server action pattern
+ * @param formData - FormData containing userId and sessionId
+ * @returns Promise that redirects to membership page with success message
  */
-export const updateUserAfterCheckout = async (
-  userId: number,
-  sessionID: string,
-  authToken: string,
-) => {
+export async function updateUserAfterCheckout(formData: FormData) {
+  // Get authentication token from server
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  const token = cookieStore.get("bvrstrco_auth");
+  
+  if (!token?.value) {
+    throw new Error("Authentication required");
+  }
+
+  const userId = Number(formData.get("userId"));
+  const sessionID = formData.get("sessionId") as string;
+
+  if (!userId || !sessionID) {
+    throw new Error("User ID and session ID are required");
+  }
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}/stripe/${sessionID}`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${token.value}`,
       },
     },
   );
+
+  const responseText = await response.text();
+
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    console.error("User update after checkout failed:", response.status, responseText);
+    throw new Error(`User update after checkout failed: ${responseText}`);
   }
-  const body: { message: string; pointsAdded: number } = await response.json();
-  return body;
-};
+
+  let body: { message: string; pointsAdded: number };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  // Redirect to membership page with success message
+  const { redirect } = await import("next/navigation");
+  redirect(`/membership?success=true&points=${body.pointsAdded}`);
+}

@@ -1,8 +1,6 @@
 import { SignUpCard } from "@/components/cards/signup-card";
 import Image from "next/image";
 
-export const dynamic = "force-static";
-
 export default function Page() {
   return (
     <div className="flex min-h-screen w-full">

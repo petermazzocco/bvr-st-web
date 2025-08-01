@@ -1,22 +1,17 @@
-"use client";
 import { VariantSelector } from "@/components/product/variant-selector";
-import { Price } from "@/components/product/product-price";
 import { MemberPrice } from "@/components/product/member-price";
 import { Product } from "@/lib/shopify/types";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Separator } from "../ui/separator";
-import { useCart } from "@/components/cart/cart-context";
 import Link from "next/link";
-import { isAuctionProduct } from "@/lib/utils";
-import { AuctionProductDescription } from "./auction-product-description";
-import { useAuth } from "../auth/auth-context";
 import SizeChartModal from "../modals/size-chart-modal";
 import Image from "next/image";
 import { AdditionalDetails, Affiliate } from "@/lib/types";
 import { CareInstructionsModal } from "../modals/care-instructions-modal";
 import { AffiliateSelection } from "../utils/affiliate-selection";
+import { cookies } from "next/headers";
 
-export function ProductDescription({
+export async function ProductDescription({
   product,
   isMember,
   details,
@@ -27,16 +22,14 @@ export function ProductDescription({
   details?: AdditionalDetails;
   affiliates?: Affiliate[] | undefined;
 }) {
-  const { isAuthenticated } = useAuth();
-
-  if (isAuctionProduct(product)) {
-    return <AuctionProductDescription product={product} />;
-  }
+  const cookieStore = await cookies();
+  const authTokenCookie = cookieStore.get("bvrstrco_auth");
+  const authToken = authTokenCookie?.value || null;
 
   const basePoints = Math.floor(
     Number(product.priceRange.maxVariantPrice.amount),
   );
-  const membershipMultiplier = isAuthenticated ? 1.5 : 1;
+  const membershipMultiplier = !authToken ? 1.5 : 1;
   const earnedPoints = Math.floor(basePoints * membershipMultiplier);
 
   const totalStock = product.variants.reduce((total, variant) => {
@@ -112,7 +105,7 @@ export function ProductDescription({
 
       <div className="mt-4 text-xs flex uppercase flex-col gap-1 bg-muted h-fit w-full rounded-md font-muted-foreground font-semibold p-2">
         <p>
-          {isAuthenticated ? (
+          {authToken ? (
             <>Earn {Math.round(earnedPoints)} points</>
           ) : (
             <>

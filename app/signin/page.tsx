@@ -1,7 +1,5 @@
-import { SignInCard } from "@/components/cards/signin-card";
 import Image from "next/image";
-
-export const dynamic = "force-static";
+import { SignInCard } from "@/components/cards/signin-card";
 
 export default function Page() {
   return (

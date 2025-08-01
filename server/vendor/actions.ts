@@ -14,7 +14,7 @@ import {
  * Returns all partner stores
  * @returns Promise containing all partner stores
  */
-export const getAllPartneredStores = async (): Promise<ApiResult<Vendor[]>> => {
+export const getAllPartneredStores = async (): Promise<Vendor[]> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/merch/`,
@@ -30,44 +30,26 @@ export const getAllPartneredStores = async (): Promise<ApiResult<Vendor[]>> => {
       const errorText = await response.text();
 
       if (errorText.includes("Failed to initialize Sanity client")) {
-        return {
-          success: false,
-          error: "Internal server error. Please try again.",
-        };
+        return [];
       }
 
       if (errorText.includes("Failed to fetch vendors from Sanity")) {
-        return {
-          success: false,
-          error: "Failed to fetch vendors. Please try again.",
-        };
+        return [];
       }
 
       if (errorText.includes("Failed to unmarshal vendors")) {
-        return {
-          success: false,
-          error: "Failed to fetch vendors. Please try again.",
-        };
+        return [];
       }
 
-      return {
-        success: false,
-        error: "Fetching vendors failed. Please try again.",
-      };
+      return [];
     }
 
     const body = await response.json();
 
-    return {
-      success: true,
-      data: body.vendors || body,
-    };
+    return body.vendors || body;
   } catch (error) {
     console.error("Get all partnered stores error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+    return [];
   }
 };
 
@@ -416,73 +398,48 @@ export const createCheckoutRequest = async (
 
 /**
  * Creates a new vendor request
- * @param storeName - The name of the store to fetch products for
- * @param storefrontAccessToken - The storefront access token for the store
- * @param name - The name of the vendor
- * @param logo - The logo of the vendor
- * @param banner - The banner of the vendor
- * @param description - The description of the vendor
- * @param shopLink - The shop link of the vendor
- * @param webhookSecret - The webhook secret of the vendor
- * @returns Promise of data which includes message for request being sent
+ * @param formData - FormData containing all vendor request information
+ * @returns Promise that redirects on success or throws error on failure
  */
-export const newVendorRequest = async (
-  storeName: string,
-  storefrontAccessToken: string,
-  name: string,
-  logo: string,
-  banner: string,
-  description: string,
-  shopLink: string | undefined,
-  webhookSecret: string,
-): Promise<ApiResult<{ message: string }>> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/merch/new`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          storeName,
-          storefrontAccessToken,
-          name,
-          logo,
-          banner,
-          description,
-          shopLink,
-          webhookSecret,
-        }),
+export async function newVendorRequest(formData: FormData) {
+  const requestData = {
+    storeName: formData.get("storeName"),
+    storefrontAccessToken: formData.get("storefrontAccessToken"),
+    name: formData.get("name"),
+    logo: formData.get("logo"),
+    banner: formData.get("banner"),
+    description: formData.get("description"),
+    shopLink: formData.get("shopLink") || undefined,
+    webhookSecret: formData.get("webhookSecret"),
+  };
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/merch/new`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(requestData),
+    },
+  );
 
-    if (!response.ok) {
-      const errorText = await response.text();
+  const responseText = await response.text();
 
-      if (errorText.includes("Internal server error")) {
-        return {
-          success: false,
-          error: "An error occurred. Please try again.",
-        };
-      }
-
-      return {
-        success: false,
-        error: "An error occurred. Please try again.",
-      };
-    }
-
-    const body: { message: string } = await response.json();
-    return {
-      success: true,
-      data: body,
-    };
-  } catch (error) {
-    console.error("Get product error:", error);
-    return {
-      success: false,
-      error: "An unexpected error occurred. Please try again.",
-    };
+  if (!response.ok) {
+    console.error("Partner request failed:", response.status, responseText);
+    throw new Error(`Partner request failed: ${responseText}`);
   }
-};
+
+  let body: { message: string };
+  try {
+    body = JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON response:", responseText);
+    throw new Error("Invalid response from server");
+  }
+
+  // Redirect to contact page with partner success message
+  const { redirect } = await import("next/navigation");
+  redirect("/contact?partner=true");
+}

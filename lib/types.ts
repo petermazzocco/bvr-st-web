@@ -11,7 +11,7 @@ export interface User {
   /** User's phone number */
   phone?: string;
   /** User's physical address information */
-  address: Address;
+  address: string;
   /** User's email address */
   email: string;
   /** User's encrypted password */
@@ -112,7 +112,7 @@ export interface UpdateUser {
   /** User's phone number */
   phone?: string;
   /** User's physical address information */
-  address: Address;
+  address: string;
   /** User's email address */
   email: string;
   /** Optin marketing */

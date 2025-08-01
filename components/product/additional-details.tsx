@@ -1,5 +1,3 @@
-"use client";
-
 import { AdditionalDetails } from "@/lib/types";
 import { Separator } from "../ui/separator";
 import Image from "next/image";

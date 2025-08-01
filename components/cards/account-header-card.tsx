@@ -1,39 +1,13 @@
-"use client";
 import { LogOut, Star } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { UpdateUser, User } from "@/lib/types";
 import { signOut } from "@/server/user/actions";
-import { OTPCard } from "@/components/cards/otp-card";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { UpdateUserModal } from "../modals/update-user-details";
+import Form from "next/form";
 
 export function AccountHeaderCard({ user }: { user: User | undefined }) {
-  const router = useRouter();
-
-  const handleSignOut = async () => {
-    try {
-      const result = await signOut();
-      if (result.success) {
-        router.push("/");
-      } else {
-        console.error("Sign out failed:", result.error);
-      }
-    } catch (error) {
-      console.error("Sign out error:", error);
-    }
-  };
-
   return (
     <div className=" border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -57,35 +31,23 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4 ">
-            {/* {!user?.emailVerified && (
-              <Dialog>
-                <DialogTrigger>
-                  <Button variant={"default"}>Verify Email</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle></DialogTitle>
-                    <DialogDescription></DialogDescription>
-                  </DialogHeader>
-                  <OTPCard user={user} />
-                </DialogContent>
-              </Dialog>
-            )} */}
             {!user?.isMember && (
               <Link href="/membership">
                 <Button variant="default">Become A Member</Button>
               </Link>
             )}
             <div className="flex justify-between items-center gap-2">
-              <UpdateUserModal user={user as UpdateUser} userId={user?.id} />
-              <Button
-                variant="outline"
-                onClick={handleSignOut}
-                className="w-fit"
-                size={"sm"}
-              >
-                <LogOut className="w-4 h-4" />
-              </Button>
+              <UpdateUserModal user={user as UpdateUser} />
+              <Form action={signOut}>
+                <Button
+                  variant="outline"
+                  type="submit"
+                  className="w-fit"
+                  size={"sm"}
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </Form>
             </div>
           </div>
         </div>

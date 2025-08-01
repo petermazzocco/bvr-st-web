@@ -1,22 +1,7 @@
-"use client";
-
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { CountdownTimer } from "./countdown-timer";
-import { useApiMutation } from "@/hooks/use-api-mutation";
 import { addToNewsletter } from "@/server/user/actions";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -26,43 +11,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Form from "next/form";
 
-const newsletterSchema = z.object({
-  fullName: z.string().min(1, "Full name is required"),
-  email: z.email("Invalid email address"),
-});
-
-type NewsletterFormValues = z.infer<typeof newsletterSchema>;
-
-export function ComingSoonPage() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const form = useForm<NewsletterFormValues>({
-    resolver: zodResolver(newsletterSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-    },
-  });
-
-  const { mutate: subscribeToNewsletter, isPending } = useApiMutation(
-    (variables: NewsletterFormValues) =>
-      addToNewsletter(variables.email, variables.fullName),
-    {
-      onSuccess: () => {
-        setIsSubmitted(true);
-        form.reset();
-      },
-      onError: (error) => {
-        console.error("Failed to subscribe to newsletter", error);
-        toast.error("Uh oh! Something went wrong, please try again.");
-      },
-    },
-  );
-
-  const onSubmit = (data: NewsletterFormValues) => {
-    subscribeToNewsletter(data);
+interface ComingSoonPageProps {
+  searchParams?: {
+    newsletter?: string;
   };
+}
+
+export function ComingSoonPage({ searchParams }: ComingSoonPageProps = {}) {
+  const isSubmitted = searchParams?.newsletter === "true";
 
   return (
     <>
@@ -96,53 +54,24 @@ export function ComingSoonPage() {
                     Get notified when we launch
                   </DialogDescription>
                 </DialogHeader>
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-3"
-                  >
-                    <FormField
-                      control={form.control}
-                      name="fullName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              type="text"
-                              className="text-foreground"
-                              placeholder="Enter your full name"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-destructive text-left text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              className="text-foreground"
-                              placeholder="Enter your email"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-destructive text-left text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={isPending}
-                    >
-                      {isPending ? "Subscribing..." : "Notify Me"}
-                    </Button>
-                  </form>
+                <Form action={addToNewsletter} className="space-y-3">
+                  <Input
+                    type="text"
+                    name="fullName"
+                    className="text-foreground"
+                    placeholder="Enter your full name"
+                    required
+                  />
+                  <Input
+                    type="email"
+                    name="email"
+                    className="text-foreground"
+                    placeholder="Enter your email"
+                    required
+                  />
+                  <Button type="submit" className="w-full">
+                    Notify Me
+                  </Button>
                 </Form>
                 <DialogFooter>
                   <p className="text-[0.5rem] text-muted-foreground">
