@@ -114,6 +114,8 @@ export function ForgotPasswordOTPCard({ email }: ForgotPasswordOTPCardProps) {
         <CardTitle className="text-2xl">Enter Verification Code</CardTitle>
         <CardDescription>
           We sent an 8-character code to {email}. Enter it below to continue.
+          The code will expire in 30 minutes, and may take up to 5 minutes to
+          arrive.
         </CardDescription>
       </CardHeader>
       <CardContent>
