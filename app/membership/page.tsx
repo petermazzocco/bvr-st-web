@@ -28,6 +28,7 @@ interface MembershipPageProps {
     success?: string;
     points?: string;
     affiliate?: string;
+    type?: string;
   }>;
 }
 
@@ -47,6 +48,7 @@ export default async function MembershipPage({
   // Show success message if explicitly set
   const showSuccess = params.success === "true";
   const pointsAdded = params.points;
+  const membershipType = params.type;
 
   // If we have successful stripe checkout params, process them
   if (stripeCheckout === "success" && sessionId && authToken) {
@@ -99,6 +101,7 @@ export default async function MembershipPage({
             affiliates={affiliates?.data}
             userId={userId}
             authToken={authToken}
+            type={membershipType}
           />
         )}
       </div>
@@ -151,6 +154,7 @@ export default async function MembershipPage({
               affiliates={affiliates?.data}
               userId={userId}
               authToken={authToken}
+              type={membershipType}
             />
           )}
         </div>
