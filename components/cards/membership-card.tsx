@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { createCheckoutSession } from "@/server/stripe/actions";
 import { AffiliateSelection } from "../utils/affiliate-selection";
 import Link from "next/link";
@@ -24,6 +25,7 @@ interface MembershipCardProps {
   userId: number | null;
   affiliates: Affiliate[] | undefined;
   affiliateCode?: string;
+  type?: string;
 }
 
 export function MembershipCard({
@@ -31,7 +33,9 @@ export function MembershipCard({
   userId,
   affiliates,
   affiliateCode,
+  type,
 }: MembershipCardProps) {
+  const [selectedType, setSelectedType] = useState(type || "yearly");
   const [message, formAction, pending] = useActionState(
     createCheckoutSession,
     null,
@@ -49,12 +53,41 @@ export function MembershipCard({
           Get instant access to all premium features
         </CardDescription>
       </CardHeader>
-      <div className="flex flex-row items-center justify-center w-full px-6">
-        <Separator className="flex-1" />
-        <Badge className="text-2xl font-bold px-4" variant={"outline"}>
-          $10 <span className="text-sm text-muted-foreground">per month</span>
-        </Badge>
-        <Separator className="flex-1" />
+      <div className="px-6">
+        <Tabs
+          value={selectedType}
+          onValueChange={setSelectedType}
+          className="w-full"
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="monthly">Monthly</TabsTrigger>
+            <TabsTrigger value="yearly">Yearly</TabsTrigger>
+          </TabsList>
+          <TabsContent value="monthly" className="mt-4">
+            <div className="flex flex-row items-center justify-center w-full">
+              <Separator className="flex-1" />
+              <Badge className="text-2xl font-bold px-4" variant={"outline"}>
+                $10{" "}
+                <span className="text-sm text-muted-foreground">per month</span>
+              </Badge>
+              <Separator className="flex-1" />
+            </div>
+          </TabsContent>
+          <TabsContent value="yearly" className="mt-4">
+            <div className="flex flex-row items-center justify-center w-full">
+              <Separator className="flex-1" />
+              <Badge className="text-2xl font-bold px-4" variant={"outline"}>
+                $100
+                <span className=" text-sm opacity-50 line-through">$120</span>
+                <span className=" text-sm text-muted-foreground">per year</span>
+              </Badge>
+              <Separator className="flex-1" />
+            </div>
+            <p className="text-xs text-primary font-semibold mt-2">
+              Get 2 months free when you sign up for a yearly membership
+            </p>
+          </TabsContent>
+        </Tabs>
       </div>
       <CardContent>
         <div className="space-y-2">
@@ -85,6 +118,7 @@ export function MembershipCard({
         )}
         <Form action={formAction}>
           <input type="hidden" name="userId" value={userId?.toString() || ""} />
+          <input type="hidden" name="type" value={selectedType} />
           {affiliateCode && (
             <input type="hidden" name="affiliateCode" value={affiliateCode} />
           )}
