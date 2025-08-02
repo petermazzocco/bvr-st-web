@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ErrorMessage } from "@/components/utils/error-message";
+import { AddressAutofillInput } from "../utils/address-autofill-input";
 
 // Zod validation schema
 const signUpSchema = z.object({
@@ -23,6 +24,8 @@ const signUpSchema = z.object({
   email: z.email("Please enter a valid email address"),
   phone: z.string().optional(),
   address: z.string().min(1, "Address is required"),
+  addressLine2: z.string().optional(),
+  addressLine3: z.string().optional(),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters long")
@@ -46,6 +49,8 @@ export function SignUpCard() {
     email: "",
     phone: "",
     address: "",
+    addressLine2: "",
+    addressLine3: "",
     password: "",
     termsAccepted: false,
     optInMarketing: false,
@@ -72,6 +77,14 @@ export function SignUpCard() {
         [name]: undefined,
       }));
     }
+  };
+
+  // Handle address selection from Mapbox
+  const handleAddressSelect = (cityStateZip: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      addressLine3: cityStateZip,
+    }));
   };
 
   // Validate form using Zod
@@ -102,6 +115,33 @@ export function SignUpCard() {
       e.preventDefault();
       setErrors(validationErrors);
       return;
+    }
+
+    // Combine all address fields into a single address string
+    const addressParts = [
+      formData.address,
+      formData.addressLine2,
+      formData.addressLine3
+    ].filter(Boolean); // Remove empty/undefined values
+    
+    const combinedAddress = addressParts.join(", ");
+
+    // Update the form data to include the combined address
+    const form = e.target as HTMLFormElement;
+    const addressInput = form.querySelector('input[name="address"]') as HTMLInputElement;
+    if (addressInput) {
+      addressInput.value = combinedAddress || "";
+    }
+
+    // Remove addressLine2 and addressLine3 from form submission by clearing their names
+    const addressLine2Input = form.querySelector('input[name="addressLine2"]') as HTMLInputElement;
+    if (addressLine2Input) {
+      addressLine2Input.name = ""; // Remove the name so it doesn't get submitted
+    }
+
+    const addressLine3Input = form.querySelector('input[name="addressLine3"]') as HTMLInputElement;
+    if (addressLine3Input) {
+      addressLine3Input.name = ""; // Remove the name so it doesn't get submitted
     }
 
     // If validation passes, allow form to submit normally
@@ -224,18 +264,52 @@ export function SignUpCard() {
             >
               Address
             </label>
-            <Input
-              type="text"
+            <AddressAutofillInput
               name="address"
+              value={formData.address || ""}
+              onChangeAction={handleInputChange}
+              onAddressSelect={handleAddressSelect}
               placeholder="123 Main St"
               required
-              value={formData.address || ""}
-              onChange={handleInputChange}
               className={errors.address ? "bored-destructive" : ""}
             />
             {errors.address && (
               <p className="text-xs text-destructive">{errors.address}</p>
             )}
+          </div>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="addressLine2"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Apartment, Suite, Unit (Optional)
+            </label>
+            <Input
+              type="text"
+              name="addressLine2"
+              placeholder="Apt 4B, Suite 200, Unit 5"
+              value={formData.addressLine2 || ""}
+              onChange={handleInputChange}
+              autoComplete="shipping address-line2"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label
+              htmlFor="addressLine3"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              City, State, ZIP Code (Optional)
+            </label>
+            <Input
+              type="text"
+              name="addressLine3"
+              placeholder="Beaverton, OR 97008"
+              value={formData.addressLine3 || ""}
+              onChange={handleInputChange}
+              autoComplete="shipping address-level2"
+            />
           </div>
 
           <div className="space-y-2">

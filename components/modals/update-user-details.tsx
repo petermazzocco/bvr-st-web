@@ -19,6 +19,7 @@ import { updateUserDetails } from "@/server/user/actions";
 import { Edit } from "lucide-react";
 import Form from "next/form";
 import { useActionState } from "react";
+import { AddressAutofillInput } from "../utils/address-autofill-input";
 
 // Zod validation schema
 const updateUserSchema = z.object({
@@ -27,6 +28,8 @@ const updateUserSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().optional(),
   address: z.string().min(1, "Address is required"),
+  addressLine2: z.string().optional(),
+  addressLine3: z.string().optional(),
   optInMarketing: z.boolean().optional(),
   optInRewards: z.boolean().optional(),
 });
@@ -48,6 +51,8 @@ export function UpdateUserModal({ user }: UpdateUserModalProps) {
     email: user?.email || "",
     phone: user?.phone || "",
     address: user?.address || "",
+    addressLine2: "",
+    addressLine3: "",
     optInMarketing: user?.optInMarketing || false,
     optInRewards: user?.optInRewards || false,
   });
@@ -90,6 +95,14 @@ export function UpdateUserModal({ user }: UpdateUserModalProps) {
     }
   };
 
+  // Handle address selection from Mapbox
+  const handleAddressSelect = (cityStateZip: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      addressLine3: cityStateZip,
+    }));
+  };
+
   // Validate form using Zod
   const validateForm = () => {
     try {
@@ -119,6 +132,39 @@ export function UpdateUserModal({ user }: UpdateUserModalProps) {
       e.preventDefault();
       setErrors(validationErrors);
       return;
+    }
+
+    // Combine all address fields into a single address string
+    const addressParts = [
+      formData.address,
+      formData.addressLine2,
+      formData.addressLine3,
+    ].filter(Boolean); // Remove empty/undefined values
+
+    const combinedAddress = addressParts.join(", ");
+
+    // Update the form data to include the combined address
+    const form = e.target as HTMLFormElement;
+    const addressInput = form.querySelector(
+      'input[name="address"]',
+    ) as HTMLInputElement;
+    if (addressInput) {
+      addressInput.value = combinedAddress || "";
+    }
+
+    // Remove addressLine2 and addressLine3 from form submission by clearing their names
+    const addressLine2Input = form.querySelector(
+      'input[name="addressLine2"]',
+    ) as HTMLInputElement;
+    if (addressLine2Input) {
+      addressLine2Input.name = ""; // Remove the name so it doesn't get submitted
+    }
+
+    const addressLine3Input = form.querySelector(
+      'input[name="addressLine3"]',
+    ) as HTMLInputElement;
+    if (addressLine3Input) {
+      addressLine3Input.name = ""; // Remove the name so it doesn't get submitted
     }
 
     // If validation passes, allow form to submit normally
@@ -224,16 +270,48 @@ export function UpdateUserModal({ user }: UpdateUserModalProps) {
               <div className="grid grid-cols-4 items-center gap-4">
                 <label className="text-left text-sm font-medium">Address</label>
                 <div className="col-span-3 space-y-1">
-                  <Input
+                  <AddressAutofillInput
                     name="address"
                     value={formData.address || ""}
-                    onChange={handleInputChange}
-                    className={errors.address ? "border-destructive" : ""}
+                    onChangeAction={handleInputChange}
+                    onAddressSelect={handleAddressSelect}
+                    placeholder="123 Main St"
                     required
+                    className={errors.address ? "border-destructive" : ""}
                   />
                   {errors.address && (
                     <p className="text-xs text-destructive">{errors.address}</p>
                   )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-left text-sm font-medium">
+                  Apt/Suite
+                </label>
+                <div className="col-span-3 space-y-1">
+                  <Input
+                    name="addressLine2"
+                    value={formData.addressLine2 || ""}
+                    onChange={handleInputChange}
+                    placeholder="Apt 4B, Suite 200, Unit 5"
+                    autoComplete="shipping address-line2"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label className="text-left text-sm font-medium">
+                  City/State/ZIP
+                </label>
+                <div className="col-span-3 space-y-1">
+                  <Input
+                    name="addressLine3"
+                    value={formData.addressLine3 || ""}
+                    onChange={handleInputChange}
+                    placeholder="Beaverton, OR 97008"
+                    autoComplete="shipping address-level2"
+                  />
                 </div>
               </div>
 
