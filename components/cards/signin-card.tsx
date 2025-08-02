@@ -1,8 +1,8 @@
 "use client";
-
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Form from "next/form";
 import Link from "next/link";
+import { z } from "zod";
 import { signInWithEmail } from "@/server/user/actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,11 +14,86 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { ErrorMessage } from "@/components/utils/error-message";
+
+// Zod validation schema
+const signInSchema = z.object({
+  email: z.email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type SignInFormData = z.infer<typeof signInSchema>;
 
 export function SignInCard() {
   const [message, formAction, pending] = useActionState(signInWithEmail, null);
+  const [formData, setFormData] = useState<Partial<SignInFormData>>({
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof SignInFormData, string>>
+  >({});
+
+  // Handle input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Clear error for this field when user starts typing
+    if (errors[name as keyof SignInFormData]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
+  };
+
+  // Validate form using Zod
+  const validateForm = () => {
+    try {
+      signInSchema.parse(formData);
+      return {};
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors: Partial<Record<keyof SignInFormData, string>> = {};
+        error.issues.forEach((issue) => {
+          if (issue.path.length > 0) {
+            const fieldName = issue.path[0] as keyof SignInFormData;
+            fieldErrors[fieldName] = issue.message;
+          }
+        });
+        return fieldErrors;
+      }
+      return {};
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      e.preventDefault();
+      setErrors(validationErrors);
+      return;
+    }
+
+    // If validation passes, allow form to submit normally
+    setErrors({});
+  };
+
+  // Check if form is valid for button state
+  const isFormValid = () => {
+    const result = signInSchema.safeParse(formData);
+    return result.success;
+  };
+
   return (
-    <Card className="mx-auto min-w-md shadow-none border-none">
+    <Card className="mx-auto max-w-lg min-w-lg shadow-none border-none">
       <CardHeader>
         <CardTitle className="text-2xl">Sign In</CardTitle>
         <CardDescription>
@@ -26,7 +101,7 @@ export function SignInCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form action={formAction} className="space-y-4">
+        <Form action={formAction} onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label
               htmlFor="email"
@@ -39,9 +114,14 @@ export function SignInCard() {
               name="email"
               placeholder="m@example.com"
               required
+              value={formData.email || ""}
+              onChange={handleInputChange}
+              className={errors.email ? "border-destructive" : ""}
             />
+            {errors.email && (
+              <p className="text-xs text-destructive">{errors.email}</p>
+            )}
           </div>
-
           <div className="space-y-2">
             <label
               htmlFor="password"
@@ -49,11 +129,20 @@ export function SignInCard() {
             >
               Password
             </label>
-            <Input type="password" name="password" required />
+            <Input
+              type="password"
+              name="password"
+              required
+              value={formData.password || ""}
+              onChange={handleInputChange}
+              className={errors.password ? "border-destructive" : ""}
+            />
+            {errors.password && (
+              <p className="text-xs text-destructive">{errors.password}</p>
+            )}
           </div>
-
           <Button
-            disabled={pending}
+            disabled={pending || !isFormValid()}
             type="submit"
             className="w-full"
             id="signin-button"
@@ -64,11 +153,7 @@ export function SignInCard() {
         </Form>
       </CardContent>
       <CardFooter className="flex flex-col items-start justify-center gap-2">
-        {message?.error && (
-          <div className="mb-4 p-3 text-xs text-destructive bg-destructive/10 border border-destructive/20 max-w-sm rounded-md">
-            {message.error}
-          </div>
-        )}
+        {message?.error && <ErrorMessage message={message.error} />}
         <div className="text-center text-sm">
           {"Don't have an account? "}
           <Link href="/signup" className="underline">
