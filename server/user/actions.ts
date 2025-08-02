@@ -464,14 +464,13 @@ export async function updateUserDetails(initialState: any, formData: FormData) {
     }
 
     // Redirect to account page with success message
-    const { redirect } = await import("next/navigation");
     redirect("/account?updated=true");
   } catch (error) {
-    console.error("Update user details error:", error);
     if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      // This is a redirect, re-throw it
+      // This is a redirect, re-throw it (don't log as error)
       throw error;
     }
+    console.error("Update user details error:", error);
     return { error: "Network error. Please check your connection and try again." };
   }
 }
