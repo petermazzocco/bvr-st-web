@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,12 +16,17 @@ import { UpdateUser } from "@/lib/types";
 import { updateUserDetails } from "@/server/user/actions";
 import { Edit } from "lucide-react";
 import Form from "next/form";
+import { useActionState } from "react";
 
 interface UpdateUserModalProps {
   user: UpdateUser | undefined;
 }
 
 export function UpdateUserModal({ user }: UpdateUserModalProps) {
+  const [message, formAction, pending] = useActionState(
+    updateUserDetails,
+    null,
+  );
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -35,7 +42,7 @@ export function UpdateUserModal({ user }: UpdateUserModalProps) {
             you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <Form action={updateUserDetails}>
+        <Form action={formAction}>
           <div className="space-y-4">
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
@@ -126,13 +133,19 @@ export function UpdateUserModal({ user }: UpdateUserModalProps) {
                 </div>
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="flex flex-col gap-2">
+              {message?.error && (
+                <div className="p-3 text-xs text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
+                  {message.error}
+                </div>
+              )}
               <Button
+                disabled={pending}
                 type="submit"
                 id="update-user-button"
                 data-umami-event="Update user button"
               >
-                Save changes
+                {pending ? "Saving..." : "Save changes"}
               </Button>
             </DialogFooter>
           </div>

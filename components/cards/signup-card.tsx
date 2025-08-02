@@ -1,3 +1,5 @@
+"use client";
+import { useActionState } from "react";
 import Form from "next/form";
 import Link from "next/link";
 import { signUp } from "@/server/user/actions";
@@ -6,12 +8,14 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 export function SignUpCard() {
+  const [message, formAction, pending] = useActionState(signUp, null);
   return (
     <Card className="mx-auto min-w-md max-w-lg shadow-none border-none">
       <CardHeader>
@@ -22,7 +26,7 @@ export function SignUpCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form action={signUp} className="space-y-4">
+        <Form action={formAction} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label
@@ -145,22 +149,29 @@ export function SignUpCard() {
           </div>
 
           <Button
+            disabled={pending}
             type="submit"
             className="w-full"
             id="signup-button"
             data-umami-event="Signup button"
           >
-            Sign Up
+            {pending ? "Signing up..." : "Sign Up"}
           </Button>
         </Form>
-
-        <div className="mt-4 text-left text-sm">
+      </CardContent>
+      <CardFooter className="flex flex-col items-start justify-center gap-2">
+        {message?.error && (
+          <div className="mb-4 p-3 text-xs text-destructive bg-destructive/10 border border-destructive/20 max-w-sm rounded-md">
+            {message.error}
+          </div>
+        )}
+        <div className="text-left text-sm">
           Already have an account?{" "}
           <Link href="/signin" className="underline">
             Sign in
           </Link>
         </div>
-      </CardContent>
+      </CardFooter>
     </Card>
   );
 }

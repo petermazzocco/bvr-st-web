@@ -1,3 +1,4 @@
+"use client";
 import Form from "next/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { contactSubmission } from "@/server/user/actions";
+import { useActionState } from "react";
 
 export function ContactCard() {
+  const [message, formAction, pending] = useActionState(
+    contactSubmission,
+    null,
+  );
   return (
     <Card className="mx-auto max-w-2xl border-none">
       <CardHeader>
@@ -22,7 +28,7 @@ export function ContactCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form action={contactSubmission} className="space-y-4">
+        <Form action={formAction} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <label
@@ -81,12 +87,13 @@ export function ContactCard() {
           </div>
 
           <Button
+            disabled={pending}
             type="submit"
             className="w-full"
             id="contact-submission-button"
             data-umami-event="Contact submission button"
           >
-            Send Message
+            {pending ? "Sending..." : "Send Message"}
           </Button>
         </Form>
       </CardContent>

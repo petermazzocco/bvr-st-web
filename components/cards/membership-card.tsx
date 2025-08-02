@@ -1,3 +1,6 @@
+"use client";
+
+import { useActionState } from "react";
 import {
   Card,
   CardContent,
@@ -10,48 +13,33 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "../ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { createCheckoutSession } from "@/server/stripe/actions";
-import { getAuthTokenServer, getUserIdFromTokenServer } from "@/server/user/actions";
 import { AffiliateSelection } from "../utils/affiliate-selection";
-import { getAffiliates } from "@/server/sanity/actions";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import Form from "next/form";
+import { redirect } from "next/navigation";
+import { Affiliate } from "@/lib/types";
 
 interface MembershipCardProps {
-  searchParams?: {
-    affiliate?: string;
-  };
+  authToken: string | null;
+  userId: number | null;
+  affiliates: Affiliate[] | undefined;
+  affiliateCode?: string;
 }
 
-export async function MembershipCard({ searchParams }: MembershipCardProps = {}) {
-  const authToken = await getAuthTokenServer();
-  const userId = await getUserIdFromTokenServer();
-  const affiliateCode = searchParams?.affiliate;
+export function MembershipCard({
+  authToken,
+  userId,
+  affiliates,
+  affiliateCode,
+}: MembershipCardProps) {
+  const [message, formAction, pending] = useActionState(
+    createCheckoutSession,
+    null,
+  );
 
-  // Get affiliates data
-  const affiliatesResult = await getAffiliates();
-  const affiliates = affiliatesResult?.data;
-
-  const handleStartMembership = async (formData: FormData) => {
-    "use server";
-    
-    const authToken = await getAuthTokenServer();
-    const userId = await getUserIdFromTokenServer();
-    
-    if (!authToken || !userId) {
-      redirect("/signin?redirect=/membership");
-      return;
-    }
-
-    // Add userId and affiliate code to form data
-    formData.append("userId", userId.toString());
-    if (affiliateCode) {
-      formData.append("affiliateCode", affiliateCode);
-    }
-
-    // This will redirect to Stripe checkout
-    await createCheckoutSession(formData);
-  };
+  if (!authToken || !userId) {
+    redirect("/signin?redirect=/membership");
+  }
 
   return (
     <Card className="border-none">
@@ -95,16 +83,26 @@ export async function MembershipCard({ searchParams }: MembershipCardProps = {})
             </Link>
           </div>
         )}
-        <Form action={handleStartMembership}>
+        <Form action={formAction}>
+          <input type="hidden" name="userId" value={userId?.toString() || ""} />
+          {affiliateCode && (
+            <input type="hidden" name="affiliateCode" value={affiliateCode} />
+          )}
           <Button
+            disabled={pending}
             type="submit"
             className="w-full"
             id="membership-button"
             data-umami-event="Create membership intent button"
           >
-            Start Membership
+            {pending ? "Processing..." : "Start Membership"}
           </Button>
         </Form>
+        {message?.error && (
+          <div className="p-3 text-xs text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
+            {message.error}
+          </div>
+        )}
       </CardFooter>
     </Card>
   );
