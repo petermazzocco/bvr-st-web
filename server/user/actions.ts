@@ -12,16 +12,16 @@ export const getAuthTokenServer = async (): Promise<string | null> => {
 };
 
 export async function handleEmailSubmit(initialData: any, formData: FormData) {
+  let shouldRedirect = false;
+  let redirectUrl = "";
+  
   try {
     await requestForgotPassword(formData);
     const email = formData.get("email") as string;
-    redirect(`/forgot-password/verify?email=${encodeURIComponent(email)}`);
+    shouldRedirect = true;
+    redirectUrl = `/forgot-password/verify?email=${encodeURIComponent(email)}`;
   } catch (error) {
     console.error("Handle email submit error:", error);
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      // This is a redirect, re-throw it
-      throw error;
-    }
     
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     
@@ -36,10 +36,17 @@ export async function handleEmailSubmit(initialData: any, formData: FormData) {
     }
     
     return { error: "Failed to send reset code. Please try again." };
+  } finally {
+    if (shouldRedirect) {
+      redirect(redirectUrl);
+    }
   }
 }
 
 export async function handleOTPSubmit(initialState: any, formData: FormData) {
+  let shouldRedirect = false;
+  let redirectUrl = "";
+  
   try {
     const code = formData.get("code") as string;
     const email = initialState.email;
@@ -56,16 +63,71 @@ export async function handleOTPSubmit(initialState: any, formData: FormData) {
       return { error: "Code must contain only letters and numbers." };
     }
 
-    redirect(
-      `/forgot-password/reset?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`,
+    if (!email) {
+      return { error: "Email is required for verification." };
+    }
+
+    // Call the API to verify the OTP
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/verify-otp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          code: code,
+        }),
+      },
     );
+
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      console.error("OTP verification failed:", response.status, responseText);
+      
+      if (response.status === 400) {
+        if (responseText.includes("user_id") || responseText.includes("email")) {
+          return { error: "Please provide either user_id or email" };
+        }
+        if (responseText.includes("OTP code")) {
+          return { error: "Please provide a valid OTP code" };
+        }
+        return { error: "Please check your request format and try again" };
+      }
+      if (response.status === 404) {
+        return { error: "Account not found. Please check your account details" };
+      }
+      if (response.status >= 500) {
+        return { error: "We're experiencing technical difficulties. Please try again later" };
+      }
+      
+      return { error: "Failed to verify code. Please try again." };
+    }
+
+    let body: { valid: boolean };
+    try {
+      body = JSON.parse(responseText);
+    } catch (error) {
+      console.error("Invalid JSON response:", responseText);
+      return { error: "Invalid response from server. Please try again." };
+    }
+
+    if (!body.valid) {
+      return { error: "Invalid or expired verification code. Please try again or request a new code." };
+    }
+
+    // OTP is valid, proceed to reset password page
+    shouldRedirect = true;
+    redirectUrl = `/forgot-password/reset?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`;
   } catch (error) {
     console.error("Handle OTP submit error:", error);
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      // This is a redirect, re-throw it
-      throw error;
+    return { error: "Network error. Please check your connection and try again." };
+  } finally {
+    if (shouldRedirect) {
+      redirect(redirectUrl);
     }
-    return { error: "Failed to verify code. Please try again." };
   }
 }
 
@@ -117,6 +179,9 @@ export async function signInWithEmail(initialState: any, formData: FormData) {
     callbackUrl: formData.get("callbackUrl"),
   };
 
+  let shouldRedirect = false;
+  let redirectUrl = "";
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/email`,
@@ -166,19 +231,19 @@ export async function signInWithEmail(initialState: any, formData: FormData) {
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-      // Redirect to callback URL or default dashboard
-      redirect(body.callbackUrl || "/account");
+      shouldRedirect = true;
+      redirectUrl = body.callbackUrl || "/account";
     } else {
       return { error: "No authentication token received. Please try again." };
     }
   } catch (error) {
     // Handle network errors or other unexpected errors
     console.error("Sign in error:", error);
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      // This is a redirect, re-throw it
-      throw error;
-    }
     return { error: "Network error. Please check your connection and try again." };
+  } finally {
+    if (shouldRedirect) {
+      redirect(redirectUrl);
+    }
   }
 }
 
@@ -263,6 +328,9 @@ export async function signUp(initialState: any, formData: FormData) {
     address: formData.get("address"),
   };
 
+  let shouldRedirect = false;
+  let redirectUrl = "";
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
@@ -316,17 +384,18 @@ export async function signUp(initialState: any, formData: FormData) {
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-      redirect(body.callbackUrl || "/account");
+      shouldRedirect = true;
+      redirectUrl = body.callbackUrl || "/account";
     } else {
       return { error: "No authentication token received. Please try again." };
     }
   } catch (error) {
     console.error("Sign up error:", error);
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      // This is a redirect, re-throw it
-      throw error;
-    }
     return { error: "Network error. Please check your connection and try again." };
+  } finally {
+    if (shouldRedirect) {
+      redirect(redirectUrl);
+    }
   }
 }
 
@@ -395,6 +464,8 @@ export const getUserDetails = async (
  * @returns Promise that redirects with success message or throws error on failure
  */
 export async function updateUserDetails(initialState: any, formData: FormData) {
+  let shouldRedirect = false;
+  
   try {
     const authToken = await getAuthTokenServer();
     const userId = await getUserIdFromTokenServer();
@@ -463,15 +534,14 @@ export async function updateUserDetails(initialState: any, formData: FormData) {
       return { error: "Invalid response from server. Please try again." };
     }
 
-    // Redirect to account page with success message
-    redirect("/account?updated=true");
+    shouldRedirect = true;
   } catch (error) {
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      // This is a redirect, re-throw it (don't log as error)
-      throw error;
-    }
     console.error("Update user details error:", error);
     return { error: "Network error. Please check your connection and try again." };
+  } finally {
+    if (shouldRedirect) {
+      redirect("/account?updated=true");
+    }
   }
 }
 
@@ -724,6 +794,8 @@ export async function confirmForgotPassword(
     newPassword: formData.get("newPassword"),
   };
 
+  let shouldRedirect = false;
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password/confirm`,
@@ -775,14 +847,14 @@ export async function confirmForgotPassword(
       return { error: "Invalid response from server. Please try again." };
     }
 
-    redirect("/signin");
+    shouldRedirect = true;
   } catch (error) {
     console.error("Confirm forgot password error:", error);
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      // This is a redirect, re-throw it
-      throw error;
-    }
     return { error: "Network error. Please check your connection and try again." };
+  } finally {
+    if (shouldRedirect) {
+      redirect("/signin");
+    }
   }
 }
 
