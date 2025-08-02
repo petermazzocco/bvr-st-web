@@ -3,12 +3,71 @@
 import { Order, UpdateUser, User, UserSignUp, ApiResult } from "@/lib/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 export const getAuthTokenServer = async (): Promise<string | null> => {
   const cookieStore = await cookies();
   const token = cookieStore.get("bvrstrco_auth");
   return token?.value || null;
 };
+
+export async function handleEmailSubmit(initialData: any, formData: FormData) {
+  try {
+    await requestForgotPassword(formData);
+    const email = formData.get("email") as string;
+    redirect(`/forgot-password/verify?email=${encodeURIComponent(email)}`);
+  } catch (error) {
+    console.error("Handle email submit error:", error);
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      // This is a redirect, re-throw it
+      throw error;
+    }
+    
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    
+    if (errorMessage.includes("404") || errorMessage.includes("not found")) {
+      return { error: "No account found with this email address. Please check your email or sign up for a new account." };
+    }
+    if (errorMessage.includes("400") || errorMessage.includes("invalid")) {
+      return { error: "Please provide a valid email address." };
+    }
+    if (errorMessage.includes("500") || errorMessage.includes("server")) {
+      return { error: "Server error. Please try again later." };
+    }
+    
+    return { error: "Failed to send reset code. Please try again." };
+  }
+}
+
+export async function handleOTPSubmit(initialState: any, formData: FormData) {
+  try {
+    const code = formData.get("code") as string;
+    const email = initialState.email;
+
+    if (!code) {
+      return { error: "Please enter the verification code." };
+    }
+
+    if (code.length !== 8) {
+      return { error: "Please enter a valid 8-character code." };
+    }
+
+    if (!/^[A-Za-z0-9]{8}$/.test(code)) {
+      return { error: "Code must contain only letters and numbers." };
+    }
+
+    redirect(
+      `/forgot-password/reset?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`,
+    );
+  } catch (error) {
+    console.error("Handle OTP submit error:", error);
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      // This is a redirect, re-throw it
+      throw error;
+    }
+    return { error: "Failed to verify code. Please try again." };
+  }
+}
 
 export const getUserIdFromTokenServer = async (): Promise<number | null> => {
   try {
@@ -51,54 +110,75 @@ export const getMembershipStatus = async (
  * @param callbackUrl - URL to redirect to after successful sign in
  * @returns Promise containing authentication token and callback URL or error
  */
-export async function signInWithEmail(formData: FormData) {
+export async function signInWithEmail(initialState: any, formData: FormData) {
   const requestData = {
     email: formData.get("email"),
     password: formData.get("password"),
     callbackUrl: formData.get("callbackUrl"),
   };
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/email`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    },
-  );
-
-  const responseText = await response.text();
-
-  if (!response.ok) {
-    // Handle non-200 responses
-    console.error("Authentication failed:", response.status, responseText);
-    throw new Error(`Authentication failed: ${responseText}`);
-  }
-
-  let body: { token: string; callbackUrl: string };
   try {
-    body = JSON.parse(responseText);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signin/email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      },
+    );
+
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      // Handle non-200 responses
+      console.error("Authentication failed:", response.status, responseText);
+      
+      if (response.status === 401) {
+        return { error: "Invalid email or password. Please check your credentials and try again." };
+      }
+      if (response.status === 404) {
+        return { error: "Account not found. Please check your email or sign up for a new account." };
+      }
+      if (response.status >= 500) {
+        return { error: "Server error. Please try again later." };
+      }
+      
+      return { error: "Sign in failed. Please try again." };
+    }
+
+    let body: { token: string; callbackUrl: string };
+    try {
+      body = JSON.parse(responseText);
+    } catch (error) {
+      console.error("Invalid JSON response:", responseText);
+      return { error: "Invalid response from server. Please try again." };
+    }
+
+    if (body.token) {
+      // Set the authentication token as a cookie
+      const cookieStore = await cookies();
+      cookieStore.set("bvrstrco_auth", body.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+      });
+
+      // Redirect to callback URL or default dashboard
+      redirect(body.callbackUrl || "/account");
+    } else {
+      return { error: "No authentication token received. Please try again." };
+    }
   } catch (error) {
-    console.error("Invalid JSON response:", responseText);
-    throw new Error("Invalid response from server");
-  }
-
-  if (body.token) {
-    // Set the authentication token as a cookie
-    const cookieStore = await cookies();
-    cookieStore.set("bvrstrco_auth", body.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
-    // Redirect to callback URL or default dashboard
-    redirect(body.callbackUrl || "/account");
-  } else {
-    throw new Error("No token received");
+    // Handle network errors or other unexpected errors
+    console.error("Sign in error:", error);
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      // This is a redirect, re-throw it
+      throw error;
+    }
+    return { error: "Network error. Please check your connection and try again." };
   }
 }
 
@@ -161,14 +241,10 @@ export async function signInWithPhone(formData: FormData) {
  * Signs out the current user by removing the authentication token cookie
  * @returns Promise containing success status and optional error information
  */
-export const signOut = async () => {
-  try {
-    const cookieStore = await cookies();
-    cookieStore.delete("bvrstrco_auth");
-    redirect("/");
-  } catch (error) {
-    console.error("Sign out error:", error);
-  }
+export const signOut = async (initialState: any) => {
+  const cookieStore = await cookies();
+  cookieStore.delete("bvrstrco_auth");
+  redirect("/");
 };
 
 /**
@@ -176,7 +252,7 @@ export const signOut = async () => {
  * @param user - A user sign up object containing phone, password, and callback URL
  * @returns Promise containing authentication token or error
  */
-export async function signUp(formData: FormData) {
+export async function signUp(initialState: any, formData: FormData) {
   const requestData = {
     email: formData.get("email"),
     phone: formData.get("phone"),
@@ -187,44 +263,70 @@ export async function signUp(formData: FormData) {
     address: formData.get("address"),
   };
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    },
-  );
-
-  const responseText = await response.text();
-
-  if (!response.ok) {
-    console.error("Sign up failed:", response.status, responseText);
-    throw new Error(`Sign up failed: ${responseText}`);
-  }
-
-  let body: { token: string; callbackUrl?: string };
   try {
-    body = JSON.parse(responseText);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/signup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      },
+    );
+
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      console.error("Sign up failed:", response.status, responseText);
+      
+      if (response.status === 400) {
+        if (responseText.includes("email")) {
+          return { error: "Email address is already in use. Please try signing in instead." };
+        }
+        if (responseText.includes("password")) {
+          return { error: "Password doesn't meet requirements. Please ensure it's at least 8 characters with uppercase, lowercase, and numbers." };
+        }
+        return { error: "Invalid information provided. Please check your details and try again." };
+      }
+      if (response.status === 409) {
+        return { error: "An account with this email already exists. Please sign in instead." };
+      }
+      if (response.status >= 500) {
+        return { error: "Server error. Please try again later." };
+      }
+      
+      return { error: "Sign up failed. Please try again." };
+    }
+
+    let body: { token: string; callbackUrl?: string };
+    try {
+      body = JSON.parse(responseText);
+    } catch (error) {
+      console.error("Invalid JSON response:", responseText);
+      return { error: "Invalid response from server. Please try again." };
+    }
+
+    if (body.token) {
+      const cookieStore = await cookies();
+      cookieStore.set("bvrstrco_auth", body.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+      });
+
+      redirect(body.callbackUrl || "/account");
+    } else {
+      return { error: "No authentication token received. Please try again." };
+    }
   } catch (error) {
-    console.error("Invalid JSON response:", responseText);
-    throw new Error("Invalid response from server");
-  }
-
-  if (body.token) {
-    const cookieStore = await cookies();
-    cookieStore.set("bvrstrco_auth", body.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
-    redirect(body.callbackUrl || "/account");
-  } else {
-    throw new Error("No token received");
+    console.error("Sign up error:", error);
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      // This is a redirect, re-throw it
+      throw error;
+    }
+    return { error: "Network error. Please check your connection and try again." };
   }
 }
 
@@ -292,63 +394,85 @@ export const getUserDetails = async (
  * @param formData - FormData containing user information
  * @returns Promise that redirects with success message or throws error on failure
  */
-export async function updateUserDetails(formData: FormData) {
-  const authToken = await getAuthTokenServer();
-  const userId = await getUserIdFromTokenServer();
-
-  if (!authToken || !userId) {
-    throw new Error("Authentication required");
-  }
-
-  const updateData: UpdateUser = {
-    firstName: formData.get("firstName") as string,
-    lastName: formData.get("lastName") as string,
-    email: formData.get("email") as string,
-    phone: formData.get("phone") as string,
-    address: formData.get("address") as string,
-    optInMarketing: formData.get("optInMarketing") === "on",
-    optInRewards: formData.get("optInRewards") === "on",
-  };
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(updateData),
-    },
-  );
-
-  const responseText = await response.text();
-
-  if (!response.ok) {
-    console.error("Update user details failed:", response.status, responseText);
-
-    if (responseText.includes("Unauthorized")) {
-      throw new Error("You are not authorized to update this user.");
-    }
-
-    if (responseText.includes("Validation error")) {
-      throw new Error("Invalid user information provided.");
-    }
-
-    throw new Error("Failed to update user details. Please try again.");
-  }
-
-  let body: User;
+export async function updateUserDetails(initialState: any, formData: FormData) {
   try {
-    body = JSON.parse(responseText);
-  } catch (error) {
-    console.error("Invalid JSON response:", responseText);
-    throw new Error("Invalid response from server");
-  }
+    const authToken = await getAuthTokenServer();
+    const userId = await getUserIdFromTokenServer();
 
-  // Redirect to account page with success message
-  const { redirect } = await import("next/navigation");
-  redirect("/account?updated=true");
+    if (!authToken || !userId) {
+      return { error: "Authentication required. Please sign in again." };
+    }
+
+    const updateData: UpdateUser = {
+      firstName: formData.get("firstName") as string,
+      lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      address: formData.get("address") as string,
+      optInMarketing: formData.get("optInMarketing") === "on",
+      optInRewards: formData.get("optInRewards") === "on",
+    };
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(updateData),
+      },
+    );
+
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      console.error("Update user details failed:", response.status, responseText);
+
+      if (response.status === 401 || responseText.includes("Unauthorized")) {
+        return { error: "Authentication expired. Please sign in again." };
+      }
+
+      if (response.status === 400 || responseText.includes("Validation error")) {
+        if (responseText.includes("email")) {
+          return { error: "Please provide a valid email address." };
+        }
+        if (responseText.includes("phone")) {
+          return { error: "Please provide a valid phone number." };
+        }
+        return { error: "Invalid information provided. Please check your details." };
+      }
+
+      if (response.status === 409) {
+        return { error: "Email address is already in use by another account." };
+      }
+
+      if (response.status >= 500) {
+        return { error: "Server error. Please try again later." };
+      }
+
+      return { error: "Failed to update profile. Please try again." };
+    }
+
+    let body: User;
+    try {
+      body = JSON.parse(responseText);
+    } catch (error) {
+      console.error("Invalid JSON response:", responseText);
+      return { error: "Invalid response from server. Please try again." };
+    }
+
+    // Redirect to account page with success message
+    redirect("/account?updated=true");
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      // This is a redirect, re-throw it (don't log as error)
+      throw error;
+    }
+    console.error("Update user details error:", error);
+    return { error: "Network error. Please check your connection and try again." };
+  }
 }
 
 /**
@@ -590,44 +714,76 @@ export async function requestForgotPassword(formData: FormData) {
  * @param newPassword - New password to be set for the user
  * @returns Promise containing success message of password change and status or error
  */
-export async function confirmForgotPassword(formData: FormData) {
+export async function confirmForgotPassword(
+  initialState: any,
+  formData: FormData,
+) {
   const requestData = {
     email: formData.get("email"),
     code: formData.get("code"),
     newPassword: formData.get("newPassword"),
   };
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password/confirm`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    },
-  );
-
-  const responseText = await response.text();
-
-  if (!response.ok) {
-    console.error(
-      "Password reset confirmation failed:",
-      response.status,
-      responseText,
-    );
-    throw new Error(`Password reset confirmation failed: ${responseText}`);
-  }
-
-  let body: { message: string; success: boolean };
   try {
-    body = JSON.parse(responseText);
-  } catch (error) {
-    console.error("Invalid JSON response:", responseText);
-    throw new Error("Invalid response from server");
-  }
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password/confirm`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      },
+    );
 
-  redirect("/signin");
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      console.error(
+        "Password reset confirmation failed:",
+        response.status,
+        responseText,
+      );
+      
+      if (response.status === 400) {
+        if (responseText.includes("password")) {
+          return { error: "Password doesn't meet requirements. Please ensure it's at least 8 characters with uppercase, lowercase, and numbers." };
+        }
+        if (responseText.includes("code")) {
+          return { error: "Invalid or expired verification code. Please request a new code." };
+        }
+        return { error: "Invalid information provided. Please check your details and try again." };
+      }
+      if (response.status === 401) {
+        return { error: "Invalid verification code. Please try again or request a new code." };
+      }
+      if (response.status === 404) {
+        return { error: "Account not found. Please check your email address." };
+      }
+      if (response.status >= 500) {
+        return { error: "Server error. Please try again later." };
+      }
+      
+      return { error: "Password reset failed. Please try again." };
+    }
+
+    let body: { message: string; success: boolean };
+    try {
+      body = JSON.parse(responseText);
+    } catch (error) {
+      console.error("Invalid JSON response:", responseText);
+      return { error: "Invalid response from server. Please try again." };
+    }
+
+    redirect("/signin");
+  } catch (error) {
+    console.error("Confirm forgot password error:", error);
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      // This is a redirect, re-throw it
+      throw error;
+    }
+    return { error: "Network error. Please check your connection and try again." };
+  }
 }
 
 /**
@@ -697,7 +853,7 @@ export const deleteUser = async (
  * @param message - Message submitted by the user
  * @returns Message containing confirmation of submission or error
  */
-export async function contactSubmission(formData: FormData) {
+export async function contactSubmission(initialState: any, formData: FormData) {
   const requestData = {
     name: formData.get("name"),
     email: formData.get("email"),

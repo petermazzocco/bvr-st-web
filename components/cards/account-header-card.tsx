@@ -1,3 +1,4 @@
+"use client";
 import { LogOut, Star } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -6,8 +7,10 @@ import { signOut } from "@/server/user/actions";
 import { Button } from "@/components/ui/button";
 import { UpdateUserModal } from "../modals/update-user-details";
 import Form from "next/form";
+import { useActionState } from "react";
 
 export function AccountHeaderCard({ user }: { user: User | undefined }) {
+  const [message, formAction, pending] = useActionState(signOut, null);
   return (
     <div className=" border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -38,8 +41,9 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
             )}
             <div className="flex justify-between items-center gap-2">
               <UpdateUserModal user={user as UpdateUser} />
-              <Form action={signOut}>
+              <Form action={formAction}>
                 <Button
+                  disabled={pending}
                   variant="outline"
                   type="submit"
                   className="w-fit"

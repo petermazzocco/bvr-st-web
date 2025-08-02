@@ -5,22 +5,25 @@ import { generateMetadata as createMetadata } from "@/lib/metadata";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { updateUserAfterCheckout } from "@/server/stripe/actions";
-import { getAuthTokenServer, getUserIdFromTokenServer } from "@/server/user/actions";
+import {
+  getAuthTokenServer,
+  getUserIdFromTokenServer,
+} from "@/server/user/actions";
 import { redirect } from "next/navigation";
 import Form from "next/form";
-
-export const dynamic = "force-dynamic";
+import { getAffiliates } from "@/server/sanity/actions";
 
 export const metadata: Metadata = createMetadata({
   title: "Premium Membership",
-  description: "Get instant access to all premium features with BVR STR CO membership. 10% off all purchases, exclusive events, and more.",
+  description:
+    "Get instant access to all premium features with BVR STR CO membership. 10% off all purchases, exclusive events, and more.",
   canonical: "https://bvrstrco.com/membership",
 });
 
 interface MembershipPageProps {
-  searchParams: Promise<{ 
-    stripe_checkout?: string; 
-    session_id?: string; 
+  searchParams: Promise<{
+    stripe_checkout?: string;
+    session_id?: string;
     user_id?: string;
     success?: string;
     points?: string;
@@ -28,16 +31,19 @@ interface MembershipPageProps {
   }>;
 }
 
-export default async function MembershipPage({ searchParams }: MembershipPageProps) {
+export default async function MembershipPage({
+  searchParams,
+}: MembershipPageProps) {
   const params = await searchParams;
   const authToken = await getAuthTokenServer();
   const userId = await getUserIdFromTokenServer();
+  const affiliates = await getAffiliates();
 
   // Handle Stripe checkout success
   const stripeCheckout = params.stripe_checkout;
   const sessionId = params.session_id;
   const userIdFromParams = params.user_id;
-  
+
   // Show success message if explicitly set
   const showSuccess = params.success === "true";
   const pointsAdded = params.points;
@@ -50,7 +56,7 @@ export default async function MembershipPage({ searchParams }: MembershipPagePro
       const formData = new FormData();
       formData.append("userId", finalUserId.toString());
       formData.append("sessionId", sessionId);
-      
+
       // This will redirect to membership page with success message
       await updateUserAfterCheckout(formData);
     }
@@ -69,10 +75,12 @@ export default async function MembershipPage({ searchParams }: MembershipPagePro
           Access your account and benefits now:
         </p>
         <Separator className="my-4" />
-        <Form action={async () => {
-          "use server";
-          redirect("/account");
-        }}>
+        <Form
+          action={async () => {
+            "use server";
+            redirect("/account");
+          }}
+        >
           <Button type="submit" className="w-full">
             Go to Account
           </Button>
@@ -87,7 +95,11 @@ export default async function MembershipPage({ searchParams }: MembershipPagePro
         {showSuccess ? (
           <SuccessMessage />
         ) : (
-          <MembershipCard searchParams={{ affiliate: params.affiliate }} />
+          <MembershipCard
+            affiliates={affiliates?.data}
+            userId={userId}
+            authToken={authToken}
+          />
         )}
       </div>
 
@@ -122,10 +134,12 @@ export default async function MembershipPage({ searchParams }: MembershipPagePro
                 <p className="text-muted text-xs mb-6">
                   Access your account now
                 </p>
-                <Form action={async () => {
-                  "use server";
-                  redirect("/account");
-                }}>
+                <Form
+                  action={async () => {
+                    "use server";
+                    redirect("/account");
+                  }}
+                >
                   <Button type="submit" className="px-6 py-2">
                     Go to Account
                   </Button>
@@ -133,7 +147,11 @@ export default async function MembershipPage({ searchParams }: MembershipPagePro
               </div>
             </div>
           ) : (
-            <MembershipCard searchParams={{ affiliate: params.affiliate }} />
+            <MembershipCard
+              affiliates={affiliates?.data}
+              userId={userId}
+              authToken={authToken}
+            />
           )}
         </div>
       </div>

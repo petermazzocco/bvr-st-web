@@ -1,3 +1,6 @@
+"use client";
+
+import { useActionState } from "react";
 import Form from "next/form";
 import Link from "next/link";
 import { signInWithEmail } from "@/server/user/actions";
@@ -6,12 +9,14 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 export function SignInCard() {
+  const [message, formAction, pending] = useActionState(signInWithEmail, null);
   return (
     <Card className="mx-auto min-w-md shadow-none border-none">
       <CardHeader>
@@ -21,7 +26,7 @@ export function SignInCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form action={signInWithEmail} className="space-y-4">
+        <Form action={formAction} className="space-y-4">
           <div className="space-y-2">
             <label
               htmlFor="email"
@@ -48,16 +53,23 @@ export function SignInCard() {
           </div>
 
           <Button
+            disabled={pending}
             type="submit"
             className="w-full"
             id="signin-button"
             data-umami-event="Signin button"
           >
-            Sign In
+            {pending ? "Signing in..." : "Sign In"}
           </Button>
         </Form>
-
-        <div className="mt-4 text-center text-sm">
+      </CardContent>
+      <CardFooter className="flex flex-col items-start justify-center gap-2">
+        {message?.error && (
+          <div className="mb-4 p-3 text-xs text-destructive bg-destructive/10 border border-destructive/20 max-w-sm rounded-md">
+            {message.error}
+          </div>
+        )}
+        <div className="text-center text-sm">
           {"Don't have an account? "}
           <Link href="/signup" className="underline">
             Sign up
@@ -70,7 +82,7 @@ export function SignInCard() {
             Forgot your password?
           </Link>
         </div>
-      </CardContent>
+      </CardFooter>
     </Card>
   );
 }
