@@ -4,7 +4,6 @@ import {
   getUserOrders,
 } from "@/server/user/actions";
 import { AccountHeaderCard } from "@/components/cards/account-header-card";
-import { AccountInfoCard } from "@/components/cards/account-info-card";
 import { AccountOrdersCard } from "@/components/cards/account-orders-card";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -33,7 +32,6 @@ export default async function Page() {
   const user = await getUserDetails(authToken, userId);
   const orders = await getUserOrders(authToken, userId);
   const discountCodes = await getUserDiscountCodes(authToken, userId);
-  console.log(discountCodes);
 
   if (!user.data || (user && !user.success)) {
     return redirect("/signup");
@@ -44,9 +42,6 @@ export default async function Page() {
       <AccountHeaderCard user={user?.data} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="space-y-2">
-          <div className="flex flex-col md:flex-row gap-4">
-            <AccountInfoCard user={user?.data} />
-          </div>
           {orders && <AccountOrdersCard orders={orders} />}
         </div>
       </div>
