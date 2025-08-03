@@ -13,7 +13,7 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
   const [message, formAction, pending] = useActionState(signOut, null);
   return (
     <div className=" border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-4 ">
         <div className="flex flex-row w-full justify-between items-center gap-4">
           <div className="flex items-center space-x-4">
             <div>
@@ -53,6 +53,30 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
                 </Button>
               </Form>
             </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm font-medium text-muted-foreground">
+              Email
+            </label>
+            <p className="mt-1 text-foreground">
+              {user?.email || "Loading..."}
+            </p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-muted-foreground">
+              Phone
+            </label>
+            <p className="mt-1 text-foreground">
+              {user?.phone || "Not provided"}
+            </p>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">
+              Shipping Address
+            </label>
+            <p className="text-foreground">{user?.address}</p>
           </div>
         </div>
       </div>
