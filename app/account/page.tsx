@@ -1,4 +1,8 @@
-import { getUserDetails, getUserOrders } from "@/server/user/actions";
+import {
+  getUserDetails,
+  getUserDiscountCodes,
+  getUserOrders,
+} from "@/server/user/actions";
 import { AccountHeaderCard } from "@/components/cards/account-header-card";
 import { AccountInfoCard } from "@/components/cards/account-info-card";
 import { AccountOrdersCard } from "@/components/cards/account-orders-card";
@@ -28,6 +32,8 @@ export default async function Page() {
   // Fetch all data
   const user = await getUserDetails(authToken, userId);
   const orders = await getUserOrders(authToken, userId);
+  const discountCodes = await getUserDiscountCodes(authToken, userId);
+  console.log(discountCodes);
 
   if (!user.data || (user && !user.success)) {
     return redirect("/signup");

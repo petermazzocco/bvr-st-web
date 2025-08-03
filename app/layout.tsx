@@ -17,6 +17,11 @@ import {
   getAllPartneredStores,
   getPartneredStore,
 } from "@/server/vendor/actions";
+import {
+  getUserDetails,
+  getAuthTokenServer,
+  getUserIdFromTokenServer,
+} from "@/server/user/actions";
 
 export const metadata: Metadata = {
   title: "BVR STR CO",
@@ -102,13 +107,30 @@ export default async function RootLayout({
   const collections = await getCollections();
   const partners = await getAllPartneredStores();
 
+  // Get user membership status
+  let isMember = false;
+  try {
+    const authToken = await getAuthTokenServer();
+    const userId = await getUserIdFromTokenServer();
+
+    if (authToken && userId) {
+      const userResult = await getUserDetails(authToken, userId);
+      if (userResult.success && userResult.data) {
+        isMember = userResult.data.isMember || false;
+      }
+    }
+  } catch (error) {
+    // Continue without membership status if error occurs
+    isMember = false;
+  }
+
   const isUnderConstructionFlag = await underConstructionFlag();
   const isComingSoonFlag = await comingSoonFlag();
 
   return (
     <html lang="en">
       <body className={`${ibm.variable} antialiased min-h-screen`}>
-        <AuthProvider>
+        <AuthProvider initialIsMember={isMember}>
           <CartProvider cartPromise={cart}>
             {isUnderConstructionFlag ? (
               <UnderConstructionPage />

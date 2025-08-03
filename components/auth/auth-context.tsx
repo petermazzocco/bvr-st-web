@@ -7,16 +7,24 @@ type AuthContextType = {
   token: string | null;
   userId: number | null;
   isAuthenticated: boolean;
+  isMember: boolean;
   logout: () => void;
   refreshAuth: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ 
+  children,
+  initialIsMember = false 
+}: { 
+  children: React.ReactNode;
+  initialIsMember?: boolean;
+}) {
   const [token, setToken] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isMember, setIsMember] = useState(initialIsMember);
 
   const refreshAuth = () => {
     const currentToken = getAuthToken();
@@ -32,6 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     setUserId(null);
     setIsAuthenticated(false);
+    setIsMember(false);
   };
 
   useEffect(() => {
@@ -42,6 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     token,
     userId,
     isAuthenticated,
+    isMember,
     logout,
     refreshAuth,
   };
