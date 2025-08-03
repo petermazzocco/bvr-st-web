@@ -14,7 +14,7 @@ export const getAuthTokenServer = async (): Promise<string | null> => {
 export async function handleEmailSubmit(initialData: any, formData: FormData) {
   let shouldRedirect = false;
   let redirectUrl = "";
-  
+
   try {
     await requestForgotPassword(formData);
     const email = formData.get("email") as string;
@@ -22,11 +22,15 @@ export async function handleEmailSubmit(initialData: any, formData: FormData) {
     redirectUrl = `/forgot-password/verify?email=${encodeURIComponent(email)}`;
   } catch (error) {
     console.error("Handle email submit error:", error);
-    
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
+
     if (errorMessage.includes("404") || errorMessage.includes("not found")) {
-      return { error: "No account found with this email address. Please check your email or sign up for a new account." };
+      return {
+        error:
+          "No account found with this email address. Please check your email or sign up for a new account.",
+      };
     }
     if (errorMessage.includes("400") || errorMessage.includes("invalid")) {
       return { error: "Please provide a valid email address." };
@@ -34,7 +38,7 @@ export async function handleEmailSubmit(initialData: any, formData: FormData) {
     if (errorMessage.includes("500") || errorMessage.includes("server")) {
       return { error: "Server error. Please try again later." };
     }
-    
+
     return { error: "Failed to send reset code. Please try again." };
   } finally {
     if (shouldRedirect) {
@@ -46,7 +50,7 @@ export async function handleEmailSubmit(initialData: any, formData: FormData) {
 export async function handleOTPSubmit(initialState: any, formData: FormData) {
   let shouldRedirect = false;
   let redirectUrl = "";
-  
+
   try {
     const code = formData.get("code") as string;
     const email = initialState.email;
@@ -86,9 +90,12 @@ export async function handleOTPSubmit(initialState: any, formData: FormData) {
 
     if (!response.ok) {
       console.error("OTP verification failed:", response.status, responseText);
-      
+
       if (response.status === 400) {
-        if (responseText.includes("user_id") || responseText.includes("email")) {
+        if (
+          responseText.includes("user_id") ||
+          responseText.includes("email")
+        ) {
           return { error: "Please provide either user_id or email" };
         }
         if (responseText.includes("OTP code")) {
@@ -97,12 +104,17 @@ export async function handleOTPSubmit(initialState: any, formData: FormData) {
         return { error: "Please check your request format and try again" };
       }
       if (response.status === 404) {
-        return { error: "Account not found. Please check your account details" };
+        return {
+          error: "Account not found. Please check your account details",
+        };
       }
       if (response.status >= 500) {
-        return { error: "We're experiencing technical difficulties. Please try again later" };
+        return {
+          error:
+            "We're experiencing technical difficulties. Please try again later",
+        };
       }
-      
+
       return { error: "Failed to verify code. Please try again." };
     }
 
@@ -115,7 +127,10 @@ export async function handleOTPSubmit(initialState: any, formData: FormData) {
     }
 
     if (!body.valid) {
-      return { error: "Invalid or expired verification code. Please try again or request a new code." };
+      return {
+        error:
+          "Invalid or expired verification code. Please try again or request a new code.",
+      };
     }
 
     // OTP is valid, proceed to reset password page
@@ -123,7 +138,9 @@ export async function handleOTPSubmit(initialState: any, formData: FormData) {
     redirectUrl = `/forgot-password/reset?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`;
   } catch (error) {
     console.error("Handle OTP submit error:", error);
-    return { error: "Network error. Please check your connection and try again." };
+    return {
+      error: "Network error. Please check your connection and try again.",
+    };
   } finally {
     if (shouldRedirect) {
       redirect(redirectUrl);
@@ -199,17 +216,23 @@ export async function signInWithEmail(initialState: any, formData: FormData) {
     if (!response.ok) {
       // Handle non-200 responses
       console.error("Authentication failed:", response.status, responseText);
-      
+
       if (response.status === 401) {
-        return { error: "Invalid email or password. Please check your credentials and try again." };
+        return {
+          error:
+            "Invalid email or password. Please check your credentials and try again.",
+        };
       }
       if (response.status === 404) {
-        return { error: "Account not found. Please check your email or sign up for a new account." };
+        return {
+          error:
+            "Account not found. Please check your email or sign up for a new account.",
+        };
       }
       if (response.status >= 500) {
         return { error: "Server error. Please try again later." };
       }
-      
+
       return { error: "Sign in failed. Please try again." };
     }
 
@@ -239,7 +262,9 @@ export async function signInWithEmail(initialState: any, formData: FormData) {
   } catch (error) {
     // Handle network errors or other unexpected errors
     console.error("Sign in error:", error);
-    return { error: "Network error. Please check your connection and try again." };
+    return {
+      error: "Network error. Please check your connection and try again.",
+    };
   } finally {
     if (shouldRedirect) {
       redirect(redirectUrl);
@@ -347,23 +372,35 @@ export async function signUp(initialState: any, formData: FormData) {
 
     if (!response.ok) {
       console.error("Sign up failed:", response.status, responseText);
-      
+
       if (response.status === 400) {
         if (responseText.includes("email")) {
-          return { error: "Email address is already in use. Please try signing in instead." };
+          return {
+            error:
+              "Email address is already in use. Please try signing in instead.",
+          };
         }
         if (responseText.includes("password")) {
-          return { error: "Password doesn't meet requirements. Please ensure it's at least 8 characters with uppercase, lowercase, and numbers." };
+          return {
+            error:
+              "Password doesn't meet requirements. Please ensure it's at least 8 characters with uppercase, lowercase, and numbers.",
+          };
         }
-        return { error: "Invalid information provided. Please check your details and try again." };
+        return {
+          error:
+            "Invalid information provided. Please check your details and try again.",
+        };
       }
       if (response.status === 409) {
-        return { error: "An account with this email already exists. Please sign in instead." };
+        return {
+          error:
+            "An account with this email already exists. Please sign in instead.",
+        };
       }
       if (response.status >= 500) {
         return { error: "Server error. Please try again later." };
       }
-      
+
       return { error: "Sign up failed. Please try again." };
     }
 
@@ -391,7 +428,9 @@ export async function signUp(initialState: any, formData: FormData) {
     }
   } catch (error) {
     console.error("Sign up error:", error);
-    return { error: "Network error. Please check your connection and try again." };
+    return {
+      error: "Network error. Please check your connection and try again.",
+    };
   } finally {
     if (shouldRedirect) {
       redirect(redirectUrl);
@@ -465,7 +504,7 @@ export const getUserDetails = async (
  */
 export async function updateUserDetails(initialState: any, formData: FormData) {
   let shouldRedirect = false;
-  
+
   try {
     const authToken = await getAuthTokenServer();
     const userId = await getUserIdFromTokenServer();
@@ -499,20 +538,29 @@ export async function updateUserDetails(initialState: any, formData: FormData) {
     const responseText = await response.text();
 
     if (!response.ok) {
-      console.error("Update user details failed:", response.status, responseText);
+      console.error(
+        "Update user details failed:",
+        response.status,
+        responseText,
+      );
 
       if (response.status === 401 || responseText.includes("Unauthorized")) {
         return { error: "Authentication expired. Please sign in again." };
       }
 
-      if (response.status === 400 || responseText.includes("Validation error")) {
+      if (
+        response.status === 400 ||
+        responseText.includes("Validation error")
+      ) {
         if (responseText.includes("email")) {
           return { error: "Please provide a valid email address." };
         }
         if (responseText.includes("phone")) {
           return { error: "Please provide a valid phone number." };
         }
-        return { error: "Invalid information provided. Please check your details." };
+        return {
+          error: "Invalid information provided. Please check your details.",
+        };
       }
 
       if (response.status === 409) {
@@ -537,7 +585,9 @@ export async function updateUserDetails(initialState: any, formData: FormData) {
     shouldRedirect = true;
   } catch (error) {
     console.error("Update user details error:", error);
-    return { error: "Network error. Please check your connection and try again." };
+    return {
+      error: "Network error. Please check your connection and try again.",
+    };
   } finally {
     if (shouldRedirect) {
       redirect("/account?updated=true");
@@ -816,18 +866,30 @@ export async function confirmForgotPassword(
         response.status,
         responseText,
       );
-      
+
       if (response.status === 400) {
         if (responseText.includes("password")) {
-          return { error: "Password doesn't meet requirements. Please ensure it's at least 8 characters with uppercase, lowercase, and numbers." };
+          return {
+            error:
+              "Password doesn't meet requirements. Please ensure it's at least 8 characters with uppercase, lowercase, and numbers.",
+          };
         }
         if (responseText.includes("code")) {
-          return { error: "Invalid or expired verification code. Please request a new code." };
+          return {
+            error:
+              "Invalid or expired verification code. Please request a new code.",
+          };
         }
-        return { error: "Invalid information provided. Please check your details and try again." };
+        return {
+          error:
+            "Invalid information provided. Please check your details and try again.",
+        };
       }
       if (response.status === 401) {
-        return { error: "Invalid verification code. Please try again or request a new code." };
+        return {
+          error:
+            "Invalid verification code. Please try again or request a new code.",
+        };
       }
       if (response.status === 404) {
         return { error: "Account not found. Please check your email address." };
@@ -835,7 +897,7 @@ export async function confirmForgotPassword(
       if (response.status >= 500) {
         return { error: "Server error. Please try again later." };
       }
-      
+
       return { error: "Password reset failed. Please try again." };
     }
 
@@ -850,7 +912,9 @@ export async function confirmForgotPassword(
     shouldRedirect = true;
   } catch (error) {
     console.error("Confirm forgot password error:", error);
-    return { error: "Network error. Please check your connection and try again." };
+    return {
+      error: "Network error. Please check your connection and try again.",
+    };
   } finally {
     if (shouldRedirect) {
       redirect("/signin");
@@ -1291,4 +1355,23 @@ export async function addToNewsletter(formData: FormData) {
   // Redirect to current page with success parameter
   const { redirect } = await import("next/navigation");
   redirect("/?newsletter=true");
+}
+
+export async function getUserDiscountCodes(authToken: string, userID: number) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/discount-codes`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch discount codes");
+  }
+  const body = await response.json();
+  return body;
 }

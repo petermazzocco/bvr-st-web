@@ -22,13 +22,13 @@ import {
 import { useCart } from "@/components/cart/cart-context";
 import { EditItemQuantityButton } from "@/components/cart/edit-item-quan-button";
 import { OpenCartButton } from "@/components/cart/open-cart-button";
-import { useMemberStatus } from "@/hooks/use-member-status";
+import { useAuth } from "@/components/auth/auth-context";
 
 export function CartSheet() {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
-  const { isMember } = useMemberStatus();
+  const { isMember } = useAuth();
 
   const openCart = () => {
     setIsOpen(true);

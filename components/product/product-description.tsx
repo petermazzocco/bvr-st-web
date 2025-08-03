@@ -27,10 +27,9 @@ export async function ProductDescription({
   const authToken = authTokenCookie?.value || null;
 
   const basePoints = Math.floor(
-    Number(product.priceRange.maxVariantPrice.amount),
+    Number(product.priceRange.minVariantPrice.amount),
   );
-  const membershipMultiplier = !authToken ? 1.5 : 1;
-  const earnedPoints = Math.floor(basePoints * membershipMultiplier);
+  const earnedPoints = Math.floor(basePoints);
 
   const totalStock = product.variants.reduce((total, variant) => {
     return total + (variant.availableForSale ? 1 : 0);
@@ -86,9 +85,6 @@ export async function ProductDescription({
       <div className="flex flex-col gap-4">
         {affiliates && (
           <div className="flex flex-col gap-2">
-            <p className="text-xs text-foreground">
-              This purchase will support:
-            </p>
             <AffiliateSelection affiliates={affiliates} />
 
             <Link
@@ -103,7 +99,7 @@ export async function ProductDescription({
         <AddToCartButton product={product} />
       </div>
 
-      <div className="mt-4 text-xs flex uppercase flex-col gap-1 bg-muted h-fit w-full rounded-md font-muted-foreground font-semibold p-2">
+      <div className="mt-4 text-xs flex uppercase flex-col gap-1  h-fit w-full rounded-md font-muted-foreground font-semibold ">
         <p>
           {authToken ? (
             <>Earn {Math.round(earnedPoints)} points</>
@@ -114,7 +110,7 @@ export async function ProductDescription({
                 className="text-blue-600 cursor-pointer underline hover:underline ml-1"
                 href="/signup"
               >
-                100 free points for signing up + 10% off with a membership
+                100 free points for signing up
               </Link>
             </>
           )}
