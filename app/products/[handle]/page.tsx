@@ -6,6 +6,7 @@ import { generateProductMetadata } from "@/lib/metadata";
 import { ProductProvider } from "@/components/product/product-provider";
 import { ProductDescription } from "@/components/product/product-description";
 import { AuctionProductDescription } from "@/components/product/auction-product-description";
+import { DigitalProductDescription } from "@/components/product/digital-product-description";
 import { Image } from "@/lib/shopify/types";
 import { Suspense } from "react";
 import { Gallery } from "@/components/product/product-gallery";
@@ -132,6 +133,13 @@ export default async function Page(props: {
                   <AuctionProductDescription
                     product={product}
                     isMember={isMember}
+                  />
+                ) : product.tags.includes("product_digital") ? (
+                  <DigitalProductDescription
+                    product={product}
+                    isMember={isMember}
+                    affiliates={affiliates.data}
+                    details={additionalDetailsResult.data}
                   />
                 ) : (
                   <ProductDescription
