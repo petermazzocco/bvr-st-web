@@ -75,11 +75,11 @@ export default function Page() {
   if (error) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="rounded-lg border border-destructive/60 bg-destructive/10 p-6 text-center">
-          <h1 className="text-lg font-semibold text-destructive">
+        <div className="rounded-lg border border-destructive/60 bg-destructive/10 p-6 text-center max-w-lg flex flex-col gap-4">
+          <h1 className="text-md font-semibold text-destructive">
             An error occurred during authentication
           </h1>
-          <p className="mt-2 text-destructive/80">{error}</p>
+          <p className="mt-2 text-destructive/80 text-xs">{error}</p>
           <Button className="w-full" asChild>
             <Link href="/signin">
               <ArrowLeft className="h-4 w-4 mr-2" />
