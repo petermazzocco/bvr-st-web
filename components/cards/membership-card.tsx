@@ -19,10 +19,11 @@ import Link from "next/link";
 import Form from "next/form";
 import { redirect } from "next/navigation";
 import { Affiliate } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface MembershipCardProps {
   authToken: string | null;
-  userId: number | null;
+  userId: string | null;
   affiliates: Affiliate[] | undefined;
   affiliateCode?: string;
   type?: string;
@@ -46,7 +47,7 @@ export function MembershipCard({
   }
 
   return (
-    <Card className="border-none">
+    <Card className={cn("border-none")}>
       <CardHeader className="text-left">
         <CardTitle className="text-2xl">Premium Membership</CardTitle>
         <CardDescription>

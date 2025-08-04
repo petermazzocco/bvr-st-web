@@ -13,7 +13,6 @@ export default async function Page() {
   const authTokenCookie = cookieStore.get("bvrstrco_auth");
   const authToken = authTokenCookie?.value || null;
 
-  // Decode userId from token
   let userId: number | null = null;
   if (authToken) {
     try {
@@ -39,7 +38,7 @@ export default async function Page() {
 
   return (
     <div className="min-h-screen">
-      <AccountHeaderCard user={user?.data} />
+      <AccountHeaderCard user={user?.data} discountCodes={discountCodes} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="space-y-2">
           {orders && <AccountOrdersCard orders={orders} />}

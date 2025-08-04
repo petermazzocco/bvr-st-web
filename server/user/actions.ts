@@ -148,7 +148,7 @@ export async function handleOTPSubmit(initialState: any, formData: FormData) {
   }
 }
 
-export const getUserIdFromTokenServer = async (): Promise<number | null> => {
+export const getUserIdFromTokenServer = async (): Promise<string | null> => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("bvrstrco_auth");
@@ -156,6 +156,7 @@ export const getUserIdFromTokenServer = async (): Promise<number | null> => {
     const payload = JSON.parse(atob(token.value.split(".")[1]));
     return payload.userid || null;
   } catch (error) {
+    AbortSignal;
     console.error("Error decoding token:", error);
     return null;
   }
@@ -332,9 +333,23 @@ export async function signInWithPhone(formData: FormData) {
  * @returns Promise containing success status and optional error information
  */
 export const signOut = async (initialState: any) => {
-  const cookieStore = await cookies();
-  cookieStore.delete("bvrstrco_auth");
-  redirect("/");
+  let shouldRedirect = false;
+  let redirectUrl = "/";
+
+  try {
+    const cookieStore = await cookies();
+    cookieStore.delete("bvrstrco_auth");
+    shouldRedirect = true;
+  } catch (error) {
+    console.error("Sign out error:", error);
+    return {
+      error: "Failed to sign out. Please try again.",
+    };
+  } finally {
+    if (shouldRedirect) {
+      redirect(redirectUrl);
+    }
+  }
 };
 
 /**

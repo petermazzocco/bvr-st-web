@@ -6,14 +6,22 @@ import { UpdateUser, User } from "@/lib/types";
 import { signOut } from "@/server/user/actions";
 import { Button } from "@/components/ui/button";
 import { UpdateUserModal } from "../modals/update-user-details";
+import { ErrorMessage } from "@/components/utils/error-message";
 import Form from "next/form";
 import { useActionState } from "react";
 
-export function AccountHeaderCard({ user }: { user: User | undefined }) {
+export function AccountHeaderCard({
+  user,
+  discountCodes,
+}: {
+  user: User | undefined;
+  discountCodes?: any;
+}) {
   const [message, formAction, pending] = useActionState(signOut, null);
   return (
     <div className=" border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-4 ">
+        {message?.error && <ErrorMessage message={message.error} />}
         <div className="flex flex-row w-full justify-between items-center gap-4">
           <div className="flex items-center space-x-4">
             <div>
@@ -79,6 +87,18 @@ export function AccountHeaderCard({ user }: { user: User | undefined }) {
             <p className="text-foreground">{user?.address}</p>
           </div>
         </div>
+        {discountCodes && discountCodes.lenth > 0 && (
+          <div className="grid grid-cols-1  gap-4">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">
+                Available Discount Codes
+              </label>
+              {discountCodes.map((code: any) => {
+                <p className="mt-1 text-foreground">{code}</p>;
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
