@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ErrorMessage } from "@/components/utils/error-message";
+import { SignInOAuthButton } from "../utils/signup-oauth-button";
+import { Separator } from "../ui/separator";
+import Image from "next/image";
 
 // Zod validation schema
 const signInSchema = z.object({
@@ -100,7 +103,18 @@ export function SignInCard() {
           Sign into your BVR STR Collective account
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2">
+        <SignInOAuthButton provider="google" className="w-full h-10">
+          <div className="flex flex-row justify-between items-center w-full">
+            Continue With Google
+            <Image src="/google.svg" alt="Google Logo" width={24} height={24} />
+          </div>
+        </SignInOAuthButton>
+        <div className="flex flex-row justify-between items-center">
+          <Separator className="my-4 flex-1" />
+          <span className="mx-2 text-xs font-muted">OR</span>
+          <Separator className="my-4 flex-1" />
+        </div>
         <Form action={formAction} onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label

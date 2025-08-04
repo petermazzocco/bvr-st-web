@@ -18,7 +18,7 @@ interface SignInOAuthButtonProps {
   callbackUrl?: string;
 }
 
-export async function SignInOAuthButton({
+export function SignInOAuthButton({
   provider,
   children,
   className,
@@ -32,10 +32,8 @@ export async function SignInOAuthButton({
     provider.charAt(0).toUpperCase() + provider.slice(1).toLowerCase();
 
   const handleOAuthSignIn = async (formData: FormData) => {
-    "use server";
-    
     const finalCallbackUrl = callbackUrl || "/account";
-    
+
     formData.append("provider", provider.toLowerCase());
     formData.append("callbackUrl", finalCallbackUrl);
 

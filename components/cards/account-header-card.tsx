@@ -84,7 +84,7 @@ export function AccountHeaderCard({
             <label className="text-sm font-medium text-muted-foreground">
               Shipping Address
             </label>
-            <p className="text-foreground">{user?.address}</p>
+            <p className="text-foreground">{user?.address || "Not provided"}</p>
           </div>
         </div>
         {discountCodes && discountCodes.lenth > 0 && (
