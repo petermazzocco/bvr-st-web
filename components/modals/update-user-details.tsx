@@ -25,9 +25,9 @@ import { AddressAutofillInput } from "../utils/address-autofill-input";
 const updateUserSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Please enter a valid email address"),
+  email: z.email("Please enter a valid email address"),
   phone: z.string().optional(),
-  address: z.string().min(1, "Address is required"),
+  address: z.string().optional(),
   addressLine2: z.string().optional(),
   addressLine3: z.string().optional(),
   optInMarketing: z.boolean().optional(),
@@ -276,7 +276,6 @@ export function UpdateUserModal({ user }: UpdateUserModalProps) {
                     onChangeAction={handleInputChange}
                     onAddressSelect={handleAddressSelect}
                     placeholder="123 Main St"
-                    required
                     className={errors.address ? "border-destructive" : ""}
                   />
                   {errors.address && (

@@ -16,6 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { ErrorMessage } from "@/components/utils/error-message";
 import { AddressAutofillInput } from "../utils/address-autofill-input";
+import { SignInOAuthButton } from "../utils/signup-oauth-button";
+import { Separator } from "../ui/separator";
+import Image from "next/image";
 
 // Zod validation schema
 const signUpSchema = z.object({
@@ -121,25 +124,31 @@ export function SignUpCard() {
     const addressParts = [
       formData.address,
       formData.addressLine2,
-      formData.addressLine3
+      formData.addressLine3,
     ].filter(Boolean); // Remove empty/undefined values
-    
+
     const combinedAddress = addressParts.join(", ");
 
     // Update the form data to include the combined address
     const form = e.target as HTMLFormElement;
-    const addressInput = form.querySelector('input[name="address"]') as HTMLInputElement;
+    const addressInput = form.querySelector(
+      'input[name="address"]',
+    ) as HTMLInputElement;
     if (addressInput) {
       addressInput.value = combinedAddress || "";
     }
 
     // Remove addressLine2 and addressLine3 from form submission by clearing their names
-    const addressLine2Input = form.querySelector('input[name="addressLine2"]') as HTMLInputElement;
+    const addressLine2Input = form.querySelector(
+      'input[name="addressLine2"]',
+    ) as HTMLInputElement;
     if (addressLine2Input) {
       addressLine2Input.name = ""; // Remove the name so it doesn't get submitted
     }
 
-    const addressLine3Input = form.querySelector('input[name="addressLine3"]') as HTMLInputElement;
+    const addressLine3Input = form.querySelector(
+      'input[name="addressLine3"]',
+    ) as HTMLInputElement;
     if (addressLine3Input) {
       addressLine3Input.name = ""; // Remove the name so it doesn't get submitted
     }
@@ -175,7 +184,18 @@ export function SignUpCard() {
           off your first purchase immediately!
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2">
+        <SignInOAuthButton provider="google" className="w-full h-10">
+          <div className="flex flex-row justify-between items-center w-full">
+            Continue With Google
+            <Image src="/google.svg" alt="Google Logo" width={24} height={24} />
+          </div>
+        </SignInOAuthButton>
+        <div className="flex flex-row justify-between items-center">
+          <Separator className="my-4 flex-1" />
+          <span className="mx-2 text-xs font-muted">OR</span>
+          <Separator className="my-4 flex-1" />
+        </div>
         <Form action={formAction} onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

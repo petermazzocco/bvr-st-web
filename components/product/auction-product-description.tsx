@@ -83,11 +83,11 @@ export async function AuctionProductDescription({
   const maximumBid = minimumBid + auctionData.auction.maximum_bid_increment;
 
   const isAuctionEnded = new Date() > new Date(auctionData.auction.end_date);
-  const canBid = isAuthenticated && user?.isMember && !isAuctionEnded;
+  const canBid = isAuthenticated && isMember && !isAuctionEnded;
 
   return (
     <>
-      {!isAuthenticated || !user?.isMember ? (
+      {!isAuthenticated || isMember ? (
         <div className="mb-2 flex flex-row items-center justify-between">
           <h1 className="text-sm font-semibold text-destructive">
             Member Only Auction
