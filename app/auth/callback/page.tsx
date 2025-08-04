@@ -1,6 +1,9 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -13,7 +16,30 @@ export default function Page() {
     const redirectUrl = searchParams.get("redirect");
 
     if (errorParam) {
-      setError(errorParam);
+      let errorMessage =
+        "Something went wrong during authentication. Please try again.";
+
+      switch (errorParam) {
+        case "account_exists_with_password":
+          errorMessage =
+            "An account with this email already exists. Please sign in with your email and password instead.";
+          break;
+        case "database_error":
+          errorMessage = "A database error occurred. Please try again later.";
+          break;
+        case "user_creation_failed":
+          errorMessage = "Failed to create your account. Please try again.";
+          break;
+        case "token_generation_failed":
+          errorMessage =
+            "Failed to generate authentication token. Please try again.";
+          break;
+        default:
+          errorMessage =
+            "Something went wrong during authentication. Please try again.";
+      }
+
+      setError(errorMessage);
       return;
     }
 
@@ -54,6 +80,12 @@ export default function Page() {
             An error occurred during authentication
           </h1>
           <p className="mt-2 text-destructive/80">{error}</p>
+          <Link href="/signin">
+            <Button className="w-full" asChild>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Go Back
+            </Button>
+          </Link>
         </div>
       </div>
     );
