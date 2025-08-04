@@ -116,7 +116,7 @@ export async function createCheckoutSession(
   formData: FormData,
 ) {
   let body: { sessionID: string; url: string } | undefined;
-  
+
   try {
     // Get authentication token from server
     const { cookies } = await import("next/headers");
@@ -127,7 +127,7 @@ export async function createCheckoutSession(
       return { error: "Please sign in to start your membership." };
     }
 
-    const userId = Number(formData.get("userId"));
+    const userId = formData.get("userId");
     const affiliateCode = formData.get("affiliateCode") as string | undefined;
     const type = formData.get("type") as string | undefined;
 
@@ -210,7 +210,6 @@ export async function createCheckoutSession(
         error: "Invalid response from payment system. Please try again.",
       };
     }
-
   } catch (error) {
     console.error("Create checkout session error:", error);
     if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {

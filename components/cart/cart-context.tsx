@@ -224,10 +224,6 @@ export function CartProvider({
       if (upTag && typeof upTag === "function") {
         // Only send tracking if cart has items or a valid ID
         if (optimisticCart.id || optimisticCart.totalQuantity > 0) {
-          console.log("Sending cart update to UpPromote:", {
-            id: optimisticCart.id,
-            totalQuantity: optimisticCart.totalQuantity,
-          });
           upTag("event", "cart_updated", {
             id: optimisticCart.id,
             checkoutUrl: optimisticCart.checkoutUrl,

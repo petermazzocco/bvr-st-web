@@ -69,25 +69,27 @@ export function NavSideSheet({
             </nav>
 
             {/* Partner Stores Section */}
-            <div className="pt-4">
-              <h3 className="mb-2 p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Partner Stores
-              </h3>
-              <nav className="space-y-1">
-                {partners?.map((vendor) => (
-                  <a
-                    key={vendor._id}
-                    href={`/stores/${vendor.storeName}`}
-                    className="flex items-center justify-between rounded-lg px-2 py-2 text-xs font-medium hover:underline"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span>{vendor.name}</span>
-                    </div>
-                    <ChevronRight className="h-4 w-4 opacity-50" />
-                  </a>
-                ))}
-              </nav>
-            </div>
+            {partners && partners.length > 0 && (
+              <div className="pt-4">
+                <h3 className="mb-2 p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  Partner Stores
+                </h3>
+                <nav className="space-y-1">
+                  {partners?.map((vendor) => (
+                    <a
+                      key={vendor._id}
+                      href={`/stores/${vendor.storeName}`}
+                      className="flex items-center justify-between rounded-lg px-2 py-2 text-xs font-medium hover:underline"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span>{vendor.name}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 opacity-50" />
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            )}
           </div>
 
           {/* Helper Links Section */}
