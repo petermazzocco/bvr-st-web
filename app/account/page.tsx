@@ -13,7 +13,7 @@ export default async function Page() {
   const authTokenCookie = cookieStore.get("bvrstrco_auth");
   const authToken = authTokenCookie?.value || null;
 
-  let userId: number | null = null;
+  let userId: string | null = null;
   if (authToken) {
     try {
       const payload = JSON.parse(atob(authToken.split(".")[1]));

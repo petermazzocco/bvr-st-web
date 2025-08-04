@@ -5,7 +5,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
   token: string | null;
-  userId: number | null;
+  userId: string | null;
   isAuthenticated: boolean;
   isMember: boolean;
   logout: () => void;
@@ -14,15 +14,15 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ 
+export function AuthProvider({
   children,
-  initialIsMember = false 
-}: { 
+  initialIsMember = false,
+}: {
   children: React.ReactNode;
   initialIsMember?: boolean;
 }) {
   const [token, setToken] = useState<string | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMember, setIsMember] = useState(initialIsMember);
 

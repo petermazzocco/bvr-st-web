@@ -25,7 +25,7 @@ export async function AuctionProductDescription({
   const authToken = authTokenCookie?.value || null;
 
   // Decode userId from token
-  let userId: number | null = null;
+  let userId: string | null = null;
   let isAuthenticated = false;
   if (authToken) {
     try {

@@ -170,7 +170,7 @@ export const getUserIdFromTokenServer = async (): Promise<string | null> => {
  */
 export const getMembershipStatus = async (
   token: string,
-  userId: number,
+  userId: string,
 ): Promise<boolean> => {
   try {
     const userResult = await getUserDetails(token, userId);
@@ -461,7 +461,7 @@ export async function signUp(initialState: any, formData: FormData) {
  */
 export const getUserDetails = async (
   authToken: string,
-  userId: number,
+  userId: string,
 ): Promise<ApiResult<User>> => {
   try {
     const response = await fetch(
@@ -620,7 +620,7 @@ export async function updateUserDetails(initialState: any, formData: FormData) {
  */
 export const getUserOrders = async (
   authToken: string | undefined,
-  userId: number,
+  userId: string,
   page = 1,
   limit = 10,
 ): Promise<ApiResult<Order[]>> => {
@@ -1372,7 +1372,7 @@ export async function addToNewsletter(formData: FormData) {
   redirect("/?newsletter=true");
 }
 
-export async function getUserDiscountCodes(authToken: string, userID: number) {
+export async function getUserDiscountCodes(authToken: string, userID: string) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/discount-codes`,
     {

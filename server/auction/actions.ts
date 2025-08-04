@@ -166,7 +166,7 @@ export async function placeBidAction(formData: FormData) {
   const authToken = authTokenCookie?.value || null;
 
   // Decode userId from token
-  let userId: number | null = null;
+  let userId: string | null = null;
   if (authToken) {
     try {
       const payload = JSON.parse(atob(authToken.split(".")[1]));
@@ -201,7 +201,9 @@ export async function placeBidAction(formData: FormData) {
     throw new Error("Auction not found");
   }
 
-  const minimumBid = auction.data.auction.highest_bid + auction.data.auction.minimum_bid_increment;
+  const minimumBid =
+    auction.data.auction.highest_bid +
+    auction.data.auction.minimum_bid_increment;
   const maximumBid = minimumBid + auction.data.auction.maximum_bid_increment;
   const bidValue = parseFloat(bidAmount);
 
@@ -244,7 +246,9 @@ export async function placeBidAction(formData: FormData) {
 
   // Revalidate the product page to show updated auction data
   revalidatePath(`/products/${productHandle}`);
-  
+
   // Redirect back to the product page
-  redirect(`/products/${productHandle}?bidSuccess=true&amount=${result.data?.bid}`);
+  redirect(
+    `/products/${productHandle}?bidSuccess=true&amount=${result.data?.bid}`,
+  );
 }
