@@ -80,12 +80,12 @@ export default function Page() {
             An error occurred during authentication
           </h1>
           <p className="mt-2 text-destructive/80">{error}</p>
-          <Link href="/signin">
-            <Button className="w-full" asChild>
+          <Button className="w-full" asChild>
+            <Link href="/signin">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Go Back
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     );
