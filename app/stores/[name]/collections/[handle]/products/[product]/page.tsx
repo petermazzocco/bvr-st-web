@@ -26,7 +26,7 @@ export async function generateMetadata(props: {
     title: `${product.title} - ${params.name}`,
     description:
       product.description ||
-      `BVR STR CO | ${product.title} from ${params.name}.`,
+      `BVR ST CO | ${product.title} from ${params.name}.`,
     image: featuredImage
       ? {
           url: featuredImage.url,

@@ -24,7 +24,7 @@ export async function generateMetadata(props: {
     description:
       collection.seo.description ||
       collection.description ||
-      `BVR STR CO | The ${collection.title} Lookbook`,
+      `BVR ST CO | The ${collection.title} Lookbook`,
     image: url
       ? {
           url,

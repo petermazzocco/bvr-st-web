@@ -37,7 +37,7 @@ export async function generateMetadata(props: {
     description:
       product.seo.description ||
       product.description ||
-      `BVR STR CO | ${product.title}`,
+      `BVR ST CO | ${product.title}`,
     image: url
       ? {
           url,

@@ -24,7 +24,7 @@ export interface MetadataOptions {
   };
 }
 
-const DEFAULT_SITE_NAME = "BVR STR CO";
+const DEFAULT_SITE_NAME = "BVR ST CO";
 const DEFAULT_DESCRIPTION =
   "Discover unique streetwear and fashion from independent brands and partner stores. Quality clothing, accessories, and lifestyle products curated for the modern streetwear enthusiast.";
 const DEFAULT_IMAGE = "https://bvrstco.com/og-image.jpg"; // You should add this image to your public folder
@@ -197,7 +197,7 @@ export function generateStoreMetadata(options: {
 }): Metadata {
   return generateMetadata({
     title: `${options.storeName} - Partner Store`,
-    description: `${options.description} Shop exclusive products from ${options.storeName}, a trusted partner store on BVR STR CO.`,
+    description: `${options.description} Shop exclusive products from ${options.storeName}, a trusted partner store on BVR ST CO.`,
     image: options.image,
     type: "website",
     canonical: options.canonical,

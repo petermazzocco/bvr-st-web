@@ -22,7 +22,7 @@ export async function generateMetadata(props: {
   return generateStoreMetadata({
     storeName: store.data.name,
     description:
-      store.data.description || `BVR STR CO | ${store.data.name} Store`,
+      store.data.description || `BVR ST CO | ${store.data.name} Store`,
     image:
       store.data.logo || store.data.banner
         ? {

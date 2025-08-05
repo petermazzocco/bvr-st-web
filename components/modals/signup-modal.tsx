@@ -88,7 +88,7 @@ export function SignupModal({ open, onOpenChange }: SignupModalProps) {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md backdrop-blur-sm bg-background/95">
         <DialogHeader>
-          <DialogTitle>Join BVR STR For Free | Earn 100 Points</DialogTitle>
+          <DialogTitle>Join BVR ST CO For Free | Earn 100 Points</DialogTitle>
           <DialogDescription>
             Gain early access, earn points, and unlock rewards!
           </DialogDescription>

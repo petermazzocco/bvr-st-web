@@ -16,7 +16,7 @@ import { getAffiliates } from "@/server/sanity/actions";
 export const metadata: Metadata = createMetadata({
   title: "Premium Membership",
   description:
-    "Get instant access to all premium features with BVR STR CO membership. 10% off all purchases, exclusive events, and more.",
+    "Get instant access to all premium features with BVR ST CO membership. 10% off all purchases, exclusive events, and more.",
   canonical: "https://bvrstco.com/membership",
 });
 

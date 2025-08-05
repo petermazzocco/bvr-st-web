@@ -1,7 +1,7 @@
-# SEO and Social Sharing Setup Guide for BVR STR
+# SEO and Social Sharing Setup Guide for BVR ST
 
 ## Overview
-This guide details the metadata improvements made to enhance SEO and social sharing across the BVR STR CO website.
+This guide details the metadata improvements made to enhance SEO and social sharing across the BVR ST CO website.
 
 ## Implementation Summary
 
@@ -42,7 +42,7 @@ Created a comprehensive metadata utility that provides:
 You need to create and add these images to the `public` folder:
 
 1. **Default OG Image**: `/public/og-image.jpg` (1200x630px)
-   - Should feature the BVR STR CO brand
+   - Should feature the BVR ST CO brand
    - Include tagline: "Premium Streetwear & Independent Fashion"
 
 2. **Hero Image**: `/public/hero.jpg`
