@@ -61,13 +61,13 @@ export const metadata: Metadata = {
     title: "BVR ST CO",
     description:
       "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
-    url: "https://bvrstrco.com",
+    url: "https://bvrstco.com",
     siteName: "BVR ST CO",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://bvrstrco.com/og-image.jpg",
+        url: "https://bvrstco.com/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "BVR ST CO",
@@ -79,13 +79,13 @@ export const metadata: Metadata = {
     title: "BVR ST CO",
     description:
       "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
-    creator: "@bvrstrco",
-    site: "@bvrstrco",
-    images: ["https://bvrstrco.com/og-image.jpg"],
+    creator: "@bvrstco",
+    site: "@bvrstco",
+    images: ["https://bvrstco.com/og-image.jpg"],
   },
-  metadataBase: new URL("https://bvrstrco.com"),
+  metadataBase: new URL("https://bvrstco.com"),
   alternates: {
-    canonical: "https://bvrstrco.com",
+    canonical: "https://bvrstco.com",
   },
 };
 
@@ -170,7 +170,7 @@ export default async function RootLayout({
 
       {/* Umami Analytics */}
       <Script
-        src="https://umami.bvrstrco.com/script.js"
+        src="https://umami.bvrstco.com/script.js"
         data-website-id="58e0fb69-5e77-4c91-b2af-f0dac2eddf69"
         defer
       />

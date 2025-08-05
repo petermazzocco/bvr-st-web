@@ -28,7 +28,7 @@ export async function Navbar({
       </div>
       <div className="flex items-center justify-center">
         <Link href="/">
-          <span className="text-lg font-bold">BVRSTR</span>
+          <span className="text-lg font-bold">BVR ST CO.</span>
         </Link>
       </div>
       <div className="flex items-center justify-end gap-4">

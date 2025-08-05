@@ -11,7 +11,7 @@ export function Footer() {
               <span className="text-lg font-bold">BVR ST CO</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} Beaver Stree Co LLC. All rights
+              © {new Date().getFullYear()} Beaver Street Co LLC. All rights
               reserved.
             </p>
           </div>
