@@ -121,7 +121,7 @@ export async function createCheckoutSession(
     // Get authentication token from server
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
-    const token = cookieStore.get("bvrstrco_auth");
+    const token = cookieStore.get("bvrstco_auth");
 
     if (!token?.value) {
       return { error: "Please sign in to start your membership." };
@@ -272,7 +272,7 @@ export async function updateUserAfterCheckout(formData: FormData) {
   // Get authentication token from server
   const { cookies } = await import("next/headers");
   const cookieStore = await cookies();
-  const token = cookieStore.get("bvrstrco_auth");
+  const token = cookieStore.get("bvrstco_auth");
 
   if (!token?.value) {
     throw new Error("Authentication required");

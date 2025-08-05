@@ -100,7 +100,7 @@ export function SignInCard() {
       <CardHeader>
         <CardTitle className="text-2xl">Sign In</CardTitle>
         <CardDescription>
-          Sign into your BVR STR Collective account
+          Sign into your BVR ST COllective account
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">

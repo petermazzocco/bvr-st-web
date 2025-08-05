@@ -162,7 +162,7 @@ export const placeBid = async (
 // Server action for form-based bid placement
 export async function placeBidAction(formData: FormData) {
   const cookieStore = await cookies();
-  const authTokenCookie = cookieStore.get("bvrstrco_auth");
+  const authTokenCookie = cookieStore.get("bvrstco_auth");
   const authToken = authTokenCookie?.value || null;
 
   // Decode userId from token

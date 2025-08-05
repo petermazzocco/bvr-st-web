@@ -6,11 +6,11 @@ export const dynamic = "force-static";
 export const metadata: Metadata = createMetadata({
   title: "FAQ",
   description:
-    "Frequently asked questions about BVR STR CO. Find answers about ordering, shipping, returns, partnerships, and more about our streetwear and Oregon State merchandise.",
-  canonical: "https://bvrstrco.com/faq",
+    "Frequently asked questions about BVR ST CO. Find answers about ordering, shipping, returns, partnerships, and more about our streetwear and Oregon State merchandise.",
+  canonical: "https://bvrstco.com/faq",
   image: {
-    url: "https://bvrstrco.com/faq.jpg",
-    alt: "BVR STR CO FAQ",
+    url: "https://bvrstco.com/faq.jpg",
+    alt: "BVR ST CO FAQ",
   },
 });
 
@@ -39,10 +39,10 @@ export default function Page() {
           <div className="flex flex-col text-xs text-muted-foreground leading-relaxed gap-10 mb-16">
             <div>
               <p className="font-bold text-foreground mb-2">
-                What is BVR STR CO?
+                What is BVR ST CO?
               </p>
               <p>
-                BVR STR CO (Beaver Street Co LLC) is an initiative focused on
+                BVR ST CO (Beaver Street Co LLC) is an initiative focused on
                 creating a renewed Oregon State culture. We curate exclusive
                 drops, forge partnerships with boundary-pushing brands,
                 entities, and influencers, and create experiences that blend

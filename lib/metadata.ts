@@ -24,10 +24,11 @@ export interface MetadataOptions {
   };
 }
 
-const DEFAULT_SITE_NAME = "BVR STR CO";
-const DEFAULT_DESCRIPTION = "Discover unique streetwear and fashion from independent brands and partner stores. Quality clothing, accessories, and lifestyle products curated for the modern streetwear enthusiast.";
-const DEFAULT_IMAGE = "https://bvrstrco.com/og-image.jpg"; // You should add this image to your public folder
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+const DEFAULT_SITE_NAME = "BVR ST CO";
+const DEFAULT_DESCRIPTION =
+  "Discover unique streetwear and fashion from independent brands and partner stores. Quality clothing, accessories, and lifestyle products curated for the modern streetwear enthusiast.";
+const DEFAULT_IMAGE = "https://bvrstco.com/og-image.jpg"; // You should add this image to your public folder
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
 
 export function generateMetadata(options: MetadataOptions = {}): Metadata {
   const {
@@ -86,8 +87,8 @@ export function generateMetadata(options: MetadataOptions = {}): Metadata {
       title: fullTitle,
       description,
       images: [imageUrl],
-      creator: "@bvrstrco",
-      site: "@bvrstrco",
+      creator: "@bvrstco",
+      site: "@bvrstco",
     },
     alternates: {
       ...(canonical && { canonical }),
@@ -146,7 +147,9 @@ export function generateProductMetadata(options: {
     },
     other: {
       ...Object.fromEntries(
-        Object.entries(baseMetadata.other || {}).filter(([_, value]) => value !== undefined)
+        Object.entries(baseMetadata.other || {}).filter(
+          ([_, value]) => value !== undefined,
+        ),
       ),
       ...(options.sku && { "product:retailer_item_id": options.sku }),
     },
@@ -194,7 +197,7 @@ export function generateStoreMetadata(options: {
 }): Metadata {
   return generateMetadata({
     title: `${options.storeName} - Partner Store`,
-    description: `${options.description} Shop exclusive products from ${options.storeName}, a trusted partner store on BVR STR CO.`,
+    description: `${options.description} Shop exclusive products from ${options.storeName}, a trusted partner store on BVR ST CO.`,
     image: options.image,
     type: "website",
     canonical: options.canonical,

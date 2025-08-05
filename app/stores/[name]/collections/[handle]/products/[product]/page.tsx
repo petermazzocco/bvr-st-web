@@ -20,13 +20,13 @@ export async function generateMetadata(props: {
 
   const product = productResult.data.productByHandle;
   const featuredImage = product.featuredImage;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
 
   return generateProductMetadata({
     title: `${product.title} - ${params.name}`,
     description:
       product.description ||
-      `BVR STR CO | ${product.title} from ${params.name}.`,
+      `BVR ST CO | ${product.title} from ${params.name}.`,
     image: featuredImage
       ? {
           url: featuredImage.url,

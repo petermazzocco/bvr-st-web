@@ -385,10 +385,10 @@ export function PartnerRequestCard() {
       <CardFooter className="text-center text-xs text-muted-foreground">
         Need help with your application?{" "}
         <a
-          href="mailto:partners@bvrstrco.com"
+          href="mailto:partners@bvrstco.com"
           className="text-primary underline hover:text-primary/80 ml-1"
         >
-          info@bvrstrco.com
+          info@bvrstco.com
         </a>
       </CardFooter>
     </Card>

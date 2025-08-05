@@ -27,7 +27,7 @@ export function ComingSoonPage({ searchParams }: ComingSoonPageProps = {}) {
       <div className="h-screen bg-[url('https://cloudfront-us-east-1.images.arcpublishing.com/advancelocal/IUVSISAT7FGOLD7NFU6X22GVZQ.jpg')] bg-cover bg-center bg-no-repeat flex items-end justify-center pb-[10vh]">
         <div className="z-10 gap-4 flex flex-col text-center items-center text-background max-w-md mx-auto px-4">
           <h2 className="text-lg font-base tracking-wider">Coming Soon</h2>
-          <h1 className="text-3xl font-bold tracking-wider">BVR STR CO</h1>
+          <h1 className="text-3xl font-bold tracking-wider">BVR ST CO</h1>
           <CountdownTimer />
 
           {isSubmitted ? (

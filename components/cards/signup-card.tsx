@@ -180,7 +180,7 @@ export function SignUpCard() {
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
-          Create your free BVR STR Collective account, earn 100 points and 10%
+          Create your free BVR ST COllective account, earn 100 points and 10%
           off your first purchase immediately!
         </CardDescription>
       </CardHeader>
@@ -416,7 +416,7 @@ export function SignUpCard() {
             />
             <label htmlFor="optInMarketing" className="text-sm leading-none">
               I would like to receive marketing communications about the latest
-              products and services offered by BVR STR CO.
+              products and services offered by BVR ST CO.
             </label>
           </div>
 
@@ -430,7 +430,7 @@ export function SignUpCard() {
               onChange={handleInputChange}
             />
             <label htmlFor="optInRewards" className="text-sm leading-none">
-              I would like to earn BVR STR CO rewards.
+              I would like to earn BVR ST CO rewards.
             </label>
           </div>
 

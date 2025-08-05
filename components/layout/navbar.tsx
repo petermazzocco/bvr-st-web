@@ -14,7 +14,7 @@ export async function Navbar({
   partners: Vendor[];
 }) {
   const cookieStore = await cookies();
-  const authTokenCookie = cookieStore.get("bvrstrco_auth");
+  const authTokenCookie = cookieStore.get("bvrstco_auth");
   const authToken = authTokenCookie?.value || null;
 
   return (
@@ -28,7 +28,7 @@ export async function Navbar({
       </div>
       <div className="flex items-center justify-center">
         <Link href="/">
-          <span className="text-lg font-bold">BVRSTR</span>
+          <span className="text-lg font-bold">BVR ST CO.</span>
         </Link>
       </div>
       <div className="flex items-center justify-end gap-4">

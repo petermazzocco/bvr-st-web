@@ -21,7 +21,7 @@ export async function AuctionProductDescription({
   isMember,
 }: AuctionProductDescriptionProps) {
   const cookieStore = await cookies();
-  const authTokenCookie = cookieStore.get("bvrstrco_auth");
+  const authTokenCookie = cookieStore.get("bvrstco_auth");
   const authToken = authTokenCookie?.value || null;
 
   // Decode userId from token

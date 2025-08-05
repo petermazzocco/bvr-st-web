@@ -6,11 +6,11 @@ export const dynamic = "force-static";
 export const metadata: Metadata = createMetadata({
   title: "About Us",
   description:
-    "Learn about BVR STR CO's mission to curate the finest hype products for Oregon State fans to benefit Oregon State student-athletes. Discover our story, values, and commitment to changing the Beaver fan culture.",
-  canonical: "https://bvrstrco.com/about",
+    "Learn about BVR ST CO's mission to curate the finest hype products for Oregon State fans to benefit Oregon State student-athletes. Discover our story, values, and commitment to changing the Beaver fan culture.",
+  canonical: "https://bvrstco.com/about",
   image: {
-    url: "https://bvrstrco.com/about.jpg",
-    alt: "BVR STR CO About Us",
+    url: "https://bvrstco.com/about.jpg",
+    alt: "BVR ST CO About Us",
   },
 });
 
@@ -27,7 +27,7 @@ export default function Page() {
           }}
         />
         <div className="relative z-10 text-center text-background">
-          <h1 className="text-8xl font-bold tracking-wider">BVR STR CO</h1>
+          <h1 className="text-8xl font-bold tracking-wider">BVR ST CO</h1>
         </div>
       </div>
 
@@ -46,7 +46,7 @@ export default function Page() {
               </strong>
             </p>
             <p>
-              BVR STR CO isn&apos;t your typical collective, company, or
+              BVR ST CO isn&apos;t your typical collective, company, or
               community—we&apos;re all three and none of them. We&apos;re a
               movement built to drag Oregon State out of outdated traditions and
               into the pulse of modern culture. Born from the streets and fueled
@@ -72,7 +72,7 @@ export default function Page() {
               </strong>
             </p>
             <p>
-              BVR STR CO is where Oregon State&apos;s underground culture meets
+              BVR ST CO is where Oregon State&apos;s underground culture meets
               mainstream impact. We&apos;re building a space where authenticity
               trumps conformity, where the products create chaos, and where
               being a Beaver means something bold and unapologetic.
@@ -84,9 +84,9 @@ export default function Page() {
               </strong>
             </p>
             <p>
-              Welcome to the new era of Oregon State. Welcome to BVR STR
-              CO—where tradition meets innovation, and the future of Beaver
-              culture begins.
+              Welcome to the new era of Oregon State. Welcome to BVR ST CO—where
+              tradition meets innovation, and the future of Beaver culture
+              begins.
             </p>
             <p className="italic">
               We don&apos;t just rep the brand. We are the brand.

@@ -6,14 +6,11 @@ export async function POST(request: NextRequest) {
     const { token, redirectUrl } = await request.json();
 
     if (!token) {
-      return NextResponse.json(
-        { error: "Token is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Token is required" }, { status: 400 });
     }
 
     const cookieStore = await cookies();
-    cookieStore.set("bvrstrco_auth", token, {
+    cookieStore.set("bvrstco_auth", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -29,7 +26,7 @@ export async function POST(request: NextRequest) {
     console.error("Set auth token error:", error);
     return NextResponse.json(
       { error: "Failed to set authentication token" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

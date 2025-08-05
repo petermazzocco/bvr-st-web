@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const getAuthTokenServer = async (): Promise<string | null> => {
   const cookieStore = await cookies();
-  const token = cookieStore.get("bvrstrco_auth");
+  const token = cookieStore.get("bvrstco_auth");
   return token?.value || null;
 };
 
@@ -151,7 +151,7 @@ export async function handleOTPSubmit(initialState: any, formData: FormData) {
 export const getUserIdFromTokenServer = async (): Promise<string | null> => {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("bvrstrco_auth");
+    const token = cookieStore.get("bvrstco_auth");
     if (!token?.value) return null;
     const payload = JSON.parse(atob(token.value.split(".")[1]));
     return payload.userid || null;
@@ -248,7 +248,7 @@ export async function signInWithEmail(initialState: any, formData: FormData) {
     if (body.token) {
       // Set the authentication token as a cookie
       const cookieStore = await cookies();
-      cookieStore.set("bvrstrco_auth", body.token, {
+      cookieStore.set("bvrstco_auth", body.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -315,7 +315,7 @@ export async function signInWithPhone(formData: FormData) {
 
   if (body.token) {
     const cookieStore = await cookies();
-    cookieStore.set("bvrstrco_auth", body.token, {
+    cookieStore.set("bvrstco_auth", body.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -338,7 +338,7 @@ export const signOut = async (initialState: any) => {
 
   try {
     const cookieStore = await cookies();
-    cookieStore.delete("bvrstrco_auth");
+    cookieStore.delete("bvrstco_auth");
     shouldRedirect = true;
   } catch (error) {
     console.error("Sign out error:", error);
@@ -429,7 +429,7 @@ export async function signUp(initialState: any, formData: FormData) {
 
     if (body.token) {
       const cookieStore = await cookies();
-      cookieStore.set("bvrstrco_auth", body.token, {
+      cookieStore.set("bvrstco_auth", body.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -1313,7 +1313,7 @@ export async function exchangeOAuthCode(formData: FormData) {
 
   if (body.token) {
     const cookieStore = await cookies();
-    cookieStore.set("bvrstrco_auth", body.token, {
+    cookieStore.set("bvrstco_auth", body.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -1390,4 +1390,3 @@ export async function getUserDiscountCodes(authToken: string, userID: string) {
   const body = await response.json();
   return body;
 }
-

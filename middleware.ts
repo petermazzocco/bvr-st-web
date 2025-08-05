@@ -67,7 +67,7 @@ function clearCookieAndRedirect(
   const response = NextResponse.redirect(signinUrl);
 
   // Clear the invalid cookie
-  response.cookies.set("bvrstrco_auth", "", {
+  response.cookies.set("bvrstco_auth", "", {
     expires: new Date(0),
     path: "/",
   });
@@ -109,7 +109,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Get the authToken from cookies
-  const authToken = request.cookies.get("bvrstrco_auth")?.value;
+  const authToken = request.cookies.get("bvrstco_auth")?.value;
 
   // Check if current path is a protected route
   const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
@@ -161,7 +161,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(accountUrl);
     } else {
       // Invalid token, clear it and let them continue to signin/signup
-      response.cookies.set("bvrstrco_auth", "", {
+      response.cookies.set("bvrstco_auth", "", {
         expires: new Date(0),
         path: "/",
       });

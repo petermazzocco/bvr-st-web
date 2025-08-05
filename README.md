@@ -1,4 +1,4 @@
-# BVR STR SHOP
+# BVR ST SHOP
 
 A modern e-commerce platform built with Next.js 15, integrating Shopify's headless commerce API with custom user management and authentication.
 

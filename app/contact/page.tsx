@@ -9,8 +9,8 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = createMetadata({
   title: "Contact Us",
   description:
-    "Get in touch with BVR STR CO. Send us a message or apply to become a partner store. We're here to help with any questions.",
-  canonical: "https://bvrstrco.com/contact",
+    "Get in touch with BVR ST CO. Send us a message or apply to become a partner store. We're here to help with any questions.",
+  canonical: "https://bvrstco.com/contact",
 });
 
 interface ContactPageProps {

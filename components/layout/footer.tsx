@@ -8,10 +8,10 @@ export function Footer() {
           {/* Left side - Logo, Name, Copyright */}
           <div className="flex flex-col space-y-4 lg:max-w-sm">
             <div className="flex items-center space-x-2">
-              <span className="text-lg font-bold">BVR STR CO</span>
+              <span className="text-lg font-bold">BVR ST CO</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} Beaver Stree Co LLC. All rights
+              © {new Date().getFullYear()} Beaver Street Co LLC. All rights
               reserved.
             </p>
           </div>
@@ -102,7 +102,7 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="https://www.bsky.app/profile/bvrstrco.com"
+                    href="https://www.bsky.app/profile/bvrstco.com"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -111,7 +111,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://www.instagram.com/bvrstrco"
+                    href="https://www.instagram.com/bvrstco"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -120,7 +120,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://www.linkedin.com/in/bvrstrco"
+                    href="https://www.linkedin.com/in/bvrstco"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -129,7 +129,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://www.twitter.com/bvrstrco"
+                    href="https://www.twitter.com/bvrstco"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
