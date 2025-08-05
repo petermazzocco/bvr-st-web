@@ -23,7 +23,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
   const showPartnerSuccess = params.partner === "true";
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-screen flex flex-col items-center justify-center">
+    <div className="container mx-auto px-4 py-8 min-h-screen flex flex-col items-center justify-center pt-16">
       {showSuccess && (
         <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-md max-w-lg w-full">
           <div className="flex">

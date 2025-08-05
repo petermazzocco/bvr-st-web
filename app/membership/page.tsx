@@ -65,7 +65,7 @@ export default async function MembershipPage({
   }
 
   const SuccessMessage = () => (
-    <div className="flex flex-col items-center justify-center h-64 space-y-4">
+    <div className="flex flex-col items-center justify-center h-64 space-y-4 pt-16">
       <div className="text-center">
         <h2 className="text-md mb-2">You&apos;re now a Premium Member!</h2>
         {pointsAdded && (

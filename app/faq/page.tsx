@@ -16,7 +16,7 @@ export const metadata: Metadata = createMetadata({
 
 export default function Page() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-16">
       <div className="relative h-screen flex items-center justify-center max-h-72">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"

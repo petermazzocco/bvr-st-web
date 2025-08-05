@@ -113,7 +113,7 @@ export default async function Page(props: {
             __html: JSON.stringify(productJsonLd),
           }}
         />
-        <div className="min-h-screen flex flex-col md:flex-row  ">
+        <div className="min-h-screen flex flex-col md:flex-row  pt-16">
           <div className="w-full md:w-1/2">
             <Suspense
               fallback={<Skeleton className="w-full h-full overflow-hidden" />}

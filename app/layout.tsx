@@ -13,10 +13,7 @@ import Script from "next/script";
 import { comingSoonFlag, underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
 import { ComingSoonPage } from "@/components/utils/coming-soon-page";
-import {
-  getAllPartneredStores,
-  getPartneredStore,
-} from "@/server/vendor/actions";
+import { getAllPartneredStores } from "@/server/vendor/actions";
 import {
   getUserDetails,
   getAuthTokenServer,
@@ -149,24 +146,6 @@ export default async function RootLayout({
           </CartProvider>
         </AuthProvider>
       </body>
-      {/* UpPromote Pixel - Load the external script */}
-      <Script
-        src="https://static-pixel.uppromote.com/collect/v1/collect.js"
-        strategy="afterInteractive"
-      />
-
-      {/* UpPromote Pixel Configuration - Cart Tracking Only */}
-      <Script
-        id="uppromote-config"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.upDataLayer = window.upDataLayer || []
-            function upTag() { return upDataLayer.push(arguments) }
-            upTag('config', 'myshopify_domain', '1budtj-uz.myshopify.com')
-          `,
-        }}
-      />
 
       {/* Umami Analytics */}
       <Script

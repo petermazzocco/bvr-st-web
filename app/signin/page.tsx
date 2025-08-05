@@ -3,7 +3,7 @@ import { SignInCard } from "@/components/cards/signin-card";
 
 export default function Page() {
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex min-h-screen w-full pt-16">
       <div className="hidden md:flex flex-col items-center justify-center w-1/2 py-2">
         <SignInCard />
       </div>
