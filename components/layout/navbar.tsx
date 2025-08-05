@@ -5,6 +5,7 @@ import { CartSheet } from "../cart/cart-sheet";
 import { Collection } from "@/lib/shopify/types";
 import { Vendor } from "@/lib/types";
 import { cookies } from "next/headers";
+import { Button } from "@/components/ui/button";
 
 export async function Navbar({
   collections,
@@ -18,12 +19,12 @@ export async function Navbar({
   const authToken = authTokenCookie?.value || null;
 
   return (
-    <nav className=" grid grid-cols-3 items-center p-2 w-full bg-background text-foreground ">
+    <nav className="fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center p-2 w-full mix-blend-difference">
       <div className="flex items-center">
         <NavSideSheet
           collections={collections}
           partners={partners}
-          className="text-foreground"
+          className="text-background"
         />
       </div>
       <div className="flex items-center justify-center">
@@ -32,9 +33,11 @@ export async function Navbar({
         </Link>
       </div>
       <div className="flex items-center justify-end gap-4">
-        <Link href={!authToken ? "/account" : "/signin"}>
-          <UserIcon className="h-4" />
-        </Link>
+        <Button variant="ghost" size="sm" asChild>
+          <Link href={!authToken ? "/account" : "/signin"}>
+            <UserIcon className="h-4" />
+          </Link>
+        </Button>
         <CartSheet />
       </div>
     </nav>

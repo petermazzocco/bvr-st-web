@@ -21,7 +21,7 @@ export default async function CollectionLayout({
   }
 
   return (
-    <div className="min-h-screen max-w-screen">
+    <div className="min-h-screen max-w-screen pt-16">
       <div className="flex flex-col">
         <div className="relative w-full mb-20">
           <AspectRatio ratio={3 / 1} className="w-full">

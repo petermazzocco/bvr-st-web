@@ -37,7 +37,7 @@ export default async function Page() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-16">
       <AccountHeaderCard user={user?.data} discountCodes={discountCodes} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="space-y-2">
