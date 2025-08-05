@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 export default async function Page() {
   const cookieStore = await cookies();
-  const authTokenCookie = cookieStore.get("bvrstrco_auth");
+  const authTokenCookie = cookieStore.get("bvrstco_auth");
   const authToken = authTokenCookie?.value || null;
 
   let userId: string | null = null;

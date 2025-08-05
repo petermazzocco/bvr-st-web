@@ -209,10 +209,10 @@ export function ContactCard() {
       <CardFooter className="text-center text-xs text-muted-foreground">
         Or email us directly at{" "}
         <a
-          href="mailto:info@bvrstrco.com"
+          href="mailto:info@bvrstco.com"
           className="text-primary underline hover:text-primary/80 ml-1"
         >
-          info@bvrstrco.com
+          info@bvrstco.com
         </a>
       </CardFooter>
     </Card>

@@ -17,7 +17,7 @@ export async function generateMetadata(props: {
   if (!collection) return notFound();
 
   const { url, width, height, altText: alt } = products[0]?.images[0] || {};
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
 
   return generateCollectionMetadata({
     title: collection.seo.title || collection.title,

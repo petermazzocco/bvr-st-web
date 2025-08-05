@@ -22,7 +22,7 @@ export async function generateMetadata(props: {
 
   const collection = collectionResponse.data.collectionByHandle;
   const productCount = collection.products.edges.length;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
 
   return generateCollectionMetadata({
     title: `${collection.title} - ${params.name}`,

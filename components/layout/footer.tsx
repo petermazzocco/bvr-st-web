@@ -102,7 +102,7 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="https://www.bsky.app/profile/bvrstrco.com"
+                    href="https://www.bsky.app/profile/bvrstco.com"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -111,7 +111,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://www.instagram.com/bvrstrco"
+                    href="https://www.instagram.com/bvrstco"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -120,7 +120,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://www.linkedin.com/in/bvrstrco"
+                    href="https://www.linkedin.com/in/bvrstco"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -129,7 +129,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://www.twitter.com/bvrstrco"
+                    href="https://www.twitter.com/bvrstco"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >

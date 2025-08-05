@@ -7,9 +7,9 @@ export const metadata: Metadata = createMetadata({
   title: "FAQ",
   description:
     "Frequently asked questions about BVR STR CO. Find answers about ordering, shipping, returns, partnerships, and more about our streetwear and Oregon State merchandise.",
-  canonical: "https://bvrstrco.com/faq",
+  canonical: "https://bvrstco.com/faq",
   image: {
-    url: "https://bvrstrco.com/faq.jpg",
+    url: "https://bvrstco.com/faq.jpg",
     alt: "BVR STR CO FAQ",
   },
 });

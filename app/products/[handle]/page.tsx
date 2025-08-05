@@ -30,7 +30,7 @@ export async function generateMetadata(props: {
   if (!product) return notFound();
   const { url, width, height, altText: alt } = product.featuredImage || {};
   const indexable = !product.tags.includes(HIDDEN_PRODUCT_TAG);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
 
   return generateProductMetadata({
     title: product.seo.title || product.title,

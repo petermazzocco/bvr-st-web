@@ -94,11 +94,11 @@ You need to create and add these images to the `public` folder:
 ### 2. Environment Variables
 Add to your `.env.local`:
 ```env
-NEXT_PUBLIC_SITE_URL=https://bvrstrco.com
+NEXT_PUBLIC_SITE_URL=https://bvrstco.com
 ```
 
 ### 3. Social Media Accounts
-- Set up Twitter account: @bvrstrco
+- Set up Twitter account: @bvrstco
 - Verify social media handles in metadata
 
 ### 4. Testing

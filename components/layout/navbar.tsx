@@ -14,7 +14,7 @@ export async function Navbar({
   partners: Vendor[];
 }) {
   const cookieStore = await cookies();
-  const authTokenCookie = cookieStore.get("bvrstrco_auth");
+  const authTokenCookie = cookieStore.get("bvrstco_auth");
   const authToken = authTokenCookie?.value || null;
 
   return (

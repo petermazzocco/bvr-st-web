@@ -7,9 +7,9 @@ export const metadata: Metadata = createMetadata({
   title: "About Us",
   description:
     "Learn about BVR STR CO's mission to curate the finest hype products for Oregon State fans to benefit Oregon State student-athletes. Discover our story, values, and commitment to changing the Beaver fan culture.",
-  canonical: "https://bvrstrco.com/about",
+  canonical: "https://bvrstco.com/about",
   image: {
-    url: "https://bvrstrco.com/about.jpg",
+    url: "https://bvrstco.com/about.jpg",
     alt: "BVR STR CO About Us",
   },
 });

@@ -17,7 +17,7 @@ export async function generateMetadata(props: {
 
   if (!store.success || !store.data) return notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstrco.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
 
   return generateStoreMetadata({
     storeName: store.data.name,
