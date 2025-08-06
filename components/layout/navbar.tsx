@@ -21,11 +21,11 @@ export async function Navbar({
   return (
     <nav className="fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center p-2 w-full mix-blend-difference">
       <div className="flex items-center">
-        <NavSideSheet
+        {/*<NavSideSheet
           collections={collections}
           partners={partners}
           className="text-background"
-        />
+        />*/}
       </div>
       <div className="flex items-center justify-center">
         <Link href="/">

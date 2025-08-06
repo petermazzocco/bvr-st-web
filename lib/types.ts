@@ -277,7 +277,7 @@ export interface FeaturedCollection {
  */
 export interface Image {
   /** Asset reference containing the actual image data */
-  asset: Asset;
+  Asset: Asset;
 }
 
 /**
@@ -285,9 +285,9 @@ export interface Image {
  */
 export interface Asset {
   /** Unique identifier for the asset */
-  _id: string;
+  ID: string;
   /** URL to access the asset */
-  url: string;
+  URL: string;
 }
 
 /**

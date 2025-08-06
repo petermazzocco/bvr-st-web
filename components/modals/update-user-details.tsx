@@ -180,7 +180,7 @@ export function UpdateUserModal({ user }: UpdateUserModalProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="w-fit">
+        <Button variant="ghost" size="sm" className="w-fit">
           <Edit className="w-4 h-4" />
         </Button>
       </DialogTrigger>
