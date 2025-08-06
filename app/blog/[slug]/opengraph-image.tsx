@@ -17,9 +17,10 @@ export default async function Image({
 
   return await OpengraphImage({
     title: post.data.title,
-    imgSrc: post.data.image?.Asset?.ID
+    // @ts-expect-error improper typing
+    imgSrc: post.data.image?.asset?.url
       ? // @ts-expect-error improper typing
-        `https://cdn.sanity.io/images/${post.data.image.asset.id}`
+        `${post.data.image.asset.url}`
       : undefined,
   });
 }
