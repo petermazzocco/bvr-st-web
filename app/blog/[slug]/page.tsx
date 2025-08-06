@@ -1,7 +1,56 @@
+import type { Metadata } from "next";
 import { PortableText } from "next-sanity";
 import { getBlogPostBySlug } from "@/server/sanity/actions";
 import { notFound } from "next/navigation";
 import { PostImage } from "@/components/blog/post-image";
+
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
+  const post = await getBlogPostBySlug(params.slug);
+
+  if (!post.data) {
+    return {
+      title: "Post Not Found | BVR ST CO",
+    };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
+  // @ts-expect-error improper typing
+  const imageUrl = post.data?.image?.asset?.url;
+
+  return {
+    title: `${post.data.title} | BVR ST CO`,
+    description: `Read ${post.data.title} on BVR ST CO blog`,
+    openGraph: {
+      title: `${post.data.title} | BVR ST CO`,
+      description: `Read ${post.data.title} on BVR ST CO blog`,
+      url: `${siteUrl}/blog/${params.slug}`,
+      siteName: "BVR ST CO",
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              width: 1200,
+              height: 630,
+              alt: post.data.title,
+            },
+          ]
+        : [],
+      locale: "en_US",
+      type: "article",
+      publishedTime: post.data.publishedAt,
+      authors: [post.data.author],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.data.title} | BVR ST CO`,
+      description: `Read ${post.data.title} on BVR ST CO blog`,
+      images: imageUrl ? [imageUrl] : [],
+    },
+  };
+}
 
 export default async function PostPage({
   params,
