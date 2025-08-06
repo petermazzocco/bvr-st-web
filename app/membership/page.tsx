@@ -29,6 +29,7 @@ interface MembershipPageProps {
     points?: string;
     affiliate?: string;
     type?: string;
+    redirect?: string;
   }>;
 }
 
@@ -49,6 +50,7 @@ export default async function MembershipPage({
   const showSuccess = params.success === "true";
   const pointsAdded = params.points;
   const membershipType = params.type;
+  const redirectParams = params.redirect;
 
   // If we have successful stripe checkout params, process them
   if (stripeCheckout === "success" && sessionId && authToken) {
@@ -102,6 +104,7 @@ export default async function MembershipPage({
             userId={userId}
             authToken={authToken}
             type={membershipType}
+            redirectParams={redirectParams}
           />
         )}
       </div>
@@ -155,6 +158,7 @@ export default async function MembershipPage({
               userId={userId}
               authToken={authToken}
               type={membershipType}
+              redirectParams={redirectParams}
             />
           )}
         </div>

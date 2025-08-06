@@ -27,6 +27,7 @@ interface MembershipCardProps {
   affiliates: Affiliate[] | undefined;
   affiliateCode?: string;
   type?: string;
+  redirectParams?: string;
 }
 
 export function MembershipCard({
@@ -35,6 +36,7 @@ export function MembershipCard({
   affiliates,
   affiliateCode,
   type,
+  redirectParams,
 }: MembershipCardProps) {
   const [selectedType, setSelectedType] = useState(type || "yearly");
   const [message, formAction, pending] = useActionState(
@@ -133,6 +135,19 @@ export function MembershipCard({
             {pending ? "Processing..." : "Start Membership"}
           </Button>
         </Form>
+        {redirectParams && redirectParams === "/membership" && (
+          <Link href="/account">
+            <Button
+              variant={"link"}
+              size={"sm"}
+              className="w-full text-muted-foreground text-xs"
+              id="skipped-membership-button"
+              data-umami-event="Skipped creating membership event"
+            >
+              Skip and Continue To Account
+            </Button>
+          </Link>
+        )}
         {message?.error && (
           <div className="p-3 text-xs text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
             {message.error}

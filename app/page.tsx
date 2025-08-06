@@ -19,7 +19,7 @@ export default function Page() {
             </Link>
           </Button>
           <Button variant={"outline"} asChild>
-            <Link href={"/signup"}>SIGN UP NOW</Link>
+            <Link href={"/signup?redirect=/membership"}>SIGN UP NOW</Link>
           </Button>
         </div>
       </div>
