@@ -341,8 +341,9 @@ export const getBlogPostBySlug = async (
   slug: string,
 ): Promise<ApiResult<Post>> => {
   try {
+    const normalizedSlug = slug.toLowerCase();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/posts/${slug}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sanity/posts/${normalizedSlug}`,
       {
         method: "GET",
         headers: {

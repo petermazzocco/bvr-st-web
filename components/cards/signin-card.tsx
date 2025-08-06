@@ -18,6 +18,7 @@ import { ErrorMessage } from "@/components/utils/error-message";
 import { SignInOAuthButton } from "../utils/signup-oauth-button";
 import { Separator } from "../ui/separator";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 // Zod validation schema
 const signInSchema = z.object({
@@ -28,6 +29,8 @@ const signInSchema = z.object({
 type SignInFormData = z.infer<typeof signInSchema>;
 
 export function SignInCard() {
+  const params = useSearchParams();
+  const redirect = params.get("redirect");
   const [message, formAction, pending] = useActionState(signInWithEmail, null);
   const [formData, setFormData] = useState<Partial<SignInFormData>>({
     email: "",
@@ -98,12 +101,14 @@ export function SignInCard() {
   return (
     <Card className="mx-auto max-w-lg min-w-lg shadow-none border-none">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign In</CardTitle>
-        <CardDescription>
-          Sign into your BVR ST COllective account
+        <CardTitle className="text-xl">Welcome Back</CardTitle>
+        <CardDescription className="text-sm">
+          {redirect == "/membership"
+            ? "Sign into your BVR ST CO account to become a member."
+            : "Sign into your BVR ST CO account"}
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2">
+      <CardContent className="flex flex-col-reverse gap-2">
         <SignInOAuthButton provider="google" className="w-full h-10">
           <div className="flex flex-row justify-between items-center w-full">
             Continue With Google
@@ -170,7 +175,7 @@ export function SignInCard() {
         {message?.error && <ErrorMessage message={message.error} />}
         <div className="text-center text-sm">
           {"Don't have an account? "}
-          <Link href="/signup" className="underline">
+          <Link href="/signup?redirect=/membership" className="underline">
             Sign up
           </Link>
           {" | "}

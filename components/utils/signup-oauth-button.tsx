@@ -1,6 +1,10 @@
+"use client";
+
 import { signInWithOAuth } from "@/server/user/actions";
 import { Button } from "@/components/ui/button";
 import Form from "next/form";
+import { useActionState } from "react";
+import { ErrorMessage } from "./error-message";
 
 interface SignInOAuthButtonProps {
   provider: string;
@@ -22,7 +26,7 @@ export function SignInOAuthButton({
   provider,
   children,
   className,
-  variant = "outline",
+  variant = "secondary",
   size = "default",
   disabled = false,
   callbackUrl,
@@ -31,30 +35,40 @@ export function SignInOAuthButton({
   const providerDisplayName =
     provider.charAt(0).toUpperCase() + provider.slice(1).toLowerCase();
 
-  const handleOAuthSignIn = async (formData: FormData) => {
+  const handleOAuthSignIn = async (
+    initialState: { error?: string } | null,
+    formData: FormData,
+  ): Promise<{ error?: string } | null> => {
     const finalCallbackUrl = callbackUrl || "/account";
 
     formData.append("provider", provider.toLowerCase());
     formData.append("callbackUrl", finalCallbackUrl);
 
-    await signInWithOAuth(formData);
+    const result = await signInWithOAuth(initialState, formData);
+    return result || null;
   };
+
+  const [message, formAction, pending] = useActionState<
+    { error?: string } | null,
+    FormData
+  >(handleOAuthSignIn, null);
 
   // If no children provided, use default dynamic text
   const buttonContent = children || `Continue with ${providerDisplayName}`;
 
   return (
-    <Form action={handleOAuthSignIn}>
+    <Form action={formAction}>
       <Button
         type="submit"
         variant={variant}
         size={size}
         className={className}
-        disabled={disabled}
+        disabled={disabled || pending}
         data-umami-event={`Signin ${provider} button`}
       >
         {buttonContent}
       </Button>
+      {message?.error && <ErrorMessage message={message.error} />}
     </Form>
   );
 }

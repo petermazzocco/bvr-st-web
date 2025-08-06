@@ -52,7 +52,7 @@ export function AccountHeaderCard({
               <Form action={formAction}>
                 <Button
                   disabled={pending}
-                  variant="outline"
+                  variant="ghost"
                   type="submit"
                   className="w-fit"
                   size={"sm"}

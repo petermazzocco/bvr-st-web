@@ -368,6 +368,8 @@ export async function signUp(initialState: any, formData: FormData) {
     address: formData.get("address"),
   };
 
+  const redirectParam = formData.get("redirect") as string;
+
   let shouldRedirect = false;
   let redirectUrl = "";
 
@@ -437,7 +439,7 @@ export async function signUp(initialState: any, formData: FormData) {
       });
 
       shouldRedirect = true;
-      redirectUrl = body.callbackUrl || "/account";
+      redirectUrl = redirectParam || body.callbackUrl || "/account";
     } else {
       return { error: "No authentication token received. Please try again." };
     }
@@ -1190,36 +1192,50 @@ export async function isOTPExpired(
 /**
  * Initiates OAuth sign-in by redirecting to the OAuth provider using server action pattern
  * @param formData - FormData containing provider and callbackUrl
- * @returns Promise that redirects to OAuth provider or throws error on failure
+ * @returns Promise that redirects to OAuth provider or returns error message on failure
  */
-export async function signInWithOAuth(formData: FormData) {
-  const provider = formData.get("provider") as string;
-  const callbackUrl = formData.get("callbackUrl") as string;
+export async function signInWithOAuth(initialState: any, formData: FormData) {
+  let shouldRedirect = false;
+  let redirectUrl = "";
 
-  if (!provider) {
-    throw new Error("OAuth provider is required");
+  try {
+    const provider = formData.get("provider") as string;
+    const callbackUrl = formData.get("callbackUrl") as string;
+
+    if (!provider) {
+      return { error: "OAuth provider is required" };
+    }
+
+    // Validate provider
+    const supportedProviders = ["google"]; // Add more providers as needed
+    if (!supportedProviders.includes(provider.toLowerCase())) {
+      return { error: `Unsupported OAuth provider: ${provider}` };
+    }
+
+    // Build the OAuth initiation URL - make sure provider is lowercase
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/${provider.toLowerCase()}`;
+    const url = new URL(baseUrl);
+
+    // Add frontend callback URL as query parameter
+    const frontendCallback = callbackUrl
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback?redirect=${encodeURIComponent(callbackUrl)}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`;
+
+    url.searchParams.append("callback", frontendCallback);
+
+    shouldRedirect = true;
+    redirectUrl = url.toString();
+  } catch (error) {
+    console.error("OAuth initiation error:", error);
+    return {
+      error: "Failed to initiate OAuth sign-in. Please try again.",
+    };
+  } finally {
+    if (shouldRedirect) {
+      const { redirect } = await import("next/navigation");
+      redirect(redirectUrl);
+    }
   }
-
-  // Validate provider
-  const supportedProviders = ["google"]; // Add more providers as needed
-  if (!supportedProviders.includes(provider.toLowerCase())) {
-    throw new Error(`Unsupported OAuth provider: ${provider}`);
-  }
-
-  // Build the OAuth initiation URL - make sure provider is lowercase
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/oauth/${provider.toLowerCase()}`;
-  const url = new URL(baseUrl);
-
-  // Add frontend callback URL as query parameter
-  const frontendCallback = callbackUrl
-    ? `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback?redirect=${encodeURIComponent(callbackUrl)}`
-    : `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`;
-
-  url.searchParams.append("callback", frontendCallback);
-
-  // Redirect to OAuth provider
-  const { redirect } = await import("next/navigation");
-  redirect(url.toString());
 }
 
 /**

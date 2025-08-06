@@ -90,9 +90,6 @@ export function CartSheet() {
           {!cart || cart.lines.length === 0 ? (
             <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
               <p className="mt-2 text-center text-sm">Your cart is empty.</p>
-              <Link href="/">
-                <Button className="mt-4">Shop Products Now</Button>
-              </Link>
             </div>
           ) : (
             <div className="flex h-full flex-col justify-between overflow-hidden p-1">

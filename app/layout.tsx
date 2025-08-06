@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/navbar";
-import { IBM_Plex_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "sonner";
@@ -86,8 +86,8 @@ export const metadata: Metadata = {
   },
 };
 
-const ibm = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -126,7 +126,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${ibm.variable} antialiased min-h-screen`}>
+      <body className={`${roboto.variable} antialiased min-h-screen`}>
         <AuthProvider initialIsMember={isMember}>
           <CartProvider cartPromise={cart}>
             {isUnderConstructionFlag ? (

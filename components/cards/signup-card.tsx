@@ -18,33 +18,42 @@ import { ErrorMessage } from "@/components/utils/error-message";
 import { AddressAutofillInput } from "../utils/address-autofill-input";
 import { SignInOAuthButton } from "../utils/signup-oauth-button";
 import { Separator } from "../ui/separator";
+import { Checkbox } from "../ui/checkbox";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 // Zod validation schema
-const signUpSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.email("Please enter a valid email address"),
-  phone: z.string().optional(),
-  address: z.string().min(1, "Address is required"),
-  addressLine2: z.string().optional(),
-  addressLine3: z.string().optional(),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/\d/, "Password must contain at least one number"),
-  termsAccepted: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions",
-  }),
-  optInMarketing: z.boolean().optional(),
-  optInRewards: z.boolean().optional(),
-});
+const signUpSchema = z
+  .object({
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    email: z.email("Please enter a valid email address"),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    addressLine2: z.string().optional(),
+    addressLine3: z.string().optional(),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(/\d/, "Password must contain at least one number"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+    termsAccepted: z.boolean().refine((val) => val === true, {
+      message: "You must accept the terms and conditions",
+    }),
+    optInMarketing: z.boolean().optional(),
+    optInRewards: z.boolean().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export function SignUpCard() {
+  const params = useSearchParams();
   const [message, formAction, pending] = useActionState(signUp, null);
   const [formData, setFormData] = useState<Partial<SignUpFormData>>({
     firstName: "",
@@ -55,9 +64,10 @@ export function SignUpCard() {
     addressLine2: "",
     addressLine3: "",
     password: "",
+    confirmPassword: "",
     termsAccepted: false,
-    optInMarketing: false,
-    optInRewards: false,
+    optInMarketing: true,
+    optInRewards: true,
   });
   const [errors, setErrors] = useState<
     Partial<Record<keyof SignUpFormData, string>>
@@ -74,6 +84,22 @@ export function SignUpCard() {
     }));
 
     // Clear error for this field when user starts typing
+    if (errors[name as keyof SignUpFormData]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
+  };
+
+  // Handle checkbox changes for Radix UI Checkbox
+  const handleCheckboxChange = (name: string, checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: checked,
+    }));
+
+    // Clear error for this field when user changes it
     if (errors[name as keyof SignUpFormData]) {
       setErrors((prev) => ({
         ...prev,
@@ -138,7 +164,7 @@ export function SignUpCard() {
       addressInput.value = combinedAddress || "";
     }
 
-    // Remove addressLine2 and addressLine3 from form submission by clearing their names
+    // Remove addressLine2, addressLine3, and confirmPassword from form submission by clearing their names
     const addressLine2Input = form.querySelector(
       'input[name="addressLine2"]',
     ) as HTMLInputElement;
@@ -151,6 +177,13 @@ export function SignUpCard() {
     ) as HTMLInputElement;
     if (addressLine3Input) {
       addressLine3Input.name = ""; // Remove the name so it doesn't get submitted
+    }
+
+    const confirmPasswordInput = form.querySelector(
+      'input[name="confirmPassword"]',
+    ) as HTMLInputElement;
+    if (confirmPasswordInput) {
+      confirmPasswordInput.name = ""; // Remove the name so it doesn't get submitted
     }
 
     // If validation passes, allow form to submit normally
@@ -178,13 +211,13 @@ export function SignUpCard() {
   return (
     <Card className="mx-auto max-w-lg min-w-lg shadow-none border-none">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
-        <CardDescription>
-          Create your free BVR ST COllective account, earn 100 points and 10%
-          off your first purchase immediately!
+        <CardTitle className="text-lg">Welcome To BVR ST CO</CardTitle>
+        <CardDescription className="text-sm">
+          Create your free BVR ST CO account, earn 100 points and 10% off your
+          first purchase immediately!
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2">
+      <CardContent className="flex flex-col-reverse gap-2">
         <SignInOAuthButton provider="google" className="w-full h-10">
           <div className="flex flex-row justify-between items-center w-full">
             Continue With Google
@@ -197,6 +230,11 @@ export function SignUpCard() {
           <Separator className="my-4 flex-1" />
         </div>
         <Form action={formAction} onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="hidden"
+            name="redirect"
+            value={params.get("redirect") || ""}
+          />
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label
@@ -282,7 +320,7 @@ export function SignUpCard() {
               htmlFor="address"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Address
+              Address (Optional)
             </label>
             <AddressAutofillInput
               name="address"
@@ -290,7 +328,6 @@ export function SignUpCard() {
               onChangeAction={handleInputChange}
               onAddressSelect={handleAddressSelect}
               placeholder="123 Main St"
-              required
               className={errors.address ? "bored-destructive" : ""}
             />
             {errors.address && (
@@ -352,7 +389,29 @@ export function SignUpCard() {
             )}
           </div>
 
-          <div className="text-sm text-muted-foreground">
+          <div className="space-y-2">
+            <label
+              htmlFor="confirmPassword"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Confirm Password
+            </label>
+            <Input
+              type="password"
+              name="confirmPassword"
+              required
+              value={formData.confirmPassword || ""}
+              onChange={handleInputChange}
+              className={errors.confirmPassword ? "bored-destructive" : ""}
+            />
+            {errors.confirmPassword && (
+              <p className="text-xs text-destructive">
+                {errors.confirmPassword}
+              </p>
+            )}
+          </div>
+
+          <div className="text-xs text-muted-foreground">
             <p>Password requirements:</p>
             <ul className="list-disc list-inside mt-1 space-y-1">
               <li
@@ -377,21 +436,40 @@ export function SignUpCard() {
               >
                 Contains at least one number
               </li>
+              <li
+                className={
+                  formData.password &&
+                  formData.confirmPassword &&
+                  formData.password === formData.confirmPassword
+                    ? "text-green-600"
+                    : ""
+                }
+              >
+                Passwords match
+              </li>
             </ul>
           </div>
 
-          <div className="flex items-start space-x-3">
-            <input
-              type="checkbox"
-              name="termsAccepted"
+          <div className="flex items-center space-x-3">
+            <Checkbox
               id="termsAccepted"
+              name="termsAccepted"
               className="mt-1"
-              required
               checked={formData.termsAccepted || false}
-              onChange={handleInputChange}
+              onCheckedChange={(checked) =>
+                handleCheckboxChange("termsAccepted", checked === true)
+              }
+            />
+            <input
+              type="hidden"
+              name="termsAccepted"
+              value={formData.termsAccepted ? "on" : ""}
             />
             <div className="flex flex-col">
-              <label htmlFor="termsAccepted" className="text-sm leading-none">
+              <label
+                htmlFor="termsAccepted"
+                className="text-xs leading-none text-muted-foreground cursor-pointer"
+              >
                 I agree to the{" "}
                 <Link href="/legal/terms" target="_blank" className="underline">
                   Terms and Conditions
@@ -405,31 +483,49 @@ export function SignUpCard() {
             </div>
           </div>
 
-          <div className="flex items-start space-x-3">
-            <input
-              type="checkbox"
-              name="optInMarketing"
+          <div className="flex items-center  space-x-3">
+            <Checkbox
               id="optInMarketing"
+              name="optInMarketing"
               className="mt-1"
               checked={formData.optInMarketing || false}
-              onChange={handleInputChange}
+              onCheckedChange={(checked) =>
+                handleCheckboxChange("optInMarketing", checked === true)
+              }
             />
-            <label htmlFor="optInMarketing" className="text-sm leading-none">
+            <input
+              type="hidden"
+              name="optInMarketing"
+              value={formData.optInMarketing ? "on" : ""}
+            />
+            <label
+              htmlFor="optInMarketing"
+              className="text-xs leading-none text-muted-foreground cursor-pointer"
+            >
               I would like to receive marketing communications about the latest
               products and services offered by BVR ST CO.
             </label>
           </div>
 
-          <div className="flex items-start space-x-3">
-            <input
-              type="checkbox"
-              name="optInRewards"
+          <div className="flex items-center space-x-3">
+            <Checkbox
               id="optInRewards"
+              name="optInRewards"
               className="mt-1"
               checked={formData.optInRewards || false}
-              onChange={handleInputChange}
+              onCheckedChange={(checked) =>
+                handleCheckboxChange("optInRewards", checked === true)
+              }
             />
-            <label htmlFor="optInRewards" className="text-sm leading-none">
+            <input
+              type="hidden"
+              name="optInRewards"
+              value={formData.optInRewards ? "on" : ""}
+            />
+            <label
+              htmlFor="optInRewards"
+              className="text-xs leading-none text-muted-foreground cursor-pointer"
+            >
               I would like to earn BVR ST CO rewards.
             </label>
           </div>
@@ -447,7 +543,7 @@ export function SignUpCard() {
       </CardContent>
       <CardFooter className="flex flex-col items-start justify-center gap-2">
         {message?.error && <ErrorMessage message={message.error} />}
-        <div className="text-left text-sm">
+        <div className="text-left text-xs">
           Already have an account?{" "}
           <Link href="/signin" className="underline">
             Sign in

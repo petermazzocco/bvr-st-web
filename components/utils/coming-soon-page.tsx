@@ -24,6 +24,13 @@ export function ComingSoonPage({ searchParams }: ComingSoonPageProps = {}) {
 
   return (
     <>
+      <nav className="fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center p-2 w-full mix-blend-difference">
+        <div className="flex items-center"></div>
+        <div className="flex items-center justify-center">
+          <span className="text-lg font-bold">BVR ST CO.</span>
+        </div>
+        <div className="flex items-center justify-end gap-4"></div>
+      </nav>
       <div className="h-screen bg-[url('https://cloudfront-us-east-1.images.arcpublishing.com/advancelocal/IUVSISAT7FGOLD7NFU6X22GVZQ.jpg')] bg-cover bg-center bg-no-repeat flex items-end justify-center pb-[10vh]">
         <div className="z-10 gap-4 flex flex-col text-center items-center text-background max-w-md mx-auto px-4">
           <h2 className="text-lg font-base tracking-wider">Coming Soon</h2>
@@ -40,11 +47,8 @@ export function ComingSoonPage({ searchParams }: ComingSoonPageProps = {}) {
           ) : (
             <Dialog>
               <DialogTrigger asChild className="  cursor-pointer">
-                <Button
-                  variant="default"
-                  className="w-full hover:bg-opacity-100"
-                >
-                  Notify Me
+                <Button variant="outline" className="w-full">
+                  NOTIFY ME
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] rounded-md">
@@ -70,7 +74,7 @@ export function ComingSoonPage({ searchParams }: ComingSoonPageProps = {}) {
                     required
                   />
                   <Button type="submit" className="w-full">
-                    Notify Me
+                    Get Notified
                   </Button>
                 </Form>
                 <DialogFooter>
