@@ -11,16 +11,16 @@ export default async function Image({
   const slug = await params.then(({ slug }) => slug);
   const post = await getBlogPostBySlug(slug);
 
-  if (!post.success || !post.data) {
+  if (!post.data) {
     return await OpengraphImage({});
   }
 
   return await OpengraphImage({
     title: post.data.title,
     // @ts-expect-error improper typing
-    imgSrc: post.data.image?.asset?.url
+    imgSrc: post.data?.image?.asset?.url
       ? // @ts-expect-error improper typing
-        `${post.data.image.asset.url}`
+        `${post.data?.image?.asset?.url}`
       : undefined,
   });
 }
