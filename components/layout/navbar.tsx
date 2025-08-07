@@ -38,7 +38,7 @@ export async function Navbar({
             <UserIcon className="h-4" />
           </Link>
         </Button>
-        <CartSheet />
+        {/*<CartSheet />*/}
       </div>
     </nav>
   );

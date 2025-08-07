@@ -5,12 +5,19 @@ import { comingSoonFlag, underConstructionFlag } from "./lib/flags";
 // Define the routes that require authentication
 const PROTECTED_ROUTES = ["/account"];
 const PUBLIC_ROUTES = ["/signin", "/signup"];
+const BLOCKED_ROUTES = ["/collections", "/products", "/stores"];
 
 // Helper function to get user ID from JWT token
 function getUserIdFromToken(token: string): string | null {
   try {
     if (!token) return null;
     const payload = JSON.parse(atob(token.split(".")[1]));
+    
+    // Check if token is expired
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      return null;
+    }
+    
     return payload.userid || null;
   } catch (error) {
     console.error("Error decoding token:", error);
@@ -110,6 +117,16 @@ export async function middleware(request: NextRequest) {
 
   // Get the authToken from cookies
   const authToken = request.cookies.get("bvrstco_auth")?.value;
+
+  // Check if current path is a blocked route
+  const isBlockedRoute = BLOCKED_ROUTES.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  // Redirect blocked routes to home
+  if (isBlockedRoute) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   // Check if current path is a protected route
   const isProtectedRoute = PROTECTED_ROUTES.some((route) =>

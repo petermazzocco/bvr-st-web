@@ -79,7 +79,7 @@ export default async function PostPage({
       {/* Main content with container */}
       <main className="container mx-auto max-w-4xl p-8 flex flex-col gap-4">
         <h1 className="text-2xl font-bold mb-8">{post.data?.title || ""}</h1>
-        <div className="prose flex flex-col gap-4">
+        <div className="prose flex flex-col gap-2">
           <p className="text-muted-foreground text-xs">
             {post.data.author} |{" "}
             {new Date(post?.data?.publishedAt).toLocaleDateString()}
@@ -102,12 +102,12 @@ export default async function PostPage({
                     <h4 className="text-lg font-bold mb-2 mt-4">{children}</h4>
                   ),
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-border/10 pl-4 italic mb-4">
+                    <blockquote className="border-l-4 text-sm border-border/10 pl-4 italic mb-4">
                       {children}
                     </blockquote>
                   ),
                   normal: ({ children }) => (
-                    <p className="mb-4 leading-7">{children}</p>
+                    <p className="mb-4 leading-7 text-sm">{children}</p>
                   ),
                 },
                 marks: {
