@@ -4,11 +4,11 @@ import Image from "next/image";
 export default function Page() {
   return (
     <div className="flex min-h-screen w-full pt-16">
-      <div className="hidden md:flex flex-col items-center justify-center w-1/3 py-2">
+      <div className="hidden md:flex flex-col items-center justify-center w-2/5 py-2">
         <SignUpCard />
       </div>
 
-      <div className="hidden md:block w-2/3 relative">
+      <div className="hidden md:block w-3/5 relative">
         <Image
           src="/auth.jpg"
           alt="Authentication illustration"
