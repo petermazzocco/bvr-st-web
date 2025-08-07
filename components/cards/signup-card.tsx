@@ -246,7 +246,7 @@ export function SignUpCard() {
               <Input
                 type="text"
                 name="firstName"
-                placeholder="John"
+                placeholder="Coach"
                 required
                 value={formData.firstName || ""}
                 onChange={handleInputChange}
@@ -266,7 +266,7 @@ export function SignUpCard() {
               <Input
                 type="text"
                 name="lastName"
-                placeholder="Smith"
+                placeholder="Bray"
                 required
                 value={formData.lastName || ""}
                 onChange={handleInputChange}
@@ -288,7 +288,7 @@ export function SignUpCard() {
             <Input
               type="email"
               name="email"
-              placeholder="john@example.com"
+              placeholder="gobeavs@email.com"
               required
               value={formData.email || ""}
               onChange={handleInputChange}
@@ -327,7 +327,7 @@ export function SignUpCard() {
               value={formData.address || ""}
               onChangeAction={handleInputChange}
               onAddressSelect={handleAddressSelect}
-              placeholder="123 Main St"
+              placeholder="660 SW 26th St"
               className={errors.address ? "bored-destructive" : ""}
             />
             {errors.address && (
@@ -345,7 +345,7 @@ export function SignUpCard() {
             <Input
               type="text"
               name="addressLine2"
-              placeholder="Apt 4B, Suite 200, Unit 5"
+              placeholder="Section 222"
               value={formData.addressLine2 || ""}
               onChange={handleInputChange}
               autoComplete="shipping address-line2"
@@ -362,7 +362,7 @@ export function SignUpCard() {
             <Input
               type="text"
               name="addressLine3"
-              placeholder="Beaverton, OR 97008"
+              placeholder="Corvallis, OR 97331"
               value={formData.addressLine3 || ""}
               onChange={handleInputChange}
               autoComplete="shipping address-level2"

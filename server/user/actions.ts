@@ -154,9 +154,14 @@ export const getUserIdFromTokenServer = async (): Promise<string | null> => {
     const token = cookieStore.get("bvrstco_auth");
     if (!token?.value) return null;
     const payload = JSON.parse(atob(token.value.split(".")[1]));
+    
+    // Check if token is expired
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      return null;
+    }
+    
     return payload.userid || null;
   } catch (error) {
-    AbortSignal;
     console.error("Error decoding token:", error);
     return null;
   }
@@ -479,7 +484,9 @@ export const getUserDetails = async (
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Get user details error:", errorText);
+      if (!errorText.includes("Invalid token")) {
+        console.error("Get user details error:", errorText);
+      }
       if (errorText.includes("Unauthorized")) {
         return {
           success: false,
