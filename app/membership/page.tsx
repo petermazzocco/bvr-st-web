@@ -72,7 +72,7 @@ export default async function MembershipPage({
         <h2 className="text-md mb-2">You&apos;re now a Premium Member!</h2>
         {pointsAdded && (
           <p className="text-muted-foreground text-xs mb-2">
-            {pointsAdded} points added to your account!
+            Your points added to your account!
           </p>
         )}
         <p className="text-muted-foreground text-xs mb-4">

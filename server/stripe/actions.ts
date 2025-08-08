@@ -278,7 +278,7 @@ export async function updateUserAfterCheckout(formData: FormData) {
     throw new Error("Authentication required");
   }
 
-  const userId = Number(formData.get("userId"));
+  const userId = formData.get("userId") as string;
   const sessionID = formData.get("sessionId") as string;
 
   if (!userId || !sessionID) {
