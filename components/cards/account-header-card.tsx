@@ -10,13 +10,7 @@ import { ErrorMessage } from "@/components/utils/error-message";
 import Form from "next/form";
 import { useActionState } from "react";
 
-export function AccountHeaderCard({
-  user,
-  discountCodes,
-}: {
-  user: User | undefined;
-  discountCodes?: any;
-}) {
+export function AccountHeaderCard({ user }: { user: User | undefined }) {
   const [message, formAction, pending] = useActionState(signOut, null);
   return (
     <div className=" border-b">
@@ -87,18 +81,6 @@ export function AccountHeaderCard({
             <p className="text-foreground">{user?.address || "Not provided"}</p>
           </div>
         </div>
-        {discountCodes && discountCodes.lenth > 0 && (
-          <div className="grid grid-cols-1  gap-4">
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                Available Discount Codes
-              </label>
-              {discountCodes.map((code: any) => {
-                <p className="mt-1 text-foreground">{code}</p>;
-              })}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
