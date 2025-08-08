@@ -19,6 +19,7 @@ import { SignInOAuthButton } from "../utils/signup-oauth-button";
 import { Separator } from "../ui/separator";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { ArrowRightIcon } from "lucide-react";
 
 // Zod validation schema
 const signInSchema = z.object({
@@ -163,11 +164,16 @@ export function SignInCard() {
           <Button
             disabled={pending || !isFormValid()}
             type="submit"
-            className="w-full"
+            className="w-full group"
             id="signin-button"
             data-umami-event="Signin button"
           >
             {pending ? "Signing in..." : "Sign In"}
+            <ArrowRightIcon
+              className="-me-1 opacity-60 transition-transform group-hover:translate-x-0.5"
+              size={16}
+              aria-hidden="true"
+            />
           </Button>
         </Form>
       </CardContent>
