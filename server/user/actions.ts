@@ -471,19 +471,51 @@ export const getUserDetails = async (
   userId: string,
 ): Promise<ApiResult<User>> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
+    // Add validation and logging
+    console.log("getUserDetails called with:", {
+      hasAuthToken: !!authToken,
+      authTokenLength: authToken?.length,
+      userId,
+      userIdType: typeof userId,
+    });
+
+    if (!authToken) {
+      console.error("No auth token provided to getUserDetails");
+      return {
+        success: false,
+        error: "Authentication token is required.",
+      };
+    }
+
+    if (!userId) {
+      console.error("No user ID provided to getUserDetails");
+      return {
+        success: false,
+        error: "User ID is required.",
+      };
+    }
+
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`;
+    console.log("Making request to:", url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
       },
-    );
+    });
+
+    console.log("API response:", {
+      status: response.status,
+      ok: response.ok,
+      statusText: response.statusText,
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error("API error response:", errorText);
+
       if (!errorText.includes("Invalid token")) {
         console.error("Get user details error:", errorText);
       }
@@ -508,6 +540,7 @@ export const getUserDetails = async (
     }
 
     const body: User = await response.json();
+    console.log("Successfully retrieved user details");
     return {
       success: true,
       data: body,
@@ -1396,20 +1429,48 @@ export async function addToNewsletter(formData: FormData) {
 }
 
 export async function getUserDiscountCodes(authToken: string, userID: string) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/discount-codes`,
-    {
+  try {
+    console.log("getUserDiscountCodes called with:", {
+      hasAuthToken: !!authToken,
+      userID,
+      userIDType: typeof userID,
+    });
+
+    if (!authToken) {
+      throw new Error("Authentication token is required");
+    }
+
+    if (!userID) {
+      throw new Error("User ID is required");
+    }
+
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userID}/discount-codes`;
+    console.log("Making discount codes request to:", url);
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       },
-    },
-  );
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch discount codes");
+    console.log("Discount codes API response:", {
+      status: response.status,
+      ok: response.ok,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Discount codes API error:", errorText);
+      throw new Error(`Failed to fetch discount codes: ${errorText}`);
+    }
+
+    const body = await response.json();
+    console.log("Successfully retrieved discount codes");
+    return body;
+  } catch (error) {
+    console.error("getUserDiscountCodes error:", error);
+    throw error;
   }
-  const body = await response.json();
-  return body;
 }
