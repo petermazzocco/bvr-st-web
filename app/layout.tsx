@@ -8,12 +8,10 @@ import { cookies } from "next/headers";
 import { getCart } from "@/lib/shopify";
 import { CartProvider } from "@/components/cart/cart-context";
 import { AuthProvider } from "@/components/auth/auth-context";
-import { getCollections } from "@/lib/shopify";
 import Script from "next/script";
 import { comingSoonFlag, underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
 import { ComingSoonPage } from "@/components/utils/coming-soon-page";
-import { getAllPartneredStores } from "@/server/vendor/actions";
 import {
   getUserDetails,
   getAuthTokenServer,
@@ -101,11 +99,15 @@ export default async function RootLayout({
   const cartId = cookieStore.get("cartId")?.value;
 
   const cart = getCart(cartId);
-  const collections = await getCollections();
-  const partners = await getAllPartneredStores();
 
-  // Get user membership status
-  let isMember = false;
+  // Get initial auth state server-side
+  let initialAuthState = {
+    token: null as string | null,
+    userId: null as string | null,
+    isAuthenticated: false,
+    isMember: false,
+  };
+
   try {
     const authToken = await getAuthTokenServer();
     const userId = await getUserIdFromTokenServer();
@@ -113,12 +115,22 @@ export default async function RootLayout({
     if (authToken && userId) {
       const userResult = await getUserDetails(authToken, userId);
       if (userResult.success && userResult.data) {
-        isMember = userResult.data.isMember || false;
+        initialAuthState = {
+          token: authToken,
+          userId: userId,
+          isAuthenticated: true,
+          isMember: userResult.data.isMember || false,
+        };
       }
     }
   } catch (error) {
-    // Continue without membership status if error occurs
-    isMember = false;
+    // Continue with default auth state if error occurs
+    initialAuthState = {
+      token: null,
+      userId: null,
+      isAuthenticated: false,
+      isMember: false,
+    };
   }
 
   const isUnderConstructionFlag = await underConstructionFlag();
@@ -127,7 +139,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} antialiased min-h-screen`}>
-        <AuthProvider initialIsMember={isMember}>
+        <AuthProvider initialAuthState={initialAuthState}>
           <CartProvider cartPromise={cart}>
             {isUnderConstructionFlag ? (
               <UnderConstructionPage />
@@ -135,7 +147,7 @@ export default async function RootLayout({
               <ComingSoonPage />
             ) : (
               <>
-                <Navbar collections={collections} partners={partners} />
+                <Navbar />
                 <main>
                   {children}
                   <Toaster closeButton />

@@ -5,50 +5,9 @@ import Cookies from "js-cookie";
 import { AUCTION_PRODUCT_TAG } from "@/lib/constants";
 import { Product } from "@/lib/shopify/types";
 
-/**
- * Sets the authentication token in a secure HTTP-only cookie
- * @param token - JWT authentication token to store
- */
-export const setAuthToken = (token: string) => {
-  Cookies.set("bvrstco_auth", token, {
-    expires: 1, // 1 day
-    secure: true,
-    sameSite: "strict",
-  });
-};
-
-/**
- * Retrieves the authentication token from cookies
- * @returns The stored authentication token, or undefined if not found
- */
-export const getAuthToken = () => {
-  const token = Cookies.get("bvrstco_auth");
-  return token;
-};
-
-/**
- * Removes the authentication token from cookies (for logout)
- */
-export const removeAuthToken = () => {
-  Cookies.remove("bvrstco_auth");
-};
-
-/**
- * Extracts and returns the user ID from a JWT authentication token
- * Decodes the JWT payload and looks for the 'userid' claim
- * @returns The user ID from the token, or null if token is invalid/missing
- */
-export const getUserIdFromToken = (): string | null => {
-  try {
-    const token = Cookies.get("bvrstco_auth");
-    if (!token) return null;
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.userid || null;
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return null;
-  }
-};
+// Note: Authentication token functions have been removed since we now use
+// HTTP-only cookies for security. Token management is handled server-side.
+// Client-side auth state is provided via AuthProvider props from the server.
 
 /**
  * Creates a complete URL by combining a pathname with URL search parameters

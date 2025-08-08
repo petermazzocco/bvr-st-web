@@ -1,31 +1,12 @@
-import { UserIcon } from "lucide-react";
 import { NavSideSheet } from "./side-sheet";
 import Link from "next/link";
-import { CartSheet } from "../cart/cart-sheet";
-import { Collection } from "@/lib/shopify/types";
-import { Vendor } from "@/lib/types";
-import { cookies } from "next/headers";
-import { Button } from "@/components/ui/button";
+import { ProfileDropdown } from "./profile-dropdown";
 
-export async function Navbar({
-  collections,
-  partners,
-}: {
-  collections: Collection[];
-  partners: Vendor[];
-}) {
-  const cookieStore = await cookies();
-  const authTokenCookie = cookieStore.get("bvrstco_auth");
-  const authToken = authTokenCookie?.value || null;
-
+export async function Navbar() {
   return (
     <nav className="fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center p-2 w-full mix-blend-difference">
       <div className="flex items-center">
-        {/*<NavSideSheet
-          collections={collections}
-          partners={partners}
-          className="text-background"
-        />*/}
+        <NavSideSheet />
       </div>
       <div className="flex items-center justify-center">
         <Link href="/">
@@ -33,11 +14,7 @@ export async function Navbar({
         </Link>
       </div>
       <div className="flex items-center justify-end gap-4">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href={!authToken ? "/account" : "/signin"}>
-            <UserIcon className="h-4" />
-          </Link>
-        </Button>
+        <ProfileDropdown />
         {/*<CartSheet />*/}
       </div>
     </nav>

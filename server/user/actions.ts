@@ -525,7 +525,6 @@ export const getUserDetails = async (
     }
 
     const body: User = await response.json();
-    console.log("Successfully retrieved user details");
     return {
       success: true,
       data: body,
@@ -1452,7 +1451,7 @@ export async function getUserDiscountCodes(authToken: string, userID: string) {
     }
 
     const body = await response.json();
-    console.log("Successfully retrieved discount codes");
+
     return body;
   } catch (error) {
     console.error("getUserDiscountCodes error:", error);

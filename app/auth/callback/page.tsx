@@ -1,10 +1,12 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useAuth } from "@/components/auth/auth-context";
 
 export default function Page() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { updateAuthState } = useAuth();
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -60,7 +62,8 @@ export default function Page() {
         })
         .then((data) => {
           if (data.success) {
-            router.push(data.redirectUrl);
+            // Refresh the page to get updated auth state from server
+            window.location.href = data.redirectUrl;
           } else {
             console.error("❌ Token setting failed:", data.error);
             router.push(`/signin?error=${encodeURIComponent(data.error || "Failed to authenticate")}`);
