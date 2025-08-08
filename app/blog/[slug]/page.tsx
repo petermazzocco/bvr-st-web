@@ -79,7 +79,7 @@ export default async function PostPage({
       {/* Main content with container */}
       <main className="container mx-auto max-w-4xl p-8 flex flex-col gap-4">
         <h1 className="text-2xl font-bold mb-8">{post.data?.title || ""}</h1>
-        <div className="prose flex flex-col gap-2">
+        <article className="prose flex flex-col gap-2">
           <p className="text-muted-foreground text-xs">
             {post.data.author} |{" "}
             {new Date(post?.data?.publishedAt).toLocaleDateString()}
@@ -125,7 +125,7 @@ export default async function PostPage({
               }}
             />
           )}
-        </div>
+        </article>
       </main>
     </div>
   );

@@ -17,14 +17,14 @@ export default async function ResetPage({ searchParams }: ResetPageProps) {
 
   return (
     <div className="flex min-h-screen w-full">
-      <div className="hidden md:flex flex-col items-center justify-center w-1/2 py-2">
+      <div className="hidden md:flex flex-col items-center justify-center w-2/5 py-2">
         <ForgotPasswordResetCard
           email={decodeURIComponent(email)}
           code={decodeURIComponent(code)}
         />
       </div>
 
-      <div className="hidden md:block w-1/2 relative">
+      <div className="hidden md:block w-3/5 relative">
         <Image
           src="/auth.jpg"
           alt="Authentication illustration"
