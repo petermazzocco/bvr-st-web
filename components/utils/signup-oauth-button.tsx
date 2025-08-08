@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Form from "next/form";
 import { useActionState } from "react";
 import { ErrorMessage } from "./error-message";
+import { cn } from "@/lib/utils";
 
 interface SignInOAuthButtonProps {
   provider: string;
@@ -54,15 +55,15 @@ export function SignInOAuthButton({
   >(handleOAuthSignIn, null);
 
   // If no children provided, use default dynamic text
-  const buttonContent = children || `Continue with ${providerDisplayName}`;
+  const buttonContent = children || `${providerDisplayName}`;
 
   return (
-    <Form action={formAction}>
+    <Form action={formAction} className="w=full">
       <Button
         type="submit"
         variant={variant}
         size={size}
-        className={className}
+        className={cn(className, "w-full rounded-full")}
         disabled={disabled || pending}
         data-umami-event={`Signin ${provider} button`}
       >

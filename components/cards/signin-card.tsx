@@ -110,15 +110,44 @@ export function SignInCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col-reverse gap-2">
-        <SignInOAuthButton provider="google" className="w-full h-10">
-          <div className="flex flex-row justify-between items-center w-full">
-            Continue With Google
-            <Image src="/google.svg" alt="Google Logo" width={24} height={24} />
-          </div>
-        </SignInOAuthButton>
+        <div className="flex flex-row justify-evenly items-center gap-2">
+          <SignInOAuthButton provider="google" className="w-full h-10">
+            <div className="flex flex-row justify-between items-center w-full">
+              <p className="text-sm pr-2">Google</p>
+              <Image
+                src="/google.svg"
+                alt="Google Logo"
+                width={24}
+                height={24}
+              />
+            </div>
+          </SignInOAuthButton>
+          <SignInOAuthButton provider="facebook" className="w-full h-10">
+            <div className="flex flex-row justify-between items-center w-full">
+              <p className="text-sm pr-2">Facebook</p>
+              <Image
+                src="/facebook.svg"
+                alt="Facebook Logo"
+                width={24}
+                height={24}
+              />
+            </div>
+          </SignInOAuthButton>
+          <SignInOAuthButton provider="discord" className="w-full h-10">
+            <div className="flex flex-row justify-between items-center w-full">
+              <p className="text-sm pr-2">Discord</p>
+              <Image
+                src="/discord.svg"
+                alt="Discord Logo"
+                width={24}
+                height={24}
+              />
+            </div>
+          </SignInOAuthButton>
+        </div>
         <div className="flex flex-row justify-between items-center">
           <Separator className="my-4 flex-1" />
-          <span className="mx-2 text-xs font-muted">OR</span>
+          <span className="mx-2 text-xs font-muted">OR CONTINUE WITH</span>
           <Separator className="my-4 flex-1" />
         </div>
         <Form action={formAction} onSubmit={handleSubmit} className="space-y-4">

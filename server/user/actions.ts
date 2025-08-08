@@ -154,12 +154,12 @@ export const getUserIdFromTokenServer = async (): Promise<string | null> => {
     const token = cookieStore.get("bvrstco_auth");
     if (!token?.value) return null;
     const payload = JSON.parse(atob(token.value.split(".")[1]));
-    
+
     // Check if token is expired
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
       return null;
     }
-    
+
     return payload.userid || null;
   } catch (error) {
     console.error("Error decoding token:", error);
@@ -1214,7 +1214,7 @@ export async function signInWithOAuth(initialState: any, formData: FormData) {
     }
 
     // Validate provider
-    const supportedProviders = ["google"]; // Add more providers as needed
+    const supportedProviders = ["google", "discord", "facebook"]; // Add more providers as needed
     if (!supportedProviders.includes(provider.toLowerCase())) {
       return { error: `Unsupported OAuth provider: ${provider}` };
     }
