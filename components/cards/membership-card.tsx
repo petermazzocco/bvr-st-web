@@ -20,6 +20,7 @@ import Form from "next/form";
 import { redirect } from "next/navigation";
 import { Affiliate } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { ArrowRightIcon } from "lucide-react";
 
 interface MembershipCardProps {
   authToken: string | null;
@@ -60,7 +61,7 @@ export function MembershipCard({
         <Tabs
           value={selectedType}
           onValueChange={setSelectedType}
-          className="w-full"
+          className="w-[400px]"
         >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
@@ -86,7 +87,7 @@ export function MembershipCard({
               </Badge>
               <Separator className="flex-1" />
             </div>
-            <p className="text-xs text-primary font-semibold mt-2">
+            <p className="text-xs text-primary text-center font-semibold mt-2">
               Get 2 months free when you sign up for a yearly membership
             </p>
           </TabsContent>
@@ -94,17 +95,17 @@ export function MembershipCard({
       </div>
       <CardContent>
         <div className="space-y-2">
-          <ul className="space-y-1 text-sm">
+          <ul className="space-y-1 text-sm text-muted-foreground">
             <li>• 10% off all purchases</li>
-            <li>• Access to all auctions</li>
-            <li>• Receive monthly digital perks</li>
-            <li>• Exclusive member-only events</li>
+            <li>• Early access to all new products</li>
+            <li>• Receive free digital perks</li>
+            <li>• Access to exclusive member-only events</li>
             <li>• Priority customer support</li>
           </ul>
         </div>
       </CardContent>
       <CardFooter className="w-full flex flex-col gap-4">
-        {affiliates && (
+        {/*{affiliates && (
           <div className="flex flex-col gap-2">
             <p className="text-xs text-foreground">
               This purchase will support:
@@ -118,7 +119,7 @@ export function MembershipCard({
               Learn more about our affiliate program and transparent pricing
             </Link>
           </div>
-        )}
+        )}*/}
         <Form action={formAction}>
           <input type="hidden" name="userId" value={userId?.toString() || ""} />
           <input type="hidden" name="type" value={selectedType} />
@@ -128,11 +129,16 @@ export function MembershipCard({
           <Button
             disabled={pending}
             type="submit"
-            className="w-full"
+            className="w-full group"
             id="membership-button"
             data-umami-event="Create membership intent button"
           >
             {pending ? "Processing..." : "Start Membership"}
+            <ArrowRightIcon
+              className="-me-1 opacity-60 transition-transform group-hover:translate-x-0.5"
+              size={16}
+              aria-hidden="true"
+            />
           </Button>
         </Form>
         {redirectParams && redirectParams === "/membership" && (

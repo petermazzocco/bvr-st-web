@@ -94,8 +94,15 @@ export default function Page() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Processing authentication...</p>
+        <div className="flex space-x-2 justify-center items-center h-fit">
+          <span className="sr-only">Loading...</span>
+          <div className="h-1.5 w-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+          <div className="h-1.5 w-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+          <div className="h-1.5 w-1.5 bg-muted-foreground rounded-full animate-bounce"></div>
+        </div>
+        <p className="mt-2 text-muted-foreground text-xs">
+          Processing authentication...
+        </p>
       </div>
     </div>
   );
