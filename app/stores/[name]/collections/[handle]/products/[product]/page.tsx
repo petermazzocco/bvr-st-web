@@ -6,6 +6,7 @@ import { PartnerProductDescription } from "@/components/product/partner-product-
 import { Gallery } from "@/components/product/product-gallery";
 import { getPartnerStoreProductByHandle } from "@/server/vendor/actions";
 import { generateProductMetadata } from "@/lib/metadata";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string; handle: string; product: string }>;
@@ -83,7 +84,7 @@ export default async function Page(props: {
         <div className="min-h-screen flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 h-full">
             <Suspense
-              fallback={<div className="w-full h-full overflow-hidden" />}
+              fallback={<Skeleton className="w-full h-full overflow-hidden" />}
             >
               <Gallery
                 images={product.images.edges.slice(0, 5).map((edge) => ({

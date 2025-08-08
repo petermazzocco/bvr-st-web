@@ -7,6 +7,8 @@ import { AccountHeaderCard } from "@/components/cards/account-header-card";
 import { AccountOrdersCard } from "@/components/cards/account-orders-card";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function Page() {
   const cookieStore = await cookies();
@@ -38,10 +40,14 @@ export default async function Page() {
 
   return (
     <div className="min-h-screen pt-16">
-      <AccountHeaderCard user={user?.data} discountCodes={discountCodes} />
+      <Suspense fallback={<Skeleton className="h-52 w-full " />}>
+        <AccountHeaderCard user={user?.data} discountCodes={discountCodes} />
+      </Suspense>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="space-y-2">
-          {orders && <AccountOrdersCard orders={orders} />}
+          <Suspense fallback={<Skeleton className="h-screen w-full " />}>
+            {orders && <AccountOrdersCard orders={orders} />}
+          </Suspense>
         </div>
       </div>
     </div>
