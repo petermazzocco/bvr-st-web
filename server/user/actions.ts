@@ -471,14 +471,6 @@ export const getUserDetails = async (
   userId: string,
 ): Promise<ApiResult<User>> => {
   try {
-    // Add validation and logging
-    console.log("getUserDetails called with:", {
-      hasAuthToken: !!authToken,
-      authTokenLength: authToken?.length,
-      userId,
-      userIdType: typeof userId,
-    });
-
     if (!authToken) {
       console.error("No auth token provided to getUserDetails");
       return {
@@ -496,7 +488,6 @@ export const getUserDetails = async (
     }
 
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/account/${userId}`;
-    console.log("Making request to:", url);
 
     const response = await fetch(url, {
       method: "GET",
@@ -504,12 +495,6 @@ export const getUserDetails = async (
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-    });
-
-    console.log("API response:", {
-      status: response.status,
-      ok: response.ok,
-      statusText: response.statusText,
     });
 
     if (!response.ok) {

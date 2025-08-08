@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ErrorMessage } from "@/components/utils/error-message";
-import { AddressAutofillInput } from "../utils/address-autofill-input";
 import { SignInOAuthButton } from "../utils/signup-oauth-button";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
@@ -29,10 +28,6 @@ const signUpSchema = z
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     email: z.email("Please enter a valid email address"),
-    phone: z.string().optional(),
-    address: z.string().optional(),
-    addressLine2: z.string().optional(),
-    addressLine3: z.string().optional(),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters long")
@@ -60,10 +55,6 @@ export function SignUpCard() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
-    address: "",
-    addressLine2: "",
-    addressLine3: "",
     password: "",
     confirmPassword: "",
     termsAccepted: false,
@@ -109,14 +100,6 @@ export function SignUpCard() {
     }
   };
 
-  // Handle address selection from Mapbox
-  const handleAddressSelect = (cityStateZip: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      addressLine3: cityStateZip,
-    }));
-  };
-
   // Validate form using Zod
   const validateForm = () => {
     try {
@@ -147,38 +130,8 @@ export function SignUpCard() {
       return;
     }
 
-    // Combine all address fields into a single address string
-    const addressParts = [
-      formData.address,
-      formData.addressLine2,
-      formData.addressLine3,
-    ].filter(Boolean); // Remove empty/undefined values
-
-    const combinedAddress = addressParts.join(", ");
-
     // Update the form data to include the combined address
     const form = e.target as HTMLFormElement;
-    const addressInput = form.querySelector(
-      'input[name="address"]',
-    ) as HTMLInputElement;
-    if (addressInput) {
-      addressInput.value = combinedAddress || "";
-    }
-
-    // Remove addressLine2, addressLine3, and confirmPassword from form submission by clearing their names
-    const addressLine2Input = form.querySelector(
-      'input[name="addressLine2"]',
-    ) as HTMLInputElement;
-    if (addressLine2Input) {
-      addressLine2Input.name = ""; // Remove the name so it doesn't get submitted
-    }
-
-    const addressLine3Input = form.querySelector(
-      'input[name="addressLine3"]',
-    ) as HTMLInputElement;
-    if (addressLine3Input) {
-      addressLine3Input.name = ""; // Remove the name so it doesn't get submitted
-    }
 
     const confirmPasswordInput = form.querySelector(
       'input[name="confirmPassword"]',
@@ -327,76 +280,6 @@ export function SignUpCard() {
             {errors.email && (
               <p className="text-xs text-destructive">{errors.email}</p>
             )}
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="phone"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Phone Number (Optional)
-            </label>
-            <Input
-              type="tel"
-              name="phone"
-              placeholder="+1 (555) 123-4567"
-              value={formData.phone || ""}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="address"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Address (Optional)
-            </label>
-            <AddressAutofillInput
-              name="address"
-              value={formData.address || ""}
-              onChangeAction={handleInputChange}
-              onAddressSelect={handleAddressSelect}
-              placeholder="660 SW 26th St"
-              className={errors.address ? "bored-destructive" : ""}
-            />
-            {errors.address && (
-              <p className="text-xs text-destructive">{errors.address}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="addressLine2"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Apartment, Suite, Unit (Optional)
-            </label>
-            <Input
-              type="text"
-              name="addressLine2"
-              placeholder="Section 222"
-              value={formData.addressLine2 || ""}
-              onChange={handleInputChange}
-              autoComplete="shipping address-line2"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label
-              htmlFor="addressLine3"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              City, State, ZIP Code (Optional)
-            </label>
-            <Input
-              type="text"
-              name="addressLine3"
-              placeholder="Corvallis, OR 97331"
-              value={formData.addressLine3 || ""}
-              onChange={handleInputChange}
-              autoComplete="shipping address-level2"
-            />
           </div>
 
           <div className="space-y-2">
