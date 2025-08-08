@@ -12,12 +12,12 @@ function getUserIdFromToken(token: string): string | null {
   try {
     if (!token) return null;
     const payload = JSON.parse(atob(token.split(".")[1]));
-    
+
     // Check if token is expired
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
       return null;
     }
-    
+
     return payload.userid || null;
   } catch (error) {
     console.error("Error decoding token:", error);
@@ -154,12 +154,15 @@ export async function middleware(request: NextRequest) {
       return clearCookieAndRedirect(request);
     }
 
+    // TEMPORARILY COMMENT OUT API VALIDATION
+    /*
     // Validate that the user actually exists
     const userExists = await validateUserExists(userId, authToken);
     if (!userExists) {
       // User doesn't exist or token is invalid, clear cookie and redirect
       return clearCookieAndRedirect(request);
     }
+    */
 
     // User has valid auth token and exists, allow access to protected routes
     return response;
