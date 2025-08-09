@@ -38,9 +38,7 @@ export async function NavSideSheet() {
       >
         <div className="flex h-full w-full flex-col">
           <SheetHeader className="p-4 pb-4">
-            <SheetTitle className="text-left text-xl font-bold">
-              Collections
-            </SheetTitle>
+            <SheetTitle className="text-left text-xl">Collections</SheetTitle>
           </SheetHeader>
 
           {/* Collections Section */}

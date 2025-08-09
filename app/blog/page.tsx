@@ -15,7 +15,7 @@ export default async function Page() {
 
   return (
     <main className="mx-auto min-h-screen min-w-screen p-8">
-      <h1 className="text-md uppercase font-bold mb-8">Announcements</h1>
+      <h1 className="text-md uppercase mb-8">Announcements</h1>
       <Suspense
         fallback={
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
@@ -51,7 +51,7 @@ export default async function Page() {
                     {post.title}
                   </h2>
 
-                  <div className="mb-1 flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="mb-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <span>{post.author}</span>
                     </div>

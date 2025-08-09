@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/navbar";
-import { Roboto } from "next/font/google";
+import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "sonner";
@@ -84,8 +84,8 @@ export const metadata: Metadata = {
   },
 };
 
-const roboto = Roboto({
-  variable: "--font-roboto",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -138,7 +138,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${roboto.variable} antialiased min-h-screen`}>
+      <head>
+        <link rel="stylesheet" href="https://use.typekit.net/oxp4xny.css" />
+      </head>
+      <body className={`${inter.variable} antialiased min-h-screen`}>
         <AuthProvider initialAuthState={initialAuthState}>
           <CartProvider cartPromise={cart}>
             {isUnderConstructionFlag ? (

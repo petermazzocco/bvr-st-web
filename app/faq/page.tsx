@@ -27,7 +27,7 @@ export default function Page() {
           }}
         />
         <div className="relative z-10 text-center text-background">
-          <h1 className="text-8xl font-bold tracking-wider">FAQ</h1>
+          <h1 className="text-8xl">FAQ</h1>
         </div>
       </div>
 
