@@ -122,7 +122,7 @@ export default async function Page(props: {
                           id="product-title-link"
                           data-umami-event="Product title clicked"
                         >
-                          <h3 className="text-xs font-medium text-foreground">
+                          <h3 className="text-sm font-medium text-foreground">
                             {product.title}
                           </h3>
                         </Link>

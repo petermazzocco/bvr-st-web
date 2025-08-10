@@ -24,7 +24,7 @@ export function Gallery({
 
   return (
     <form>
-      <div className="relative aspect-square h-fit md:h-screen w-full overflow-hidden ">
+      <div className="relative aspect-square md:aspect-auto md:h-screen w-full">
         {images.length > 1 && (
           <>
             <button
@@ -52,12 +52,10 @@ export function Gallery({
         {images[imageIndex] && (
           <Zoom canSwipeToUnzoom={true} IconUnzoom={X}>
             <Image
-              className="h-full w-full   object-cover"
-              sizes="(min-width: 1024px) 100vw, 100vw"
+              className="h-full w-full   object-contain"
               alt={images[imageIndex]?.altText as string}
               src={images[imageIndex]?.src as string}
-              width={1024}
-              height={1024}
+              fill
             />
           </Zoom>
         )}

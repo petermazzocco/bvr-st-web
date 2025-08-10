@@ -119,7 +119,7 @@ export default async function Page(props: {
               fallback={<Skeleton className="w-full h-full overflow-hidden" />}
             >
               <Gallery
-                images={product.images.slice(0, 5).map((image: Image) => ({
+                images={product.images.slice(0, 10).map((image: Image) => ({
                   src: image.url,
                   altText: image.altText,
                 }))}
