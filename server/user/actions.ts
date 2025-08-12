@@ -374,7 +374,6 @@ export async function signUp(initialState: any, formData: FormData) {
   };
 
   const redirectParam = formData.get("redirect") as string;
-  console.log(`[SIGNUP] Redirect param received: ${redirectParam}`);
 
   let shouldRedirect = false;
   let redirectUrl = "";
@@ -455,7 +454,6 @@ export async function signUp(initialState: any, formData: FormData) {
       } else {
         redirectUrl = body.callbackUrl || "/account";
       }
-      console.log(`[SIGNUP] Will redirect to: ${redirectUrl}`);
     } else {
       return { error: "No authentication token received. Please try again." };
     }
