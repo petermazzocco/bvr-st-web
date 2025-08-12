@@ -86,6 +86,9 @@ export async function middleware(request: NextRequest) {
   const isUnderConstructionFlag = await underConstructionFlag();
   const isComingSoonFlag = await comingSoonFlag();
   const { pathname, searchParams } = request.nextUrl;
+  
+  // Debug logging
+  console.log(`[MIDDLEWARE] Path: ${pathname}, Search: ${searchParams.toString()}`);
 
   // Capture UpPromote affiliate tracking parameter
   const response = NextResponse.next();
@@ -174,10 +177,21 @@ export async function middleware(request: NextRequest) {
   );
 
   if (isPublicRoute && authToken) {
+    console.log(`[MIDDLEWARE] Public route with auth token - Path: ${pathname}, Token exists: ${!!authToken}`);
     // Check if token is valid before redirecting to account
     if (isValidJWT(authToken)) {
+      // Check if there's a redirect parameter to preserve
+      const redirectParam = searchParams.get("redirect");
+      console.log(`[MIDDLEWARE] Valid JWT, redirect param: ${redirectParam}`);
+      if (redirectParam) {
+        // User is authenticated and has a redirect, honor it
+        const redirectUrl = new URL(redirectParam, request.url);
+        console.log(`[MIDDLEWARE] Redirecting to: ${redirectUrl.toString()}`);
+        return NextResponse.redirect(redirectUrl);
+      }
       // User is authenticated but trying to access signin/signup, redirect to account
       const accountUrl = new URL("/account", request.url);
+      console.log(`[MIDDLEWARE] No redirect param, redirecting to account: ${accountUrl.toString()}`);
       return NextResponse.redirect(accountUrl);
     } else {
       // Invalid token, clear it and let them continue to signin/signup

@@ -38,8 +38,8 @@ const signUpSchema = z
     termsAccepted: z.boolean().refine((val) => val === true, {
       message: "You must accept the terms and conditions",
     }),
-    optInMarketing: z.boolean().optional(),
-    optInRewards: z.boolean().optional(),
+    optInMarketing: z.boolean(),
+    optInRewards: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -363,7 +363,7 @@ export function SignUpCard() {
             </ul>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-start space-x-3">
             <Checkbox
               id="termsAccepted"
               name="termsAccepted"
@@ -381,12 +381,14 @@ export function SignUpCard() {
             <div className="flex flex-col">
               <label
                 htmlFor="termsAccepted"
-                className="text-xs leading-none text-muted-foreground cursor-pointer"
+                className="text-xs  text-muted-foreground cursor-pointer"
               >
                 I agree to the{" "}
                 <Link href="/legal/terms" target="_blank" className="underline">
                   Terms and Conditions
                 </Link>
+                . By signing up, you also sign up for updates and notifications.
+                You can unsubscribe from this at any time.
               </label>
               {errors.termsAccepted && (
                 <p className="text-xs text-destructive mt-1">
@@ -394,53 +396,6 @@ export function SignUpCard() {
                 </p>
               )}
             </div>
-          </div>
-
-          <div className="flex items-center  space-x-3">
-            <Checkbox
-              id="optInMarketing"
-              name="optInMarketing"
-              className="mt-1"
-              checked={formData.optInMarketing || false}
-              onCheckedChange={(checked) =>
-                handleCheckboxChange("optInMarketing", checked === true)
-              }
-            />
-            <input
-              type="hidden"
-              name="optInMarketing"
-              value={formData.optInMarketing ? "on" : ""}
-            />
-            <label
-              htmlFor="optInMarketing"
-              className="text-xs leading-none text-muted-foreground cursor-pointer"
-            >
-              I would like to receive marketing communications about the latest
-              products and services offered by BVR ST CO.
-            </label>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <Checkbox
-              id="optInRewards"
-              name="optInRewards"
-              className="mt-1"
-              checked={formData.optInRewards || false}
-              onCheckedChange={(checked) =>
-                handleCheckboxChange("optInRewards", checked === true)
-              }
-            />
-            <input
-              type="hidden"
-              name="optInRewards"
-              value={formData.optInRewards ? "on" : ""}
-            />
-            <label
-              htmlFor="optInRewards"
-              className="text-xs leading-none text-muted-foreground cursor-pointer"
-            >
-              I would like to earn BVR ST CO rewards.
-            </label>
           </div>
 
           <Button

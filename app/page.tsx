@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
@@ -5,69 +7,71 @@ import Link from "next/link";
 export default function Page() {
   return (
     <>
-      <div className="h-screen bg-[url('/hero.jpg')] bg-cover bg-center bg-no-repeat flex items-end justify-center pb-[15vh]">
-        <div className="z-10 gap-2 flex flex-col text-center text-background max-w-md w-full px-4">
+      <div className="sticky inset-0 h-screen flex flex-col items-center justify-end pb-[10vh] overflow-hidden">
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          disablePictureInPicture
+          controlsList="nodownload nofullscreen noremoteplayback"
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <source
+            src="https://video.twimg.com/amplify_video/1953551064374161409/vid/avc1/1350x1080/4exec0o_lFWMaffn.mp4"
+            type="video/mp4"
+          />
+          {/* Fallback for browsers that don't support video */}
+          Your browser does not support the video tag.
+        </video>
+        <div
+          className="absolute inset-0 bg-black/30"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E")`,
+            mixBlendMode: "overlay",
+          }}
+        ></div>
+
+        {/* Content positioned in bottom quarter */}
+        <div className="relative z-10 gap-2 flex flex-col text-center text-background max-w-lg w-full px-4 mix-blend-difference">
           <h2 className="text-2xl font-base">Introducing</h2>
           <h1 className="text-5xl font-base">BEAVER STREET CO.</h1>
           <p className="text-md font-semibold">A New Culture.</p>
-          <div className="flex flex-row justify-between items-center w-full gap-4 mt-4">
-            <Button
-              variant={"outline"}
-              asChild
-              className="group flex-1 min-w-0"
+        </div>
+
+        {/* Buttons with max-w-lg */}
+        <div className="relative z-10 flex flex-row justify-between items-center max-w-lg w-full px-4 gap-4 mt-4 isolate">
+          <Button variant={"outline"} asChild className="group flex-1 min-w-0">
+            <Link
+              href={"/blog/oregon-states-revolution"}
+              id="learn-more-button"
+              data-umami-event="Homepage learn more clicked"
+              className="flex items-center justify-center w-full"
             >
-              <Link
-                href={"/blog/bvr-str-co-a-new-beaver-initiative"}
-                id="learn-more-button"
-                data-umami-event="Homepage learn more clicked"
-                className="flex items-center justify-center w-full"
-              >
-                LEARN MORE
-                <ArrowRightIcon
-                  className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
-                  size={16}
-                  aria-hidden="true"
-                />
-              </Link>
-            </Button>
-            <Button
-              variant={"outline"}
-              asChild
-              className="group flex-1 min-w-0"
+              LEARN MORE
+              <ArrowRightIcon
+                className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
+                size={16}
+                aria-hidden="true"
+              />
+            </Link>
+          </Button>
+          <Button variant={"outline"} asChild className="group flex-1 min-w-0">
+            <Link
+              href={"/signup?redirect=/membership"}
+              className="flex items-center justify-center w-full"
             >
-              <Link
-                href={"/signup?redirect=/membership"}
-                className="flex items-center justify-center w-full"
-              >
-                SIGN UP NOW
-                <ArrowRightIcon
-                  className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
-                  size={16}
-                  aria-hidden="true"
-                />
-              </Link>
-            </Button>
-          </div>
+              SIGN UP NOW
+              <ArrowRightIcon
+                className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
+                size={16}
+                aria-hidden="true"
+              />
+            </Link>
+          </Button>
         </div>
       </div>
-      {/*<Link
-          href={"/collections/the-beaver-state-tour"}
-          className="h-screen bg-[url('/auth.jpg')] bg-cover bg-center bg-no-repeat flex items-end  justify-center pb-[20vh]"
-        >
-          <div className="z-10 gap-2 flex flex-col text-center text-background">
-            <h2 className="text-lg font-base tracking-wider">Now Live</h2>
-            <h1 className="text-3xl font-bold tracking-wider">
-              The Beaver State Tour
-            </h1>
-            <Button
-              variant={"outline"}
-              id="homepage-shop-now-button"
-              data-umami-event="Homepage shop now clicked"
-            >
-              BUY NOW
-            </Button>
-          </div>
-        </Link>*/}
     </>
   );
 }

@@ -96,11 +96,9 @@ export function MembershipCard({
       <CardContent>
         <div className="space-y-2">
           <ul className="space-y-1 text-sm text-muted-foreground">
-            <li>• 10% off all purchases</li>
-            <li>• Early access to all new products</li>
-            <li>• Receive free digital perks</li>
-            <li>• Access to exclusive member-only events</li>
-            <li>• Priority customer support</li>
+            <li>• 10% off all BVR ST CO products</li>
+            <li>• Early access to exclusive products and events</li>
+            <li>• 2x points multiplier for every purchase</li>
           </ul>
         </div>
       </CardContent>
@@ -142,17 +140,25 @@ export function MembershipCard({
           </Button>
         </Form>
         {redirectParams && redirectParams === "/membership" && (
-          <Link href="/account">
-            <Button
-              variant={"link"}
-              size={"sm"}
-              className="w-full text-muted-foreground text-xs"
-              id="skipped-membership-button"
-              data-umami-event="Skipped creating membership event"
-            >
-              Skip and Continue To Account
-            </Button>
-          </Link>
+          <>
+            <div className="flex flex-row justify-between items-center">
+              <Separator className="my-2 flex-1" />
+              <span className="mx-2 text-xs font-muted">OR</span>
+              <Separator className="my-2 flex-1" />
+            </div>
+
+            <Link href="/account">
+              <Button
+                variant={"link"}
+                size={"sm"}
+                className="w-full text-muted-foreground text-xs"
+                id="skipped-membership-button"
+                data-umami-event="Skipped creating membership event"
+              >
+                Skip and Continue To Your Account
+              </Button>
+            </Link>
+          </>
         )}
         {message?.error && (
           <div className="p-3 text-xs text-destructive bg-destructive/10 border border-destructive/20 rounded-md">

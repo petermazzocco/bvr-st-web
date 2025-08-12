@@ -19,9 +19,9 @@ export default async function Page() {
       <Suspense
         fallback={
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
-            <Skeleton className="h-60 w-60" />
-            <Skeleton className="h-60 w-60" />
-            <Skeleton className="h-60 w-60" />
+            <Skeleton className="h-[300px] w-[300px]" />
+            <Skeleton className="h-[300px] w-[300px]" />
+            <Skeleton className="h-[300px] w-[300px]" />
           </div>
         }
       >
@@ -32,7 +32,7 @@ export default async function Page() {
                 <AspectRatio ratio={1 / 1}>
                   <Suspense
                     fallback={
-                      <Skeleton className="h-full w-full object-cover" />
+                      <Skeleton className="h-full w-full object-cover rounded-lg" />
                     }
                   >
                     <Image
@@ -41,12 +41,12 @@ export default async function Page() {
                       alt={post.title}
                       width={200}
                       height={240}
-                      className="h-full w-full object-cover "
+                      className="h-full w-full object-cover rounded-lg "
                     />
                   </Suspense>
                 </AspectRatio>
 
-                <div className="p-2 flex flex-col items-center justify-center">
+                <div className="p-2 flex flex-col items-start justify-center">
                   <h2 className="mb-2 text-sm font-semibold leading-tight group-hover:text-primary">
                     {post.title}
                   </h2>

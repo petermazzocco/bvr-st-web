@@ -37,6 +37,7 @@ export default async function MembershipPage({
   searchParams,
 }: MembershipPageProps) {
   const params = await searchParams;
+  console.log(`[MEMBERSHIP PAGE] Search params:`, params);
   const authToken = await getAuthTokenServer();
   const userId = await getUserIdFromTokenServer();
   const affiliates = await getAffiliates();

@@ -71,23 +71,43 @@ export default async function PostPage({
 
   return (
     <div className="min-h-screen">
-      <Suspense fallback={<Skeleton className="object-cover w-full h-full" />}>
+      {/* Desktop: Fixed parallax background image */}
+      <Suspense
+        fallback={
+          <Skeleton className="hidden md:block fixed inset-0 w-full h-full" />
+        }
+      >
         {postImageUrl && (
-          <div className="w-full">
-            <PostImage post={post} />
+          <div className="hidden md:block fixed inset-0 w-full h-full -z-10">
+            <PostImage post={post} isParallax={true} />
           </div>
         )}
       </Suspense>
 
-      <main className="container mx-auto max-w-4xl p-8 flex flex-col gap-4">
+      {/* Mobile: Regular banner image */}
+      <Suspense
+        fallback={
+          <Skeleton className="block md:hidden object-cover w-full h-full" />
+        }
+      >
+        {postImageUrl && (
+          <div className="block md:hidden w-full">
+            <PostImage post={post} isParallax={false} />
+          </div>
+        )}
+      </Suspense>
+
+      {/* Desktop: Spacer to push content down initially */}
+      <div className="hidden md:block h-[calc(10vh-64px)]" />
+
+      {/* Content */}
+      <main className="relative z-10 bg-background container mx-auto max-w-4xl p-8 flex flex-col gap-4 min-h-screen rounded-none sm:rounded-lg mb-10">
         <article className="prose flex flex-col gap-2">
           <Suspense fallback={<Skeleton className="w-14 h-5" />}>
-            <h1 className="text-2xl font-bold mb-8">
+            <h1 className="text-2xl font-bold mb-2">
               {post.data?.title || ""}
             </h1>
-          </Suspense>
-          <Suspense fallback={<Skeleton className="w-14 h-5" />}>
-            <p className="text-muted-foreground text-xs">
+            <p className="text-muted-foreground text-xs mb-2">
               {post.data.author} |{" "}
               {new Date(post?.data?.publishedAt).toLocaleDateString()}
             </p>
