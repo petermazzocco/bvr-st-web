@@ -54,14 +54,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BVR ST CO",
     description:
-      "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
+      "The new way to support Oregon State University student-athletes.",
     url: "https://bvrstco.com",
     siteName: "BVR ST CO",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://bvrstco.com/og-image.jpg",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "BVR ST CO",
@@ -72,10 +72,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BVR ST CO",
     description:
-      "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
+      "The new way to support Oregon State University student-athletes.",
     creator: "@bvrstco",
     site: "@bvrstco",
-    images: ["https://bvrstco.com/og-image.jpg"],
+    images: ["/logo.png"],
   },
   metadataBase: new URL("https://bvrstco.com"),
   alternates: {
