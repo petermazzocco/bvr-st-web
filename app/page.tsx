@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function Page() {
   return (
     <>
-      <div className="sticky inset-0 h-screen flex flex-col items-center justify-end pb-[10vh] overflow-hidden">
+      <div className="sticky inset-0 h-screen flex flex-col items-center justify-end pb-[30vh] sm:pb-[10vh] overflow-hidden">
         <video
           className="absolute inset-0 w-full h-full object-cover"
           autoPlay
