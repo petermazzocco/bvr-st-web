@@ -32,7 +32,7 @@ export const GetNotifiedModal = () => {
             />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[400px]">
           <DialogHeader>
             <DialogTitle>The New Oregon State Starts With You</DialogTitle>
             <DialogDescription>

@@ -77,18 +77,7 @@ export default async function PostPage({
       <div className="hidden md:block h-[calc(10vh-64px)]" />
 
       {/* Content */}
-      <main className="relative z-10 bg-background container mx-auto max-w-4xl p-8 flex flex-col gap-4 min-h-screen rounded-none sm:rounded-lg mb-10">
-        <Suspense
-          fallback={
-            <Skeleton className="object-cover w-full h-full rounded-lg" />
-          }
-        >
-          {postImageUrl && (
-            <div className="w-full rounded-lg">
-              <PostImage post={post} isParallax={false} />
-            </div>
-          )}
-        </Suspense>
+      <main className="relative z-10 bg-background container border border-primary/50 mx-auto max-w-4xl p-8 flex flex-col gap-4 min-h-screen rounded-none sm:rounded-lg mb-10">
         <article className="prose flex flex-col gap-2">
           <Suspense fallback={<Skeleton className="w-14 h-5" />}>
             <h1 className="text-2xl font-bold mb-2">
@@ -137,7 +126,7 @@ export default async function PostPage({
                   marks: {
                     link: ({ value, children }) => (
                       <a
-                        className="text-blue-500 hover:underline"
+                        className="text-primary hover:underline"
                         href={value.href}
                         target="_blank"
                         rel="noopener noreferrer"

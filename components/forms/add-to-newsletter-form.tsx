@@ -3,9 +3,10 @@ import { addToNewsletter } from "@/server/user/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Form from "next/form";
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { z } from "zod";
 import { ArrowUpRightIcon } from "lucide-react";
+import { toast } from "sonner";
 
 const addToNewsLetterSchema = z.object({
   fullName: z.string().min(2).max(100),
@@ -23,6 +24,17 @@ export const AddToNewsletterForm = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
     {},
   );
+
+  // Handle server action messages with toast
+  useEffect(() => {
+    if (message) {
+      if (message.includes("Successfully")) {
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    }
+  }, [message]);
 
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,7 +134,6 @@ export const AddToNewsletterForm = () => {
           aria-hidden="true"
         />
       </Button>
-      <p className="text-xs text-muted-foreground">{message}</p>
     </Form>
   );
 };

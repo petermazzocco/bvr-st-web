@@ -8,7 +8,7 @@ export function Footer() {
           {/* Left side - Logo, Name, Copyright */}
           <div className="flex flex-col space-y-4 lg:max-w-sm">
             <div className="flex items-center space-x-2">
-              <h2 className="text-lg">BEAVER STREET CO.</h2>
+              <h2 className="text-lg">BVR ST CO.</h2>
             </div>
             <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} Beaver Street Co LLC. All rights
