@@ -1380,45 +1380,61 @@ export async function exchangeOAuthCode(formData: FormData) {
  * @param formData - FormData containing email and fullName
  * @returns Promise that redirects with success message or throws error on failure
  */
-export async function addToNewsletter(formData: FormData) {
-  const requestData = {
-    email: formData.get("email"),
-    fullName: formData.get("fullName"),
-  };
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/newsletter`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    },
-  );
-
-  const responseText = await response.text();
-
-  if (!response.ok) {
-    console.error(
-      "Newsletter subscription failed:",
-      response.status,
-      responseText,
-    );
-    throw new Error(`Newsletter subscription failed: ${responseText}`);
-  }
-
-  let body: { message: string };
+export async function addToNewsletter(initialState: any, formData: FormData) {
   try {
-    body = JSON.parse(responseText);
-  } catch (error) {
-    console.error("Invalid JSON response:", responseText);
-    throw new Error("Invalid response from server");
-  }
+    const requestData = {
+      email: formData.get("email"),
+      fullName: formData.get("fullName"),
+    };
 
-  // Redirect to current page with success parameter
-  const { redirect } = await import("next/navigation");
-  redirect("/?newsletter=true");
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/newsletter`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      },
+    );
+
+    const responseText = await response.text();
+
+    if (!response.ok) {
+      console.error(
+        "Newsletter subscription failed:",
+        response.status,
+        responseText,
+      );
+
+      if (response.status === 400) {
+        if (responseText.includes("email")) {
+          return "Please provide a valid email address.";
+        }
+        return "Invalid information provided. Please check your details.";
+      }
+      if (response.status === 409) {
+        return "You're already subscribed to our newsletter!";
+      }
+      if (response.status >= 500) {
+        return "Server error. Please try again later.";
+      }
+      return "Newsletter subscription failed. Please try again.";
+    }
+
+    let body: { message: string };
+    try {
+      body = JSON.parse(responseText);
+    } catch (error) {
+      console.error("Invalid JSON response:", responseText);
+      return "Invalid response from server. Please try again.";
+    }
+
+    return "Successfully subscribed to newsletter!";
+  } catch (error) {
+    console.error("Newsletter subscription error:", error);
+    return "Network error. Please check your connection and try again.";
+  }
 }
 
 export async function getUserDiscountCodes(authToken: string, userID: string) {

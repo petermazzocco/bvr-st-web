@@ -9,9 +9,8 @@ import { getCart } from "@/lib/shopify";
 import { CartProvider } from "@/components/cart/cart-context";
 import { AuthProvider } from "@/components/auth/auth-context";
 import Script from "next/script";
-import { comingSoonFlag, underConstructionFlag } from "@/lib/flags";
+import { underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
-import { ComingSoonPage } from "@/components/utils/coming-soon-page";
 import {
   getUserDetails,
   getAuthTokenServer,
@@ -134,20 +133,24 @@ export default async function RootLayout({
   }
 
   const isUnderConstructionFlag = await underConstructionFlag();
-  const isComingSoonFlag = await comingSoonFlag();
 
   return (
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/oxp4xny.css" />
       </head>
-      <body className={`${inter.variable} antialiased min-h-screen`}>
+      <body
+        className={`${inter.variable} antialiased min-h-screen`}
+        style={{
+          backgroundImage: "url(/topo.jpeg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <AuthProvider initialAuthState={initialAuthState}>
           <CartProvider cartPromise={cart}>
             {isUnderConstructionFlag ? (
               <UnderConstructionPage />
-            ) : !isUnderConstructionFlag && isComingSoonFlag ? (
-              <ComingSoonPage />
             ) : (
               <>
                 <Navbar />

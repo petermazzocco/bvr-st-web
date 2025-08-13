@@ -4,8 +4,16 @@ import { comingSoonFlag, underConstructionFlag } from "./lib/flags";
 
 // Define the routes that require authentication
 const PROTECTED_ROUTES = ["/account"];
-const PUBLIC_ROUTES = ["/signin", "/signup"];
-const BLOCKED_ROUTES = ["/collections", "/products", "/stores"];
+const PUBLIC_ROUTES = ["/"];
+const BLOCKED_ROUTES = [
+  "/collections",
+  "/products",
+  "/stores",
+  "/signin",
+  "/signup",
+  "/account",
+  "/membership",
+];
 
 // Helper function to get user ID from JWT token
 function getUserIdFromToken(token: string): string | null {

@@ -3,10 +3,10 @@ import Image from "next/image";
 import { ApiResult, Post } from "@/lib/types";
 import { AspectRatio } from "../ui/aspect-ratio";
 
-export const PostImage = ({ 
-  post, 
-  isParallax = false 
-}: { 
+export const PostImage = ({
+  post,
+  isParallax = false,
+}: {
   post: ApiResult<Post>;
   isParallax?: boolean;
 }) => {
@@ -31,7 +31,7 @@ export const PostImage = ({
         <Image
           src={postImageUrl || ""}
           alt={post.data?.title || ""}
-          className="object-cover w-full h-full"
+          className="object-cover w-full h-full rounded-lg"
           fill
           priority
         />

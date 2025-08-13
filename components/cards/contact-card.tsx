@@ -22,8 +22,8 @@ const contactSchema = z.object({
   subject: z.string().min(1, "Subject is required"),
   message: z
     .string()
-    .min(1, "Message is required")
-    .min(10, "Message must be at least 10 characters long"),
+    .min(10, "Message must be at least 10 characters long")
+    .max(500, "Message must be at most 500 characters long"),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
@@ -104,7 +104,7 @@ export function ContactCard() {
   };
 
   return (
-    <Card className="mx-auto max-w-2xl border-none">
+    <Card className="mx-auto max-w-2xl border-none rouded-lg">
       <CardHeader>
         <CardTitle className="text-2xl">Contact Us</CardTitle>
         <CardDescription>
