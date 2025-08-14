@@ -8,6 +8,10 @@ export default function Page() {
   return (
     <>
       <div className="sticky inset-0 h-screen flex flex-col items-center justify-end pb-[30vh] sm:pb-[10vh] overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url("/main-fallback.png")' }}
+        />
         <HeroVideo />
         <div className="relative z-10 gap-2 flex flex-col text-center text-background max-w-lg w-full px-4 mix-blend-hard-light">
           <h2 className="text-2xl font-base">Introducing</h2>
