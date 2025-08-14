@@ -4,12 +4,15 @@ import { useState } from "react";
 
 export const HeroVideo = () => {
   const [videoError, setVideoError] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   return (
     <>
       {!videoError && (
         <video
-          className="absolute inset-0 w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            videoLoaded ? "opacity-100" : "opacity-0"
+          }`}
           autoPlay
           muted
           loop
@@ -18,12 +21,13 @@ export const HeroVideo = () => {
           controlsList="nodownload nofullscreen noremoteplayback"
           onContextMenu={(e) => e.preventDefault()}
           onError={() => setVideoError(true)}
+          onLoadedData={() => setVideoLoaded(true)}
         >
           <source src="/videos/main.mp4" type="video/mp4" />
         </video>
       )}
 
-      {videoError && (
+      {(videoError || !videoLoaded) && (
         <div
           className="absolute inset-0 w-full h-full bg-cover bg-center"
           style={{
