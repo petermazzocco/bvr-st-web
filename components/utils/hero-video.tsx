@@ -3,31 +3,14 @@
 export const HeroVideo = () => {
   return (
     <div className="absolute inset-0 w-full h-screen">
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <iframe
-          src="https://customer-rm55c0smfzs9z1c2.cloudflarestream.com/b9730e9225ec7fd7700877bd954ae560/iframe?controls=false&autoplay=true&muted=true&loop=true"
-          loading="lazy"
-          style={{
-            border: "none",
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            height: "56.25vw",
-            width: "100vw",
-            transform: "translate(-50%, -50%)",
-            minHeight: "100vh",
-            minWidth: "177.78vh",
-          }}
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-          allowFullScreen={true}
-        />
-      </div>
+      <video
+        src="/videos/main.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="w-full h-full object-cover"
+      />
 
       {/* Your noise overlay */}
       <div
