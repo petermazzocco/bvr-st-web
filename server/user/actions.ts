@@ -1408,32 +1408,41 @@ export async function addToNewsletter(initialState: any, formData: FormData) {
       );
 
       if (response.status === 400) {
-        if (responseText.includes("email")) {
-          return "Please provide a valid email address.";
-        }
-        return "Invalid information provided. Please check your details.";
-      }
-      if (response.status === 409) {
-        return "You're already subscribed to our newsletter!";
+        return JSON.stringify({ 
+          message: "Please provide all required information with valid formats", 
+          success: false 
+        });
       }
       if (response.status >= 500) {
-        return "Server error. Please try again later.";
+        return JSON.stringify({ 
+          message: "Server error. Please try again later.", 
+          success: false 
+        });
       }
-      return "Newsletter subscription failed. Please try again.";
+      return JSON.stringify({ 
+        message: "Newsletter subscription failed. Please try again.", 
+        success: false 
+      });
     }
 
-    let body: { message: string };
+    // Parse the JSON response from the Go API
+    let body: { message: string; success: boolean };
     try {
       body = JSON.parse(responseText);
+      return responseText; // Return the original JSON response
     } catch (error) {
       console.error("Invalid JSON response:", responseText);
-      return "Invalid response from server. Please try again.";
+      return JSON.stringify({ 
+        message: "Invalid response from server. Please try again.", 
+        success: false 
+      });
     }
-
-    return "Successfully subscribed to newsletter!";
   } catch (error) {
     console.error("Newsletter subscription error:", error);
-    return "Network error. Please check your connection and try again.";
+    return JSON.stringify({ 
+      message: "Network error. Please check your connection and try again.", 
+      success: false 
+    });
   }
 }
 

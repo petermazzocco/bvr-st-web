@@ -28,10 +28,20 @@ export const AddToNewsletterForm = () => {
   // Handle server action messages with toast
   useEffect(() => {
     if (message) {
-      if (message.includes("Successfully")) {
-        toast.success(message);
-      } else {
-        toast.error(message);
+      try {
+        const response = JSON.parse(message);
+        if (response.success) {
+          toast.success(response.message);
+        } else {
+          toast.error(response.message);
+        }
+      } catch {
+        // Fallback for non-JSON messages
+        if (message.includes("Successfully")) {
+          toast.success(message);
+        } else {
+          toast.error(message);
+        }
       }
     }
   }, [message]);
@@ -127,9 +137,11 @@ export const AddToNewsletterForm = () => {
         id="user-added-to-newsletter"
         data-umami-event="User added to newsletter"
       >
-        GET NOTIFIED{" "}
+        <span className="transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem] group-hover:animate-pulse">
+          GET NOTIFIED
+        </span>
         <ArrowUpRightIcon
-          className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem]"
+          className="-me-1 ms-2 opacity-60 group-hover:opacity-100 transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem] group-hover:animate-pulse"
           size={16}
           aria-hidden="true"
         />

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export async function Navbar() {
@@ -9,7 +10,12 @@ export async function Navbar() {
       <div className="flex items-center">{/*<NavSideSheet />*/}</div>
       <div className="flex items-center justify-center">
         <Link href="/">
-          <h2 className="text-lg font-base">BVR ST CO.</h2>
+          <Image
+            src="/assets/BEAVER-ST-CO_HORIZONTAL-02.svg"
+            alt="BVR ST CO."
+            width={170}
+            height={50}
+          />
         </Link>
       </div>
       <div className="flex items-center justify-end gap-4">
