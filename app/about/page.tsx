@@ -27,55 +27,33 @@ export default function Page() {
           </h2>
           <div className="flex flex-col gap-4 text-xs text-muted-foreground leading-relaxed mb-16">
             <p>
-              <strong>
-                The culture shift Beaver fans have been waiting for.
-              </strong>
-            </p>
-            <p>
-              BVR ST CO isn&apos;t your typical collective, company, or
+              BVR ST CO (Beaver Street Co) isn&apos;t a typical collective, a company, or a
               community—we&apos;re all three and none of them. We&apos;re a
               movement built to drag Oregon State out of outdated traditions and
-              into the pulse of modern culture. Born from the streets and fueled
-              by hype, we exist to redefine what it means to rep the Beavers.
+              into the pulse of modern, tech-inspired culture.
             </p>
             <p>
-              <strong>
+              <strong className="text-primary">
                 Our mission is simple: elevate, disrupt, innovate.
               </strong>
             </p>
             <p>
-              We&apos;re here to serve Oregon State&apos;s fans, athletes, and
-              community with a punk-driven energy that refuses to play it safe.
-              While others stick to the playbook, we&apos;re writing our own
-              rules. We curate exclusive product drops, forge partnerships with
-              boundary-pushing brands, influeners, and creators, and craft
-              experiences that blur the lines between digital innovation and
-              raw, in-person energy.
+              We&apos;re here to provide Oregon State&apos;s fans, athletes, and
+              community with a new energy that refuses to play it safe and pushes the
+              boundaries on what is possible. While others stick to the playbook, 
+              we&apos;re writing our own, new set of rules. Our goal is to curate exclusive high-quality products, goods, and services, forge partnerships with
+              boundary-pushing and successful brands, influeners, and creators, and craft
+              experiences that range between digital innovation and raw, in-person energy.
             </p>
             <p>
-              <strong>
-                We&apos;re not following compliance—we&apos;ll challenge them.
-              </strong>
-            </p>
-            <p>
-              BVR ST CO is where Oregon State&apos;s underground culture meets
-              mainstream impact. We&apos;re building a space where authenticity
-              trumps conformity, where the products create chaos, and where
-              being a Beaver means something bold and unapologetic.
-            </p>
-            <p>
-              <strong>
-                This is more than merch. This is more than community. This is
-                cultural revolution.
-              </strong>
+              BVR ST CO is where Oregon State&apos;s new culture meets
+              mainstream impact. We&apos;re building a collective space where authenticity
+              trumps conformity, where the products, experiences, and partnerships create sustainable long-term growth, shock-value, and tell 
+              the story of a new Oregon State.
             </p>
             <p>
               Welcome to the new era of Oregon State. Welcome to BVR ST CO—where
-              tradition meets innovation, and the future of Beaver culture
-              begins.
-            </p>
-            <p className="italic">
-              We don&apos;t just rep the brand. We are the brand.
+              tradition meets innovation, and the future of Oregon State begins.
             </p>
           </div>
 
@@ -83,60 +61,28 @@ export default function Page() {
             id="pricing"
             className="text-lg text-left font-bold mb-4 text-foreground"
           >
-            Transparent Pricing & Supporting Student-Athletes
+            Supporting Student-Athletes
           </h2>
           <div className="flex flex-col gap-4 text-xs text-muted-foreground leading-relaxed mb-16">
             <p>
-              <strong>
-                Our pricing is designed to maximize financial benefits for
-                Oregon State student-athletes and keep prices as low as
-                possible.
-              </strong>
-            </p>
-            <p>Here&apos;s exactly how our commission structure works:</p>
-            <ul className="list-disc ml-6 space-y-2">
-              <li>
-                <strong>Affiliates receive:</strong> 40% of selling price
-              </li>
-              <li>
-                <strong>We maintain:</strong> 60% of selling price (50% covers
-                product cost + 10% buffer for fees/expenses)
-              </li>
-            </ul>
-            <p>
-              <strong>Example Price Breakdown:</strong>
-            </p>
-            <ul className="list-disc ml-6 space-y-1">
-              <li>Cost to make product: $20.00</li>
-              <li>
-                Selling price of product: $40.00 (calculated as $20.00 ÷ 0.50)
-              </li>
-              <li>Affiliate receives: $16.00 (40%)</li>
-              <li>We receive: $24.00 (60%)</li>
-              <li>After covering cost: $4.00 profit buffer (10%)</li>
-              <li>
-                If the 10% is not needed to cover any additional expenses, the
-                profit is put towards both operational expenses for the team and
-                marketing efforts that support the student-athletes who model
-                and promote our brand.
-              </li>
-            </ul>
-            <p>
-              This structure ensures student-athletes get a strong 40%
-              commission while maintaining profitability with a 10% buffer for
-              additional expenses.
+              We&apos;re committed to supporting Oregon State student-athletes through authentic NIL partnerships with 
+              forward-thinking brands, influencers, and creators. Every student-athlete we work with 
+              receives genuine opportunities to monetize their Name, Image, and Likeness—exactly as NIL 
+              was intended to work.
             </p>
             <p>
-              <strong>
-                Don&apos;t have an affiliate code at checkout, but want the
-                athletes to earn as much as possible? No problem.
-              </strong>
+              Rather than simply asking for donations, we believe in providing real value to fans in return. 
+              That is why every marketing collaboration with our student-athletes centers around 
+              goods and services that you can actually use, purchase, and enjoy. When you support 
+              these partnerships, you are not just making a donation—you are getting something 
+              meaningful back while directly supporting the athletes who represent Oregon State
             </p>
             <p>
-              The majority of our profits go directly into marketing efforts
-              that support the student-athletes who model and promote our brand.
-              Your purchase still benefits Oregon State student-athletes,
-              whether you use an affiliate code or not.
+              Soon, we plan on launching our affilaite marketing program. This means, every athelte at Oregon State
+              is eligible to earn income for their Name, Image, and Likeness. Our goal is that the majority of our profits are 
+              reinvested into marketing efforts that showcase and financially benefit the student-athletes who partner 
+              with our brand. Whether you use an affiliate code or not, your purchase creates real NIL 
+              earning opportunities for Oregon State student-athletes.
             </p>
           </div>
         </div>
