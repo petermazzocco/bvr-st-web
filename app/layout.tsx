@@ -157,7 +157,7 @@ export default async function RootLayout({
                 <Navbar />
                 <main>
                   {children}
-                  <Toaster closeButton />
+                  <Toaster closeButton position="bottom-center" richColors />
                 </main>
                 <Footer />
               </>

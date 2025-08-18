@@ -146,6 +146,19 @@ export const AddToNewsletterForm = () => {
           aria-hidden="true"
         />
       </Button>
+      <p className="text-muted-foreground/50 text-[8px]">
+        By submitting, you agree to our{" "}
+        <a href="/legal/terms" className="underline">
+          Terms of Service
+        </a>{" "}
+        and{" "}
+        <a href="/legal/privacy" className="underline">
+          Privacy Policy
+        </a>
+        . You also agree to opting-in to receive marketing emails from us about
+        our latest updates, products and services, and can unsubscribe at any
+        time.
+      </p>
     </Form>
   );
 };

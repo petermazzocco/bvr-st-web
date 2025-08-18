@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { PostImage } from "@/components/blog/post-image";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AddToNewsletterForm } from "@/components/forms/add-to-newsletter-form";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -77,7 +79,7 @@ export default async function PostPage({
       <div className="hidden md:block h-[calc(10vh-64px)]" />
 
       {/* Content */}
-      <main className="relative z-10 bg-background container mx-auto max-w-4xl p-8 flex flex-col gap-4 min-h-screen rounded-none sm:rounded-lg mb-10">
+      <main className="relative z-10 bg-background container mx-auto max-w-4xl p-8 flex flex-col gap-4 min-h-screen rounded-none sm:rounded-lg shadow-sm border mb-10">
         <article className="prose flex flex-col gap-2">
           <Suspense fallback={<Skeleton className="w-14 h-5" />}>
             <h1 className="text-2xl font-bold mb-2">
@@ -141,6 +143,22 @@ export default async function PostPage({
           </Suspense>
         </article>
       </main>
+
+      {/* Newsletter signup card */}
+      <div className="w-full flex justify-center mb-10">
+        <div className="bg-background max-w-[400px] mx-auto p-6 rounded-lg flex flex-col gap-2 items-center shadow-sm border">
+          <Avatar className="w-14 h-14">
+            <AvatarImage src="/assets/circle-logo.jpg" alt="Avatar" />
+            <AvatarFallback>OS</AvatarFallback>
+          </Avatar>
+          <h2 className="text-md text-left">Stay up to date on the latest:</h2>
+          <p className="mb-4  text-xs text-muted-foreground">
+            Join our newsletter and be the first to know when we launch our
+            products, experiences, and services.
+          </p>
+          <AddToNewsletterForm />
+        </div>
+      </div>
     </div>
   );
 }

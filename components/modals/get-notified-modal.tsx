@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { AddToNewsletterForm } from "../forms/add-to-newsletter-form";
 import { ArrowUpRightIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const GetNotifiedModal = () => {
   return (
@@ -34,7 +35,11 @@ export const GetNotifiedModal = () => {
             />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[400px]">
+        <DialogContent className="sm:max-w-[400px] flex flex-col items-center">
+          <Avatar className="w-14 h-14">
+            <AvatarImage src="/assets/circle-logo.jpg" alt="Avatar" />
+            <AvatarFallback>OS</AvatarFallback>
+          </Avatar>
           <DialogHeader>
             <DialogTitle>The New Oregon State Starts With You</DialogTitle>
             <DialogDescription>

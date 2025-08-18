@@ -24,7 +24,7 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="/legal/privacy-policy"
+                    href="/legal/privacy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Privacy Policy
@@ -32,7 +32,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/legal/terms-of-service"
+                    href="/legal/terms"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Terms of Service
@@ -40,20 +40,20 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/legal/cookies-policy"
+                    href="/legal/cookies"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Cookie Policy
                   </Link>
                 </li>
-                <li>
+                {/*<li>
                   <Link
                     href="/legal/return-policy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Return Policy
                   </Link>
-                </li>
+                </li>*/}
               </ul>
             </div>
 
@@ -102,7 +102,7 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="https://www.bsky.app/profile/bvrstco.com"
+                    href="https://bsky.app/profile/bvrstco.com"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
