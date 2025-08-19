@@ -3,6 +3,7 @@ import { addToNewsletter } from "@/server/user/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Form from "next/form";
+import Link from "next/link";
 import { useActionState, useState, useEffect } from "react";
 import { z } from "zod";
 import { ArrowUpRightIcon } from "lucide-react";
@@ -148,13 +149,13 @@ export const AddToNewsletterForm = () => {
       </Button>
       <p className="text-muted-foreground/50 text-[8px]">
         By submitting, you agree to our{" "}
-        <a href="/legal/terms" className="underline">
+        <Link href="/legal/terms" className="underline">
           Terms of Service
-        </a>{" "}
+        </Link>{" "}
         and{" "}
-        <a href="/legal/privacy" className="underline">
+        <Link href="/legal/privacy" className="underline">
           Privacy Policy
-        </a>
+        </Link>
         . You also agree to opting-in to receive marketing emails from us about
         our latest updates, products and services, and can unsubscribe at any
         time.
