@@ -88,7 +88,7 @@ export default async function PostPage({
             <div className="flex flex-row text-xs mb-2">
               <Avatar className="mr-2 w-12 h-12">
                 <AvatarImage
-                  //@ts-ignore
+                  //@ts-expect-error
                   src={post.data?.author_image.asset.url || "/logo.png"}
                   alt={post.data?.author}
                   className="object-cover"
