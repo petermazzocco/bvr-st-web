@@ -17,10 +17,7 @@ export default async function Page({
   }
 
   return (
-    <>
-      <Suspense fallback={<Skeleton className="h-8 w-12" />}>
-        <h1 className="text-xl font-bold mb-8">{doc.data.title}</h1>
-      </Suspense>
+    <main className="relative z-10 bg-background container mx-auto max-w-4xl p-8 flex flex-col gap-4 min-h-screen rounded-none sm:rounded-lg shadow-sm border mb-10">
       <div className="prose max-w-none">
         <Suspense fallback={<Skeleton className="h-8 w-12" />}>
           {doc.data.updatedAt && (
@@ -91,6 +88,6 @@ export default async function Page({
           <p className="text-muted-foreground">No content available.</p>
         )}
       </div>
-    </>
+    </main>
   );
 }
