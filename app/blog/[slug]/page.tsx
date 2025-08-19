@@ -85,10 +85,25 @@ export default async function PostPage({
             <h1 className="text-2xl font-bold mb-2">
               {post.data?.title || ""}
             </h1>
-            <p className="text-muted-foreground text-xs mb-2">
-              {post.data.author} |{" "}
-              {new Date(post?.data?.publishedAt).toLocaleDateString()}
-            </p>
+            <div className="flex flex-row text-xs mb-2">
+              <Avatar className="mr-2 w-12 h-12">
+                <AvatarImage
+                  //@ts-ignore
+                  src={post.data?.author_image.asset.url || "/logo.png"}
+                  alt={post.data?.author}
+                  className="object-cover"
+                />
+                <AvatarFallback>
+                  {post.data?.author?.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col justify-center items-start">
+                <p>{post.data.author}</p>
+                <p className="text-muted-foreground">
+                  {new Date(post?.data?.publishedAt).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
           </Suspense>
           <Suspense fallback={<Skeleton className="w-full h-screen" />}>
             {Array.isArray(post?.data?.body) && (
