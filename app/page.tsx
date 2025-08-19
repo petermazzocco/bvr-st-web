@@ -19,7 +19,7 @@ export default function Page() {
         <div className="relative z-10 flex flex-row justify-between items-center max-w-lg w-full px-4 gap-4 mt-4 isolate">
           <Button variant={"outline"} asChild className="group flex-1 min-w-0">
             <Link
-              href={"/blog/oregon-states-revolution"}
+              href={"/blog/welcome-to-bvr-st-co"}
               id="learn-more-button"
               data-umami-event="Homepage learn more clicked"
               className="flex items-center justify-center w-full"

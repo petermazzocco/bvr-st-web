@@ -36,8 +36,12 @@ export const GetNotifiedModal = () => {
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[400px] flex flex-col items-center">
-          <Avatar className="w-14 h-14">
-            <AvatarImage src="/assets/circle-logo.jpg" alt="Avatar" />
+          <Avatar className="w-14 h-14 bg-muted-foreground">
+            <AvatarImage
+              src="/assets/icons/BEAVER-ST-CO_ICON-03.svg"
+              alt="Avatar"
+              className="p-3"
+            />
             <AvatarFallback>OS</AvatarFallback>
           </Avatar>
           <DialogHeader>

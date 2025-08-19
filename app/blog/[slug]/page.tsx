@@ -147,8 +147,12 @@ export default async function PostPage({
       {/* Newsletter signup card */}
       <div className="w-full flex justify-center mb-10">
         <div className="bg-background max-w-[400px] mx-auto p-6 rounded-lg flex flex-col gap-2 items-center shadow-sm border">
-          <Avatar className="w-14 h-14">
-            <AvatarImage src="/assets/circle-logo.jpg" alt="Avatar" />
+          <Avatar className="w-14 h-14 bg-muted-foreground">
+            <AvatarImage
+              src="/assets/icons/BEAVER-ST-CO_ICON-03.svg"
+              alt="Avatar"
+              className="p-3"
+            />
             <AvatarFallback>OS</AvatarFallback>
           </Avatar>
           <h2 className="text-md text-left">Stay up to date on the latest:</h2>
