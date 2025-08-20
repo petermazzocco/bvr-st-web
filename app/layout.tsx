@@ -146,6 +146,7 @@ export default async function RootLayout({
           backgroundImage: "url(/topo.jpeg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <AuthProvider initialAuthState={initialAuthState}>
