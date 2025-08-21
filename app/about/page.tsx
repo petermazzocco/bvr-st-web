@@ -98,36 +98,53 @@ export default function Page() {
           </h2>
           <div className="flex flex-col gap-4 text-xs text-muted-foreground leading-relaxed">
             <p>
-              BVR ST CO (Beaver Street Co) isn&apos;t a typical collective, a
-              company, or a community—we&apos;re all three and none of them.
-              We&apos;re a movement built to drag Oregon State out of outdated
-              traditions and into the pulse of modern, tech-inspired culture.
+              BVR ST CO (Beaver Street Co.) exists to revolutionize Oregon State
+              athletics by harnessing our greatest competitive advantage: our
+              unparalleled legacy of innovation and technological disruption.
+            </p>
+
+            <strong className="text-primary">
+              Our mission is to transform Oregon State into the future of
+              college athletics—where Silicon Valley mindset meets Beaver Nation
+              heritage.
+            </strong>
+
+            <p>
+              We are building more than a collective; we are architecting a new
+              paradigm that leverages Oregon State&apos;s proven ability to
+              produce world-changing innovators, from tech industry pioneers to
+              leaders at the planet&apos;s most valuable companies. While other
+              programs chase outdated models, we are engineering a revolutionary
+              approach that thinks, operates, and embodies the disruptive
+              culture of the companies shaping tomorrow.
             </p>
             <p>
-              <strong className="text-primary">
-                Our mission is simple: elevate, disrupt, innovate.
-              </strong>
+              Our vision extends beyond traditional financial contribution
+              models. We&apos;re creating an ecosystem where cutting-edge
+              products, innovative financial programs, and unprecedented
+              collaborations with student-athletes across every sport generate
+              sustainable impact. Through elevated, curated offerings that blend
+              modern culture with timeless design, we&apos;re establishing new
+              revenue streams that support athletic excellence while building a
+              brand that commands national attention.
             </p>
             <p>
-              We&apos;re here to provide Oregon State&apos;s fans, athletes, and
-              community with a new energy that refuses to play it safe and
-              pushes the boundaries on what is possible. While others stick to
-              the playbook, we&apos;re writing our own, new set of rules. Our
-              goal is to curate exclusive high-quality products, goods, and
-              services, forge partnerships with boundary-pushing and successful
-              brands, influeners, and creators, and craft experiences that range
-              between digital innovation and raw, in-person energy.
+              BVR ST CO represents Oregon State&apos;s reset moment—leveraging
+              conference realignment, the evolving NIL landscape, and our
+              extraordinary alumni network to establish a new standard in
+              college athletics. We are not asking for donations; we are
+              inviting Beaver Nation to participate in a transformation that
+              will position Oregon State as the program others aspire to follow.
             </p>
             <p>
-              BVR ST CO is where Oregon State&apos;s new culture meets
-              mainstream impact. We&apos;re building a collective space where
-              authenticity trumps conformity, where the products, experiences,
-              and partnerships create sustainable long-term growth, shock-value,
-              and tell the story of a new Oregon State.
+              This is our commitment to Oregon State&apos;s innovative heritage.
+              This is our blueprint for sustainable competitive advantage. This
+              is where tradition meets disruption, and the future of Beaver
+              Nation begins.
             </p>
             <p>
-              Welcome to the new era of Oregon State. Welcome to BVR ST CO—where
-              tradition meets innovation, and the future of Oregon State begins.
+              Welcome to BVR ST CO—where tradition meets innovation, and the
+              future of Oregon State begins.
             </p>
           </div>
           <Separator className="my-8" />
