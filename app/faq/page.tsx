@@ -44,10 +44,9 @@ export default function Page() {
                 Are you a NIL collective?
               </p>
               <p>
-                Technically, we are not an NIL collective. However, we do work
-                with student-athletes on marketing opportunities for their name,
-                image and likeness. This is what makes us different from more
-                traditional approaches.
+                Technically, we are an NIL collective. However, we are not a
+                traditional collective and will take a different route compared
+                to more traditional approaches.
               </p>
             </div>
 
