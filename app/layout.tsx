@@ -16,6 +16,7 @@ import {
   getAuthTokenServer,
   getUserIdFromTokenServer,
 } from "@/server/user/actions";
+import TerminalWrapper from "@/contexts/terminal-wrapper";
 
 export const metadata: Metadata = {
   title: "BVR ST CO",
@@ -159,14 +160,14 @@ export default async function RootLayout({
             {isUnderConstructionFlag ? (
               <UnderConstructionPage />
             ) : (
-              <>
+              <TerminalWrapper packageName="bvr-st-co">
                 <Navbar />
                 <main>
                   {children}
                   <Toaster closeButton position="bottom-center" richColors />
                 </main>
                 <Footer />
-              </>
+              </TerminalWrapper>
             )}
           </CartProvider>
         </AuthProvider>

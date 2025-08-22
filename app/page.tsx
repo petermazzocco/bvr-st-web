@@ -8,33 +8,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { HeroVideo } from "@/components/utils/hero-video";
-import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import TerminalOverlay from "@/contexts/terminal-overlay";
 import { useState, useEffect } from "react";
 
 export default function Page() {
-  const [showTerminal, setShowTerminal] = useState(true);
   const [scrollY, setScrollY] = useState(0);
-
-  const handleInstallationComplete = () => {
-    setShowTerminal(false);
-
-    // Easter egg console message with ASCII art
-    console.log(`
-      ▄ ▖▖▄▖  ▄▖▄▖  ▄▖▄▖
-      ▙▘▌▌▙▘  ▚ ▐   ▌ ▌▌
-      ▙▘▚▘▌▌  ▄▌▐   ▙▖▙▌
-
-      🎉 INSTALLATION COMPLETE!
-      👀 You found our easter egg!
-      🎁 Enjoy 50% OFF: BEAVERHACKER50
-      🔥 Valid for all products! 💻 Keep being awesome!
-      - The BVR ST CO Team
-
-      P.S. Follow us on socials for updates! 🚀
-    `);
-  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -44,13 +23,6 @@ export default function Page() {
 
   return (
     <>
-      {showTerminal && (
-        <TerminalOverlay
-          packageName="bvr-st-co"
-          onComplete={handleInstallationComplete}
-        />
-      )}
-
       {/* Hero Section with Parallax Effect */}
       <div
         className="relative h-screen flex flex-col overflow-hidden"

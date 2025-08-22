@@ -1,6 +1,9 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import Cookies from "js-cookie"; // You'll need to install: npm install js-cookie @types/js-cookie
+import Cookies from "js-cookie";
+import { usePathname } from "next/navigation";
 import {
   Terminal,
   TypingAnimation,
@@ -8,9 +11,9 @@ import {
 } from "@/components/ui/shadcn-io/terminal";
 import Image from "next/image";
 
-interface TerminalOverlayProps {
+interface TerminalWrapperProps {
+  children: React.ReactNode;
   packageName?: string;
-  onComplete?: () => void;
 }
 
 const LoadingBar: React.FC<{ delay: number }> = ({ delay }) => {
@@ -94,31 +97,31 @@ const LogoDisplay: React.FC<{
       tl.to(logoRef.current, {
         opacity: 1,
         scale: 1,
-        duration: 0.3, // Reduced from 0.4
+        duration: 0.3,
         ease: "back.out(1.7)",
       });
     }
 
-    // Animate grid and plus icons sliding up (same timing as terminal installation completion)
+    // Animate grid and plus icons sliding up
     tl.to(
       [gridLinesRef.current, plusIconsRef.current],
       {
         y: 0,
         opacity: 1,
-        duration: 0.4, // Reduced from 0.6
+        duration: 0.4,
         ease: "power2.out",
-        stagger: 0.05, // Reduced from 0.08
+        stagger: 0.05,
       },
-      0.4, // Reduced from 0.6
-    ); // Start after logo appears
+      0.4,
+    );
 
     // Hold for shorter time
-    tl.to({}, { duration: 0.4 }); // Reduced from 0.7
+    tl.to({}, { duration: 0.4 });
 
-    // Exit animation - slide background and logo up (same as terminal exit)
+    // Exit animation - slide background and logo up
     tl.to([backgroundRef.current, logoRef.current], {
-      y: "-100vh", // Slide up off screen
-      duration: 0.4, // Reduced from 0.6
+      y: "-100vh",
+      duration: 0.4,
       ease: "power3.in",
       onComplete: () => {
         // Restore body scroll
@@ -136,13 +139,13 @@ const LogoDisplay: React.FC<{
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Background that will slide up - same as terminal */}
+      {/* Background that will slide up */}
       <div
         ref={backgroundRef}
         className="absolute inset-0 bg-muted-foreground backdrop-blur-sm"
       />
 
-      {/* Grid Lines Overlay - same styling as terminal overlay */}
+      {/* Grid Lines Overlay */}
       <div
         ref={gridLinesRef}
         className="absolute inset-0 pointer-events-none opacity-0 translate-y-full hidden md:block"
@@ -152,7 +155,7 @@ const LogoDisplay: React.FC<{
         <div className="absolute left-3/4 top-0 bottom-0 w-[1px] bg-white/30"></div>
       </div>
 
-      {/* Plus Icons - same styling as terminal overlay */}
+      {/* Plus Icons */}
       <div
         ref={plusIconsRef}
         className="absolute inset-0 pointer-events-none text-white opacity-0 translate-y-full"
@@ -196,17 +199,18 @@ const LogoDisplay: React.FC<{
   );
 };
 
-const TerminalOverlay: React.FC<TerminalOverlayProps> = ({
+const TerminalWrapper: React.FC<TerminalWrapperProps> = ({
+  children,
   packageName = "bvr-st-co",
-  onComplete,
 }) => {
+  const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const gridLinesRef = useRef<HTMLDivElement>(null);
   const plusIconsRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
-  const [showMainContent, setShowMainContent] = useState<boolean>(false);
-  const [showTerminal, setShowTerminal] = useState<boolean>(false); // Changed default to false
+  const [showContent, setShowContent] = useState<boolean>(false);
+  const [showTerminal, setShowTerminal] = useState<boolean>(false);
   const [showLogo, setShowLogo] = useState<boolean>(false);
 
   // Cookie management
@@ -217,8 +221,23 @@ const TerminalOverlay: React.FC<TerminalOverlayProps> = ({
   };
 
   const markTerminalAsSeen = (): void => {
-    // Set cookie to expire in 24 hours
     Cookies.set(COOKIE_NAME, "true", { expires: 1 }); // expires in 1 day
+  };
+
+  const printConsoleMessage = (): void => {
+    console.log(`
+      ▄ ▖▖▄▖  ▄▖▄▖  ▄▖▄▖
+      ▙▘▌▌▙▘  ▚ ▐   ▌ ▌▌
+      ▙▘▚▘▌▌  ▄▌▐   ▙▖▙▌
+
+      🎉 INSTALLATION COMPLETE!
+      👀 You found our easter egg!
+      🎁 Enjoy 50% OFF: BEAVERHACKER50
+      🔥 Valid for all products! 💻 Keep being awesome!
+      - The BVR ST CO Team
+
+      P.S. Follow us on socials for updates! 🚀
+    `);
   };
 
   const exitAnimation = (): void => {
@@ -227,20 +246,20 @@ const TerminalOverlay: React.FC<TerminalOverlayProps> = ({
     // Only slide up the background and terminal, leave grid/plus icons in place
     if (backgroundRef.current && terminalRef.current) {
       tl.to([backgroundRef.current, terminalRef.current], {
-        y: "-100vh", // Slide up off screen
+        y: "-100vh",
         duration: 0.8,
         ease: "power3.in",
         onComplete: () => {
-          setShowMainContent(true);
-          if (onComplete) {
-            onComplete();
-          }
+          setShowContent(true);
         },
       });
     }
   };
 
   useEffect(() => {
+    // Reset state on route change
+    setShowContent(false);
+    
     // Check if user has seen terminal in last 24 hours and set initial state
     if (hasSeenTerminal()) {
       setShowTerminal(false);
@@ -249,7 +268,7 @@ const TerminalOverlay: React.FC<TerminalOverlayProps> = ({
       setShowTerminal(true);
       setShowLogo(false);
     }
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (!showTerminal) return;
@@ -298,16 +317,17 @@ const TerminalOverlay: React.FC<TerminalOverlayProps> = ({
       },
       undefined,
       2.4,
-    ); // 2400ms delay
+    );
 
-    // Mark terminal as seen after the final message appears (at 4000ms)
+    // Print console message and mark terminal as seen after the final message appears
     tl.call(
       () => {
+        printConsoleMessage();
         markTerminalAsSeen();
       },
       undefined,
       4.2,
-    ); // 4200ms - after "Welcome to the future of Oregon State" appears
+    );
 
     // Start exit animation after all terminal content is done
     const totalDuration = 5000;
@@ -326,137 +346,109 @@ const TerminalOverlay: React.FC<TerminalOverlayProps> = ({
 
   const handleLogoComplete = (): void => {
     setShowLogo(false);
-    setShowMainContent(true);
-    if (onComplete) {
-      onComplete();
-    }
+    setShowContent(true);
   };
 
   // Show logo if user has seen terminal before
   if (showLogo) {
     return (
-      <LogoDisplay packageName={packageName} onComplete={handleLogoComplete} />
+      <>
+        <LogoDisplay
+          packageName={packageName}
+          onComplete={handleLogoComplete}
+        />
+        {/* Render children but hidden until logo completes */}
+        <div style={{ visibility: "hidden" }}>{children}</div>
+      </>
     );
   }
 
-  if (showMainContent) {
+  // Show content after animations complete
+  if (showContent) {
+    return <>{children}</>;
+  }
+
+  // Show terminal for first-time visitors
+  if (showTerminal) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center relative">
-        {/* Grid Lines Overlay */}
-        <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-          <div className="absolute left-1/4 top-0 bottom-0 w-[1px] bg-foreground/5"></div>
-          <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-foreground/5"></div>
-          <div className="absolute left-3/4 top-0 bottom-0 w-[1px] bg-foreground/5"></div>
+      <>
+        <div
+          ref={overlayRef}
+          className="fixed inset-0 flex items-center justify-center z-50 p-4"
+        >
+          {/* Background that will slide up */}
+          <div
+            ref={backgroundRef}
+            className="absolute inset-0 bg-muted-foreground backdrop-blur-sm z-10"
+          />
+
+          {/* Grid Lines Overlay - stays in place */}
+          <div
+            ref={gridLinesRef}
+            className="absolute inset-0 z-20 pointer-events-none opacity-0 translate-y-full hidden md:block"
+          >
+            <div className="absolute left-1/4 top-0 bottom-0 w-[1px] bg-white/30"></div>
+            <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-white/30"></div>
+            <div className="absolute left-3/4 top-0 bottom-0 w-[1px] bg-white/30"></div>
+          </div>
+
+          {/* Plus Icons - stays in place */}
+          <div
+            ref={plusIconsRef}
+            className="absolute inset-0 z-20 pointer-events-none text-white opacity-0 translate-y-full"
+          >
+            {/* Top Row */}
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6 text-xl sm:text-2xl lg:text-3xl font-thin">
+              +
+            </div>
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 sm:top-6 text-xl sm:text-2xl lg:text-3xl font-thin">
+              +
+            </div>
+            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 text-xl sm:text-2xl lg:text-3xl font-thin">
+              +
+            </div>
+
+            {/* Bottom Row */}
+            <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-xl sm:text-2xl lg:text-3xl font-thin">
+              +
+            </div>
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 sm:bottom-6 text-xl sm:text-2xl lg:text-3xl font-thin">
+              +
+            </div>
+            <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-xl sm:text-2xl lg:text-3xl font-thin">
+              +
+            </div>
+          </div>
+
+          {/* Terminal */}
+          <div ref={terminalRef} className="min-w-[425px] max-w-[425px] z-30">
+            <Terminal className="max-w-none">
+              <AnimatedSpan delay={200}>
+                $ brew install {packageName}
+              </AnimatedSpan>
+              <AnimatedSpan delay={400}>Downloading bvr-st-co</AnimatedSpan>
+              <LoadingBar delay={700} />
+              <AnimatedSpan delay={2000} className="text-secondary">
+                ✓ Installation completed successfully!
+              </AnimatedSpan>
+              <AnimatedSpan delay={3000}>
+                Printing a code to the console...
+              </AnimatedSpan>
+              <AnimatedSpan delay={4000} className="text-primary">
+                Welcome to the future of Oregon State.
+              </AnimatedSpan>
+            </Terminal>
+          </div>
         </div>
 
-        {/* Plus Icons */}
-        <div className="absolute inset-0 z-0 pointer-events-none text-foreground/10">
-          <div className="absolute top-6 left-6 text-lg font-thin">+</div>
-          <div className="absolute top-6 left-1/2 transform -translate-x-1/2 text-lg font-thin">
-            +
-          </div>
-          <div className="absolute top-6 right-6 text-lg font-thin">+</div>
-          <div className="absolute bottom-6 left-6 text-lg font-thin">+</div>
-          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-lg font-thin">
-            +
-          </div>
-          <div className="absolute bottom-6 right-6 text-lg font-thin">+</div>
-        </div>
-
-        <div className="text-center relative z-10">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            Welcome to {packageName}!
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Installation completed successfully.
-          </p>
-          <div className="bg-card rounded-lg shadow-lg p-8 max-w-md mx-auto border border-border">
-            <h2 className="text-2xl font-semibold mb-4 text-card-foreground">
-              Your App is Ready
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              The installation process has completed and your application is now
-              ready to use.
-            </p>
-            <button className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors">
-              Get Started
-            </button>
-          </div>
-        </div>
-      </div>
+        {/* Render children but hidden until terminal completes */}
+        <div style={{ visibility: "hidden" }}>{children}</div>
+      </>
     );
   }
 
-  if (!showTerminal) return null;
-
-  return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 flex items-center justify-center z-50 p-4"
-    >
-      {/* Background that will slide up */}
-      <div
-        ref={backgroundRef}
-        className="absolute inset-0 bg-muted-foreground backdrop-blur-sm z-10"
-      />
-
-      {/* Grid Lines Overlay - stays in place */}
-      <div
-        ref={gridLinesRef}
-        className="absolute inset-0 z-20 pointer-events-none opacity-0 translate-y-full hidden md:block"
-      >
-        <div className="absolute left-1/4 top-0 bottom-0 w-[1px] bg-white/30"></div>
-        <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-white/30"></div>
-        <div className="absolute left-3/4 top-0 bottom-0 w-[1px] bg-white/30"></div>
-      </div>
-
-      {/* Plus Icons - stays in place */}
-      <div
-        ref={plusIconsRef}
-        className="absolute inset-0 z-20 pointer-events-none text-white opacity-0 translate-y-full"
-      >
-        {/* Top Row */}
-        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 text-xl sm:text-2xl lg:text-3xl font-thin">
-          +
-        </div>
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 sm:top-6 text-xl sm:text-2xl lg:text-3xl font-thin">
-          +
-        </div>
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 text-xl sm:text-2xl lg:text-3xl font-thin">
-          +
-        </div>
-
-        {/* Bottom Row */}
-        <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-xl sm:text-2xl lg:text-3xl font-thin">
-          +
-        </div>
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 sm:bottom-6 text-xl sm:text-2xl lg:text-3xl font-thin">
-          +
-        </div>
-        <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-xl sm:text-2xl lg:text-3xl font-thin">
-          +
-        </div>
-      </div>
-
-      {/* Terminal */}
-      <div ref={terminalRef} className="min-w-[425px] max-w-[425px] z-30">
-        <Terminal className="max-w-none ">
-          <AnimatedSpan delay={200}>$ brew install {packageName}</AnimatedSpan>
-          <AnimatedSpan delay={400}>Downloading bvr-st-co</AnimatedSpan>
-          <LoadingBar delay={700} />
-          <AnimatedSpan delay={2000} className="text-secondary">
-            ✓ Installation completed successfully!
-          </AnimatedSpan>
-          <AnimatedSpan delay={3000}>
-            Printing a code to the console...
-          </AnimatedSpan>
-          <AnimatedSpan delay={4000} className="text-primary">
-            Welcome to the future of Oregon State.
-          </AnimatedSpan>
-        </Terminal>
-      </div>
-    </div>
-  );
+  // Default: just render children (shouldn't reach here)
+  return <>{children}</>;
 };
 
-export default TerminalOverlay;
+export default TerminalWrapper;
