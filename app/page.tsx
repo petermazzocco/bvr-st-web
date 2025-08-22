@@ -24,19 +24,20 @@ export default function Page() {
   return (
     <>
       {/* Hero Section with Parallax Effect */}
-      <div
-        className="relative h-screen flex flex-col overflow-hidden"
-        style={{
-          transform: `translateY(${scrollY * 0.4}px)`,
-        }}
-      >
+      <div className="relative h-screen flex flex-col overflow-hidden">
         {/* Background Video */}
-        <div className="absolute inset-0">
+        <div
+          className="absolute inset-0"
+          style={{
+            transform: `translateY(${scrollY * 0.4}px)`,
+          }}
+        >
           <div className="absolute inset-0 bg-cover bg-center bg-[url('/main-fallback.png')]" />
-          <HeroVideo />
+          <div>
+            <HeroVideo />
+          </div>
           <div className="absolute inset-0 bg-black/30" />
         </div>
-
         {/* Grid Lines Overlay - Hide on mobile */}
         <div className="absolute inset-0 z-5 pointer-events-none hidden md:block">
           {/* Three vertical lines */}
@@ -117,7 +118,7 @@ export default function Page() {
             </div>
 
             {/* Bottom quarter section for buttons */}
-            <div className="h-1/4 flex flex-col justify-center items-center">
+            <div className="h-1/4 flex flex-col justify-center items-center pb-[15vh]">
               <div className="flex flex-col gap-2 w-full max-w-[400px]">
                 <Button
                   variant="outline"
@@ -205,7 +206,7 @@ export default function Page() {
       </div>
 
       {/* Aircraft Systems Accordion Section - Normal flow */}
-      <section className="bg-white py-16 px-6 relative z-20">
+      <section className="bg-background py-16 px-0 sm:px-6 relative z-20">
         <div className="max-w-4xl mx-auto">
           <div className="mb-12 text-center">
             <h2 className="text-3xl font-thin tracking-[-0.02em] text-gray-900 mb-4">
