@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -31,12 +30,12 @@ export function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center py-2 px-5 w-full mix-blend-difference transition-transform duration-150",
+        "fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center py-2 px-5 w-full  transition-transform duration-150",
         isVisible ? "translate-y-0" : "-translate-y-full",
       )}
     >
       <div className="flex items-center">
-        <Link href="/">
+        {/*<Link href="/">
           <Avatar className="w-6 h-6">
             <AvatarImage
               src="/assets/icons/BEAVER-ST-CO_ICON-05.svg"
@@ -45,17 +44,17 @@ export function Navbar() {
             />
             <AvatarFallback></AvatarFallback>
           </Avatar>
-        </Link>
+        </Link>*/}
       </div>
       <div className="flex items-center justify-center">
-        {/*<Link href="/">
+        <Link href="/">
           <Image
             src="/assets/BEAVER-ST-CO_HORIZONTAL-02.svg"
             alt="BVR ST CO."
             width={170}
             height={50}
           />
-        </Link>*/}
+        </Link>
       </div>
       <div className="flex items-center justify-end gap-4">
         {/*<CartSheet />*/}
