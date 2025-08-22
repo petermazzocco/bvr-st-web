@@ -27,12 +27,12 @@ export default function Page() {
       ▙▘▚▘▌▌  ▄▌▐   ▙▖▙▌
 
       🎉 INSTALLATION COMPLETE!
-      👀 Found our Easter egg!
+      👀 You found our easter egg!
       🎁 Enjoy 50% OFF: BEAVERHACKER50
-      🔥 Valid for collection! 💻 Keep being awesome!
+      🔥 Valid for all products! 💻 Keep being awesome!
       - The BVR ST CO Team
 
-      P.S. Follow us for updates! 🚀
+      P.S. Follow us on socials for updates! 🚀
     `);
   };
 
