@@ -38,6 +38,12 @@ const overlayVariants = {
   exit: { opacity: 0 },
 };
 
+const counterVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -100 },
+};
+
 const logoAssets = [
   "/assets/BEAVER-ST-CO_ABBRV-1-01.svg",
   "/assets/BEAVER-ST-CO_ABBRV-1-02.svg",
@@ -52,6 +58,9 @@ const PageTransitionContext = ({ children }: { children: React.ReactNode }) => {
   const [showLogo, setShowLogo] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [showCounter, setShowCounter] = useState(false);
+  const [counter, setCounter] = useState(0);
+  const [hasShownCounter, setHasShownCounter] = useState(false);
 
   useEffect(() => {
     if (!isHomePage) {
@@ -72,13 +81,84 @@ const PageTransitionContext = ({ children }: { children: React.ReactNode }) => {
         clearTimeout(logoTimer);
         clearTimeout(overlayTimer);
       };
+    } else if (!hasShownCounter) {
+      setHasShownCounter(true);
+      setShowCounter(true);
+      setShowContent(false);
+
+      let currentCount = 0;
+      const totalDuration = 3000;
+      const targetCount = 100;
+
+      const startTime = Date.now();
+
+      const updateCounter = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / totalDuration, 1);
+
+        const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+        currentCount = Math.floor(easeOutQuad * targetCount);
+
+        setCounter(currentCount);
+
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          setCounter(100);
+          setTimeout(() => {
+            setShowCounter(false);
+            setTimeout(() => {
+              setShowContent(true);
+            }, 500);
+          }, 300);
+        }
+      };
+
+      requestAnimationFrame(updateCounter);
     } else {
       setShowContent(true);
     }
-  }, [key, isHomePage]);
+  }, [key, isHomePage, hasShownCounter]);
 
   if (isHomePage) {
-    return <FrozenRouter>{children}</FrozenRouter>;
+    return (
+      <>
+        <AnimatePresence>
+          {showCounter && (
+            <motion.div
+              className="fixed inset-0 z-50 bg-white flex items-center justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.3, ease: "easeOut" },
+              }}
+              exit={{
+                opacity: 0,
+                y: -100,
+                transition: { duration: 0.5, ease: "easeInOut" },
+              }}
+            >
+              <div className="text-8xl font-bold text-black tabular-nums">
+                {counter}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {showContent && (
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <FrozenRouter>{children}</FrozenRouter>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
+    );
   }
 
   return (

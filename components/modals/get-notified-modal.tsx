@@ -23,7 +23,7 @@ export const GetNotifiedModal = () => {
             variant="outline"
             id="learn-more-button"
             data-umami-event="Homepage learn more clicked"
-            className=" group"
+            className=" group bg-primary"
           >
             <span className="transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem] group-hover:animate-pulse">
               GET NOTIFIED

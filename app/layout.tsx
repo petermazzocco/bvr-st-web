@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/navbar";
-import { Inter } from "next/font/google";
+import { Inter, VT323 } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "sonner";
@@ -89,6 +89,12 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
+const vt = VT323({
+  variable: "--font-vt",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export default async function RootLayout({
   children,
 }: {
@@ -140,7 +146,7 @@ export default async function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/oxp4xny.css" />
       </head>
       <body
-        className={`${inter.variable} antialiased min-h-screen`}
+        className={`${inter.variable} ${vt.variable} antialiased min-h-screen`}
         style={{
           backgroundImage: "url(/topo.jpeg)",
           backgroundSize: "cover",

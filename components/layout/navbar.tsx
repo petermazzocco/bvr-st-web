@@ -48,14 +48,14 @@ export function Navbar() {
         </Link>
       </div>
       <div className="flex items-center justify-center">
-        <Link href="/">
+        {/*<Link href="/">
           <Image
             src="/assets/BEAVER-ST-CO_HORIZONTAL-02.svg"
             alt="BVR ST CO."
             width={170}
             height={50}
           />
-        </Link>
+        </Link>*/}
       </div>
       <div className="flex items-center justify-end gap-4">
         {/*<CartSheet />*/}

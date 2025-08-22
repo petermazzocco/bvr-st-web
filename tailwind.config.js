@@ -10,6 +10,7 @@ module.exports = {
       fontFamily: {
         'shuttleblock': ['shuttleblock', 'sans-serif'],
         'shuttleblock-narrow': ['shuttleblock-narrow', 'sans-serif'],
+        'vt': ['var(--font-vt)', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",

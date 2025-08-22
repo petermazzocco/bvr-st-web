@@ -115,3 +115,20 @@
     line-height: 1.3;
   }
 }
+
+.hover-text {
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    #3b82f6 0%,
+    #3b82f6 var(--radius, 0px),
+    #374151 var(--radius, 0px)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: --radius 0.2s ease;
+}
+
+.hover-text:hover {
+  --radius: 80px;
+}
