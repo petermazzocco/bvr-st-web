@@ -105,7 +105,8 @@ export default function Page() {
                   ABOUT
                 </div>
                 <p className="text-white text-xs font-light leading-relaxed">
-                  The collective that's building the future of college athletics
+                  The collective that&apos;s building the future of college
+                  athletics
                 </p>
               </div>
             </div>
@@ -162,7 +163,8 @@ export default function Page() {
                   ABOUT
                 </div>
                 <p className="text-white text-sm font-light leading-relaxed">
-                  The collective that's building the future of college athletics
+                  The collective that&apos;s building the future of college
+                  athletics
                 </p>
               </div>
 
