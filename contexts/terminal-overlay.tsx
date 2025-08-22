@@ -254,7 +254,7 @@ const TerminalOverlay: React.FC<TerminalOverlayProps> = ({
           </AnimatedSpan>
 
           <AnimatedSpan delay={3000}>
-            {packageName} is now ready to use.
+            Printing logs to the console...
           </AnimatedSpan>
           <AnimatedSpan delay={4000} className="text-primary">
             Welcome to the future of Oregon State.

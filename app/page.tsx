@@ -11,15 +11,36 @@ import { HeroVideo } from "@/components/utils/hero-video";
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import TerminalOverlay from "@/contexts/terminal-overlay";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Page() {
   const [showTerminal, setShowTerminal] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
 
   const handleInstallationComplete = () => {
     setShowTerminal(false);
-    console.log("Installation completed!");
+
+    // Easter egg console message with ASCII art
+    console.log(`
+      ▄ ▖▖▄▖  ▄▖▄▖  ▄▖▄▖
+      ▙▘▌▌▙▘  ▚ ▐   ▌ ▌▌
+      ▙▘▚▘▌▌  ▄▌▐   ▙▖▙▌
+
+      🎉 INSTALLATION COMPLETE!
+      👀 Found our Easter egg!
+      🎁 Enjoy 50% OFF: BEAVERHACKER50
+      🔥 Valid for collection! 💻 Keep being awesome!
+      - The BVR ST CO Team
+
+      P.S. Follow us for updates! 🚀
+    `);
   };
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
@@ -30,13 +51,19 @@ export default function Page() {
         />
       )}
 
-      <div className="relative h-screen flex flex-col overflow-hidden">
+      {/* Hero Section with Parallax Effect */}
+      <div
+        className="relative h-screen flex flex-col overflow-hidden"
+        style={{
+          transform: `translateY(${scrollY * 0.4}px)`,
+        }}
+      >
         {/* Background Video */}
-        <div className="absolute inset-0 bg-cover bg-center bg-[url('/main-fallback.png')]" />
-        <HeroVideo />
-
-        {/* Dark overlay for better text contrast */}
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-cover bg-center bg-[url('/main-fallback.png')]" />
+          <HeroVideo />
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
 
         {/* Grid Lines Overlay - Hide on mobile */}
         <div className="absolute inset-0 z-5 pointer-events-none hidden md:block">
@@ -153,7 +180,7 @@ export default function Page() {
             {/* Large brand text - Desktop positioning */}
             <div className="absolute bottom-24 left-8 md:bottom-32 md:left-10 lg:bottom-16 lg:left-10">
               <div className="space-y-4">
-                <h1 className="text-[5rem] leading-[0.8] md:text-[8rem] lg:text-[12rem] xl:text-[16rem] lg:leading-[0.8] font-thin tracking-[-0.02em] text-background mix-blend-screen">
+                <h1 className="text-[5rem] leading-[0.8] md:text-[8rem] lg:text-[10rem] xl:text-[13rem] lg:leading-[0.8] font-thin tracking-[-0.02em] text-background mix-blend-screen">
                   BVR ST CO
                 </h1>
                 <div className="text-muted text-xs lg:text-sm font-light tracking-[0.3em] uppercase ml-2">
@@ -205,8 +232,8 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Aircraft Systems Accordion Section */}
-      <section className="bg-white py-16 px-6">
+      {/* Aircraft Systems Accordion Section - Normal flow */}
+      <section className="bg-white py-16 px-6 relative z-20">
         <div className="max-w-4xl mx-auto">
           <div className="mb-12 text-center">
             <h2 className="text-3xl font-thin tracking-[-0.02em] text-gray-900 mb-4">

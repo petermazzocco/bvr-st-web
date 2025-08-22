@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t bg-background">
+    <footer className="w-full border-t bg-background ">
       <div className="container px-4 py-8 md:px-6 lg:py-12">
         <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
           {/* Left side - Logo, Name, Copyright */}
