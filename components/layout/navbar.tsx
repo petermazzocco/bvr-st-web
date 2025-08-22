@@ -30,7 +30,7 @@ export function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center py-2 px-5 w-full  transition-transform duration-150",
+        "fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center py-2 px-5 w-full mix-blend-difference  transition-transform duration-150",
         isVisible ? "translate-y-0" : "-translate-y-full",
       )}
     >

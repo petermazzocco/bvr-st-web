@@ -1,8 +1,14 @@
 "use client";
 import { GetNotifiedModal } from "@/components/modals/get-notified-modal";
 import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { HeroVideo } from "@/components/utils/hero-video";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import TerminalOverlay from "@/contexts/terminal-overlay";
 import { useState } from "react";
@@ -198,6 +204,116 @@ export default function Page() {
           </div>
         </div>
       </div>
+
+      {/* Aircraft Systems Accordion Section */}
+      <section className="bg-white py-16 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-thin tracking-[-0.02em] text-gray-900 mb-4">
+              WHO WE ARE
+            </h2>
+            <p className="text-muted-foreground text-sm font-light tracking-[0.1em]">
+              OPERATIONAL STATUS OVERVIEW
+            </p>
+          </div>
+
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue="item-1"
+            className="w-full"
+          >
+            <AccordionItem value="item-1" className="border-b border-gray-200">
+              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90">
+                <span className="text-lg font-medium text-gray-900 tracking-wide">
+                  01 ELEVATING
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-6">
+                <div className="pt-4 space-y-4">
+                  <p className="text-gray-700 font-medium">
+                    Elevating Student-Athlete Opportunities Through Innovation
+                  </p>
+                  <p className="text-gray-600 leading-relaxed">
+                    We&apos;re elevating Oregon State athletics by leveraging
+                    our greatest competitive advantage: the alumni who built
+                    Silicon Valley. From the engineers behind today&apos;s AI
+                    processors to the entrepreneurs who transformed startups
+                    into tech giants, Beaver Nation has shaped the future. Now
+                    we&apos;re channeling that innovation directly into
+                    supporting our student-athletes through authentic NIL
+                    partnerships and cutting-edge revenue streams.
+                  </p>
+                  <div className="pt-2">
+                    <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
+                      Real NIL Opportunities • Genuine Partnerships •
+                      Sustainable Growth
+                    </p>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-2" className="border-b border-gray-200">
+              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90">
+                <span className="text-lg font-medium text-gray-900 tracking-wide">
+                  02 DISRUPTING
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-6">
+                <div className="pt-4 space-y-4">
+                  <p className="text-gray-700 font-medium">
+                    Disrupting Traditional Collective Models
+                  </p>
+                  <p className="text-gray-600 leading-relaxed">
+                    While major programs burn through millions via outdated
+                    fundraising models, we&apos;re operating like a tech
+                    startup. Instead of asking for donations, we&apos;re
+                    creating products and services that provide real value to
+                    fans while generating sustainable revenue. Every purchase
+                    from our offerings supports authentic NIL opportunities for
+                    student-athletes across every sport—exactly as NIL was
+                    intended to work.
+                  </p>
+                  <div className="pt-2">
+                    <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
+                      Value Creation • Product Innovation • Market Disruption
+                    </p>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-3" className="border-b border-gray-200">
+              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90">
+                <span className="text-lg font-medium text-gray-900 tracking-wide">
+                  03 INNOVATING
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-6">
+                <div className="pt-4 space-y-4">
+                  <p className="text-gray-700 font-medium">
+                    Innovating The Future of College Athletics
+                  </p>
+                  <p className="text-gray-600 leading-relaxed">
+                    We&apos;re architecting a new paradigm where Silicon Valley
+                    mindset meets Beaver Nation heritage. Through innovative
+                    programs and strategic partnerships, every Oregon State
+                    student-athlete will have opportunities to earn income
+                    through their Name, Image, and Likeness.
+                  </p>
+                  <div className="pt-2">
+                    <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
+                      Affiliate Program • Brand Partnerships • Sustainable
+                      Impact
+                    </p>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
     </>
   );
 }
