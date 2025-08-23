@@ -4,11 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
-import {
-  Terminal,
-  TypingAnimation,
-  AnimatedSpan,
-} from "@/components/ui/shadcn-io/terminal";
+import { Terminal, AnimatedSpan } from "@/components/ui/shadcn-io/terminal";
 import Image from "next/image";
 
 interface TerminalWrapperProps {
@@ -259,7 +255,7 @@ const TerminalWrapper: React.FC<TerminalWrapperProps> = ({
   useEffect(() => {
     // Reset state on route change
     setShowContent(false);
-    
+
     // Check if user has seen terminal in last 24 hours and set initial state
     if (hasSeenTerminal()) {
       setShowTerminal(false);

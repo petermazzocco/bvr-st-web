@@ -30,7 +30,7 @@ export function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center py-2 px-5 w-full mix-blend-difference  transition-transform duration-150",
+        "fixed top-0 z-50 bg-transparent text-background grid grid-cols-3 items-center py-3 px-5 w-full   transition-transform duration-150",
         isVisible ? "translate-y-0" : "-translate-y-full",
       )}
     >
@@ -49,7 +49,7 @@ export function Navbar() {
       <div className="flex items-center justify-center">
         <Link href="/">
           <Image
-            src="/assets/BEAVER-ST-CO_HORIZONTAL-02.svg"
+            src="/assets/BEAVER-ST-CO_HORIZONTAL-04.svg"
             alt="BVR ST CO."
             width={170}
             height={50}

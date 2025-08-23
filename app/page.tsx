@@ -11,6 +11,7 @@ import { HeroVideo } from "@/components/utils/hero-video";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { HeroImage } from "@/components/utils/hero-image";
 
 export default function Page() {
   const [scrollY, setScrollY] = useState(0);
@@ -33,9 +34,7 @@ export default function Page() {
           }}
         >
           <div className="absolute inset-0 bg-cover bg-center bg-[url('/main-fallback.png')]" />
-          <div>
-            <HeroVideo />
-          </div>
+
           <div className="absolute inset-0 bg-black/30" />
         </div>
         {/* Grid Lines Overlay - Hide on mobile */}
@@ -78,7 +77,7 @@ export default function Page() {
         {/* Top corner text - Responsive positioning */}
         <div className="absolute top-4 right-4 sm:top-8 sm:right-24 z-20">
           <div className="text-white/80 text-xs sm:text-sm font-light tracking-[0.2em] border border-white/20 px-2 py-1 sm:px-3 sm:py-1.5 backdrop-blur-xl">
-            (25—26)
+            (v1.0.0)
           </div>
         </div>
 
@@ -118,7 +117,7 @@ export default function Page() {
             </div>
 
             {/* Bottom quarter section for buttons */}
-            <div className="h-1/4 flex flex-col justify-center items-center pb-[15vh]">
+            <div className="h-1/4 flex flex-col justify-center items-center pb-[25vh]">
               <div className="flex flex-col gap-2 w-full max-w-[400px]">
                 <Button
                   variant="outline"
@@ -153,7 +152,7 @@ export default function Page() {
             {/* Large brand text - Desktop positioning */}
             <div className="absolute bottom-24 left-8 md:bottom-32 md:left-10 lg:bottom-16 lg:left-10">
               <div className="space-y-4">
-                <h1 className="text-[5rem] leading-[0.8] md:text-[8rem] lg:text-[10rem] xl:text-[13rem] lg:leading-[0.8] font-thin tracking-[-0.02em] text-background mix-blend-screen">
+                <h1 className="text-[5rem] leading-[0.8] md:text-[8rem] lg:text-[10rem] xl:text-[13rem] lg:leading-[0.8] font-thin tracking-[-0.01em] text-background mix-blend-screen">
                   BVR ST CO
                 </h1>
                 <div className="text-muted text-xs lg:text-sm font-light tracking-[0.3em] uppercase ml-2">
@@ -163,7 +162,7 @@ export default function Page() {
             </div>
 
             {/* Bottom right content - Desktop positioning */}
-            <div className="absolute bottom-8 right-8 lg:bottom-16 lg:right-16 max-w-xs">
+            <div className="absolute bottom-8 right-8 lg:bottom-16 lg:right-12 max-w-xs">
               <div className="mb-8 space-y-2">
                 <div className="text-primary text-xs font-light tracking-[0.2em] uppercase">
                   ABOUT
