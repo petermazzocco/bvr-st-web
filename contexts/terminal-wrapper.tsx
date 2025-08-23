@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
-import { Terminal, AnimatedSpan } from "@/components/ui/shadcn-io/terminal";
+import { Terminal, AnimatedSpan } from "@/components/ui/terminal";
 import Image from "next/image";
 
 interface TerminalWrapperProps {

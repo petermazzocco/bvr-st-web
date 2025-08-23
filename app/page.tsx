@@ -1,4 +1,5 @@
 "use client";
+
 import { GetNotifiedModal } from "@/components/modals/get-notified-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,11 +8,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HeroVideo } from "@/components/utils/hero-video";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { HeroImage } from "@/components/utils/hero-image";
 
 export default function Page() {
   const [scrollY, setScrollY] = useState(0);

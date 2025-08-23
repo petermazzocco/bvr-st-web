@@ -1,5 +1,4 @@
 import { VariantSelector } from "@/components/product/variant-selector";
-import { MemberPrice } from "@/components/product/member-price";
 import { Product } from "@/lib/shopify/types";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Separator } from "../ui/separator";
@@ -7,6 +6,7 @@ import Link from "next/link";
 import { AdditionalDetails, Affiliate } from "@/lib/types";
 import { AffiliateSelection } from "../utils/affiliate-selection";
 import { cookies } from "next/headers";
+import { Price } from "./product-price";
 
 export async function DigitalProductDescription({
   product,
@@ -34,10 +34,9 @@ export async function DigitalProductDescription({
         <h1 className=" text-sm font-semibold">{product.title}</h1>
         <div className="flex flex-col items-center gap-2">
           <div className="mr-auto w-auto p-2 text-sm font-semibold">
-            <MemberPrice
+            <Price
               amount={product.priceRange.maxVariantPrice.amount}
               currencyCode={product.priceRange.maxVariantPrice.currencyCode}
-              isMember={isMember}
             />
           </div>
         </div>

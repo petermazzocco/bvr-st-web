@@ -7,7 +7,6 @@ import {
   PlaceBidResponse,
 } from "@/lib/types";
 import { cookies } from "next/headers";
-import { getUserDetails } from "@/server/user/actions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -180,12 +179,6 @@ export async function placeBidAction(formData: FormData) {
     redirect("/signin");
   }
 
-  // Get user details
-  const user = await getUserDetails(authToken, userId);
-  if (!user.success || !user.data) {
-    redirect("/signin");
-  }
-
   // Get form data
   const bidAmount = formData.get("bidAmount") as string;
   const productId = formData.get("productId") as string;
@@ -221,20 +214,10 @@ export async function placeBidAction(formData: FormData) {
     throw new Error("This auction has already ended");
   }
 
-  // Check if user is a member
-  if (!user.data.isMember) {
-    redirect("/membership");
-  }
-
   // Prepare bid request
   const bidRequest: PlaceBidRequest = {
     bid: bidAmount,
     currency: "USD",
-    customer_email: user.data.email,
-    customer_id: user.data.shopifyCustomerID,
-    customer_first_name: user.data.firstName || "",
-    customer_last_name: user.data.lastName || "",
-    shopify_product_id: productId,
   };
 
   // Place the bid

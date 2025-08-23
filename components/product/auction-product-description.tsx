@@ -8,12 +8,11 @@ import { AuctionClock } from "@/components/utils/auction-clock";
 import { Input } from "../ui/input";
 import { Lock } from "lucide-react";
 import { cookies } from "next/headers";
-import { getUserDetails } from "@/server/user/actions";
 import Form from "next/form";
 
 interface AuctionProductDescriptionProps {
   product: Product;
-  isMember: boolean;
+  isMember?: boolean;
 }
 
 export async function AuctionProductDescription({
@@ -51,15 +50,6 @@ export async function AuctionProductDescription({
   }
 
   const auctionData = auctionResult.data;
-
-  // Get user data if authenticated
-  let user = null;
-  if (isAuthenticated && userId && authToken) {
-    const userResult = await getUserDetails(authToken, userId);
-    if (userResult.success) {
-      user = userResult.data;
-    }
-  }
 
   const getTimeUntilEnd = (endDate: string) => {
     const now = new Date().getTime();
