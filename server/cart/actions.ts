@@ -12,11 +12,6 @@ import {
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import {
-  getUserDetails,
-  getAuthTokenServer,
-  getUserIdFromTokenServer,
-} from "@/server/user/actions";
 import { getAffiliates } from "@/server/sanity/actions";
 
 // Member discount code configuration
@@ -279,55 +274,6 @@ export async function redirectToCheckout() {
 
   if (!cart) {
     return redirect("/");
-  }
-
-  // Try to get authenticated user data
-  const authToken = await getAuthTokenServer();
-  const userId = await getUserIdFromTokenServer();
-
-  if (authToken && userId) {
-    try {
-      const userResult = await getUserDetails(authToken, userId);
-
-      if (userResult.success && userResult.data) {
-        const user = userResult.data;
-
-        // Update cart with buyer identity for checkout prepopulation
-        const updatedCart = await updateCart(cartId, [], {
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          phone: user.phone,
-        });
-
-        if (updatedCart) {
-          cart = updatedCart;
-        }
-
-        // Check if user is a member and eligible for member discount
-
-        if (user.isMember && user.shopifyCustomerID) {
-          const eligibilityResult = await isEligibleForMemberDiscount(
-            user.shopifyCustomerID,
-          );
-
-          if (eligibilityResult.isEligible && eligibilityResult.discountCode) {
-            try {
-              const cartWithDiscount = await applyDiscountCode(cartId, [
-                eligibilityResult.discountCode,
-              ]);
-              if (cartWithDiscount) {
-                cart = cartWithDiscount;
-              }
-            } catch (error) {
-              // Continue with checkout even if discount application fails
-            }
-          }
-        }
-      }
-    } catch (error) {
-      // Continue with checkout even if user data prepopulation fails
-    }
   }
 
   redirect(cart.checkoutUrl);

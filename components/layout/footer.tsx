@@ -2,13 +2,13 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t bg-background">
+    <footer className="w-full border-t bg-background ">
       <div className="container px-4 py-8 md:px-6 lg:py-12">
         <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
           {/* Left side - Logo, Name, Copyright */}
           <div className="flex flex-col space-y-4 lg:max-w-sm">
             <div className="flex items-center space-x-2">
-              <span className="text-lg font-bold">BVR ST CO</span>
+              <h2 className="text-lg">BVR ST CO.</h2>
             </div>
             <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} Beaver Street Co LLC. All rights
@@ -24,7 +24,7 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="/legal/privacy-policy"
+                    href="/legal/privacy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Privacy Policy
@@ -32,7 +32,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/legal/terms-of-service"
+                    href="/legal/terms"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Terms of Service
@@ -40,20 +40,20 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/legal/cookies-policy"
+                    href="/legal/cookies"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Cookie Policy
                   </Link>
                 </li>
-                <li>
+                {/*<li>
                   <Link
                     href="/legal/return-policy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Return Policy
                   </Link>
-                </li>
+                </li>*/}
               </ul>
             </div>
 
@@ -102,7 +102,7 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="https://www.bsky.app/profile/bvrstco.com"
+                    href="https://bsky.app/profile/bvrstco.com"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >

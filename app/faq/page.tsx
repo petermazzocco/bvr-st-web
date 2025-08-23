@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { generateMetadata as createMetadata } from "@/lib/metadata";
+import Link from "next/link";
 
 export const dynamic = "force-static";
 
@@ -17,22 +18,8 @@ export const metadata: Metadata = createMetadata({
 export default function Page() {
   return (
     <div className="min-h-screen pt-16">
-      <div className="relative h-screen flex items-center justify-center max-h-72">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url(/about.jpg)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="relative z-10 text-center text-background">
-          <h1 className="text-8xl font-bold tracking-wider">FAQ</h1>
-        </div>
-      </div>
-
-      <div className="bg-background py-16">
-        <div className="max-w-4xl mx-auto px-4 text-left">
+      <div className=" py-16 ">
+        <div className="bg-background max-w-4xl mx-auto p-4 rounded-lg text-left">
           <h2 className="text-lg text-left font-bold mb-4 text-foreground">
             Frequently Asked Questions
           </h2>
@@ -46,9 +33,9 @@ export default function Page() {
                 creating a renewed Oregon State culture. We curate exclusive
                 drops, forge partnerships with boundary-pushing brands,
                 entities, and influencers, and create experiences that blend
-                digital and creative innovation with raw, punk-like energy. This
-                is not your average grandma and grandpa shop. Expect nothing
-                boring to be found here.
+                digital and creative innovation with raw, tech-like energy. This
+                is not your average grandma and grandpa collective. Expect
+                nothing boring to be found here.
               </p>
             </div>
 
@@ -57,13 +44,13 @@ export default function Page() {
                 Are you a NIL collective?
               </p>
               <p>
-                No, we are not a NIL collective. However, we do work with
-                student-athletes on marketing opportunities for their name,
-                image and likeness.
+                Technically, we are an NIL collective. However, we are not a
+                traditional collective and will take a different route compared
+                to more traditional approaches.
               </p>
             </div>
 
-            <div>
+            {/*<div>
               <p className="font-bold text-foreground mb-2">
                 If you&apos;re not an NIL collective, why do you have a
                 membership?
@@ -74,7 +61,7 @@ export default function Page() {
                 our community and enjoy the benefits of being a member, but we
                 will not force you to join.
               </p>
-            </div>
+            </div>*/}
 
             <div>
               <p className="font-bold text-foreground mb-2">
@@ -90,7 +77,7 @@ export default function Page() {
               </p>
             </div>
 
-            <div>
+            {/*<div>
               <p className="font-bold text-foreground mb-2">
                 Where does my money go?
               </p>
@@ -191,24 +178,26 @@ export default function Page() {
                 Follow our social media or sign up for our newsletter to stay
                 updated on restocks and new releases.
               </p>
-            </div>
+            </div>*/}
 
             <div>
               <p className="font-bold text-foreground mb-2">
-                How can I contact customer service?
+                How can I contact BVR ST CO for opportunities as a
+                student-athlete or a brand looking to partner?
               </p>
               <p>
                 You can reach us through our contact form, email, or social
                 media channels. We typically respond within 24-48 hours during
-                business days. Unless it&apos;s game day, expect that timeframe
-                to be longer.
+                business days.
               </p>
             </div>
 
-            <p className="italic mt-8">
-              Have more questions? Don&apos;t hesitate to reach out, we&apos;re
-              here to help.
-            </p>
+            <div className="italic mt-8">
+              Have more questions?{" "}
+              <Link href="/contact" className="underline">
+                Don&apos;t hesitate to reach out, we&apos;re here to help.{" "}
+              </Link>
+            </div>
           </div>
         </div>
       </div>

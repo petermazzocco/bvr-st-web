@@ -7,31 +7,24 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Collection } from "@/lib/shopify/types";
-import { Vendor } from "@/lib/types";
-import clsx from "clsx";
+import { getCollections } from "@/lib/shopify";
+import { getAllPartneredStores } from "@/server/vendor/actions";
 
 const helpLinks = [
   { name: "Become A Partner", href: "/contact" },
-  { name: "Returns & Exchanges", href: "/legal/return-policy" },
+  { name: "Returns & Exchanges", href: "/legal/return" },
   { name: "Terms of Service", href: "legal/terms" },
   { name: "Privacy Policy", href: "legal/privacy" },
   { name: "Contact Us", href: "/contact" },
 ];
 
-export function NavSideSheet({
-  collections,
-  partners,
-  className,
-}: {
-  collections: Collection[] | undefined;
-  partners: Vendor[] | undefined;
-  className?: string;
-}) {
+export async function NavSideSheet() {
+  const collections = await getCollections();
+  const partners = await getAllPartneredStores();
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className={clsx(className)}>
+        <Button variant="ghost" size="icon" className="text-background">
           <Menu className="h-4 w-4" />
           <span className="sr-only">Open menu</span>
         </Button>
@@ -42,9 +35,7 @@ export function NavSideSheet({
       >
         <div className="flex h-full w-full flex-col">
           <SheetHeader className="p-4 pb-4">
-            <SheetTitle className="text-left text-xl font-bold">
-              Collections
-            </SheetTitle>
+            <SheetTitle className="text-left text-xl">Collections</SheetTitle>
           </SheetHeader>
 
           {/* Collections Section */}

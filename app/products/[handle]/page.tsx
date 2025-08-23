@@ -15,11 +15,6 @@ import {
   getAffiliates,
 } from "@/server/sanity/actions";
 import { AdditionalDetailsSection } from "@/components/product/additional-details";
-import {
-  getUserDetails,
-  getAuthTokenServer,
-  getUserIdFromTokenServer,
-} from "@/server/user/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export async function generateMetadata(props: {
@@ -70,23 +65,6 @@ export default async function Page(props: {
     params.handle,
   );
 
-  // Get user membership status
-  let isMember = false;
-  try {
-    const authToken = await getAuthTokenServer();
-    const userId = await getUserIdFromTokenServer();
-
-    if (authToken && userId) {
-      const userResult = await getUserDetails(authToken, userId);
-      if (userResult.success && userResult.data) {
-        isMember = userResult.data.isMember || false;
-      }
-    }
-  } catch (error) {
-    // Continue without membership status if error occurs
-    isMember = false;
-  }
-
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -119,7 +97,7 @@ export default async function Page(props: {
               fallback={<Skeleton className="w-full h-full overflow-hidden" />}
             >
               <Gallery
-                images={product.images.slice(0, 5).map((image: Image) => ({
+                images={product.images.slice(0, 10).map((image: Image) => ({
                   src: image.url,
                   altText: image.altText,
                 }))}
@@ -130,21 +108,16 @@ export default async function Page(props: {
             <div className="w-full md:max-w-md lg:max-w-lg">
               <Suspense fallback={null}>
                 {product.tags.includes("product_auction") ? (
-                  <AuctionProductDescription
-                    product={product}
-                    isMember={isMember}
-                  />
+                  <AuctionProductDescription product={product} />
                 ) : product.tags.includes("product_digital") ? (
                   <DigitalProductDescription
                     product={product}
-                    isMember={isMember}
                     affiliates={affiliates.data}
                     details={additionalDetailsResult.data}
                   />
                 ) : (
                   <ProductDescription
                     product={product}
-                    isMember={isMember}
                     affiliates={affiliates.data}
                     details={additionalDetailsResult.data}
                   />

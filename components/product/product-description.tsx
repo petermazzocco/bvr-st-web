@@ -1,10 +1,9 @@
 import { VariantSelector } from "@/components/product/variant-selector";
-import { MemberPrice } from "@/components/product/member-price";
+import { Price } from "./product-price";
 import { Product } from "@/lib/shopify/types";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
-import SizeChartModal from "../modals/size-chart-modal";
 import Image from "next/image";
 import { AdditionalDetails, Affiliate } from "@/lib/types";
 import { CareInstructionsModal } from "../modals/care-instructions-modal";
@@ -48,16 +47,17 @@ export async function ProductDescription({
         <h1 className=" text-sm font-semibold">{product.title}</h1>
         <div className="flex flex-col items-center gap-2">
           <div className="mr-auto w-auto p-2 text-sm font-semibold">
-            <MemberPrice
+            <Price
               amount={product.priceRange.maxVariantPrice.amount}
               currencyCode={product.priceRange.maxVariantPrice.currencyCode}
-              isMember={isMember}
             />
           </div>
         </div>
       </div>
       <div>
-        <p className="text-xs font-muted-foreground">{product.description}</p>
+        <p className="text-xs font-muted-foreground">
+          {product.seo.description}
+        </p>
       </div>
       <div className="mb-2 flex flex-row text-[0.6rem] items-center text-muted-foreground justify-start md:justify-end gap-1">
         Make 4 interest free payments every 2 weeks with{" "}
@@ -82,11 +82,11 @@ export async function ProductDescription({
             <span>{spec.value}</span>
           </div>
         ))}
-        <SizeChartModal />
+        {/*<SizeChartModal />*/}
       </div>
       <Separator className="my-4" />
       <div className="flex flex-col gap-4">
-        {affiliates && (
+        {/*{affiliates && (
           <div className="flex flex-col gap-2">
             <AffiliateSelection affiliates={affiliates} />
 
@@ -97,7 +97,7 @@ export async function ProductDescription({
               Learn more about our affiliate program and transparent pricing
             </Link>
           </div>
-        )}
+        )}*/}
 
         <AddToCartButton product={product} />
       </div>
@@ -132,12 +132,6 @@ export async function ProductDescription({
           Return Policy
         </Link>
         <CareInstructionsModal details={details} />
-        <Link
-          className="text-xs text-muted-foreground cursor-pointer underline   "
-          href="/contact"
-        >
-          Request Size
-        </Link>
       </div>
       <div className="flex justify-start items-center"></div>
     </>

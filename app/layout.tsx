@@ -1,29 +1,21 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/navbar";
-import { Roboto } from "next/font/google";
+import { Inter, VT323 } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
 import { getCart } from "@/lib/shopify";
 import { CartProvider } from "@/components/cart/cart-context";
-import { AuthProvider } from "@/components/auth/auth-context";
-import { getCollections } from "@/lib/shopify";
 import Script from "next/script";
-import { comingSoonFlag, underConstructionFlag } from "@/lib/flags";
+import { underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
-import { ComingSoonPage } from "@/components/utils/coming-soon-page";
-import { getAllPartneredStores } from "@/server/vendor/actions";
-import {
-  getUserDetails,
-  getAuthTokenServer,
-  getUserIdFromTokenServer,
-} from "@/server/user/actions";
+import TerminalWrapper from "@/contexts/terminal-wrapper";
 
 export const metadata: Metadata = {
   title: "BVR ST CO",
   description:
-    "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
+    "Engineering the future of college athletics through Oregon State.",
   keywords: [
     "oregon state beavers",
     "dam nation collective",
@@ -57,14 +49,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BVR ST CO",
     description:
-      "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
+      "Engineering the future of college athletics through Oregon State.",
     url: "https://bvrstco.com",
     siteName: "BVR ST CO",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://bvrstco.com/og-image.jpg",
+        url: "https://bvrstco.com/logo.png",
         width: 1200,
         height: 630,
         alt: "BVR ST CO",
@@ -75,10 +67,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BVR ST CO",
     description:
-      "Discover unique streetwear and products for Oregon State fans that support the Oregon State University student-athletes.",
+      "Engineering the future of college athletics through Oregon State.",
     creator: "@bvrstco",
     site: "@bvrstco",
-    images: ["https://bvrstco.com/og-image.jpg"],
+    images: ["https://bvrstco.com/logo.png"],
   },
   metadataBase: new URL("https://bvrstco.com"),
   alternates: {
@@ -86,10 +78,16 @@ export const metadata: Metadata = {
   },
 };
 
-const roboto = Roboto({
-  variable: "--font-roboto",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+});
+
+const vt = VT323({
+  variable: "--font-vt",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export default async function RootLayout({
@@ -101,50 +99,37 @@ export default async function RootLayout({
   const cartId = cookieStore.get("cartId")?.value;
 
   const cart = getCart(cartId);
-  const collections = await getCollections();
-  const partners = await getAllPartneredStores();
-
-  // Get user membership status
-  let isMember = false;
-  try {
-    const authToken = await getAuthTokenServer();
-    const userId = await getUserIdFromTokenServer();
-
-    if (authToken && userId) {
-      const userResult = await getUserDetails(authToken, userId);
-      if (userResult.success && userResult.data) {
-        isMember = userResult.data.isMember || false;
-      }
-    }
-  } catch (error) {
-    // Continue without membership status if error occurs
-    isMember = false;
-  }
 
   const isUnderConstructionFlag = await underConstructionFlag();
-  const isComingSoonFlag = await comingSoonFlag();
 
   return (
     <html lang="en">
-      <body className={`${roboto.variable} antialiased min-h-screen`}>
-        <AuthProvider initialIsMember={isMember}>
-          <CartProvider cartPromise={cart}>
-            {isUnderConstructionFlag ? (
-              <UnderConstructionPage />
-            ) : !isUnderConstructionFlag && isComingSoonFlag ? (
-              <ComingSoonPage />
-            ) : (
-              <>
-                <Navbar collections={collections} partners={partners} />
-                <main>
-                  {children}
-                  <Toaster closeButton />
-                </main>
-                <Footer />
-              </>
-            )}
-          </CartProvider>
-        </AuthProvider>
+      <head>
+        <link rel="stylesheet" href="https://use.typekit.net/oxp4xny.css" />
+      </head>
+      <body
+        className={`${inter.variable} ${vt.variable} antialiased min-h-screen`}
+        style={{
+          backgroundImage: "url(/topo.jpeg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <CartProvider cartPromise={cart}>
+          {isUnderConstructionFlag ? (
+            <UnderConstructionPage />
+          ) : (
+            <TerminalWrapper packageName="bvr-st-co">
+              <Navbar />
+              <main>
+                {children}
+                <Toaster closeButton position="bottom-center" richColors />
+              </main>
+              <Footer />
+            </TerminalWrapper>
+          )}
+        </CartProvider>
       </body>
 
       {/* Umami Analytics */}

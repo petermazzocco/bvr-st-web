@@ -7,6 +7,7 @@ import Link from "next/link";
 import { getPartnerStoreCollectionByHandle } from "@/server/vendor/actions";
 import { generateCollectionMetadata } from "@/lib/metadata";
 import { Price } from "@/components/product/product-price";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string; handle: string }>;
@@ -73,7 +74,7 @@ export default async function Page(props: {
       <div className="h-full w-full basis-full lg:basis-4/6 my-10">
         <Suspense
           fallback={
-            <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
+            <Skeleton className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
           }
         >
           <h1 className="text-md font-bold mb-2">{collection.title}</h1>

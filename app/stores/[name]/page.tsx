@@ -8,6 +8,7 @@ import {
 } from "@/server/vendor/actions";
 import { generateStoreMetadata } from "@/lib/metadata";
 import { PartnerStoreImage } from "@/components/collection/partner-store-image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export async function generateMetadata(props: {
   params: Promise<{ name: string }>;
@@ -81,7 +82,7 @@ export default async function Page(props: {
           <div className="h-full w-full basis-full lg:basis-4/6">
             <Suspense
               fallback={
-                <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
+                <Skeleton className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
               }
             >
               {" "}

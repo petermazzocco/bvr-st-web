@@ -9,6 +9,7 @@ import { generateCollectionMetadata } from "@/lib/metadata";
 import { Suspense } from "react";
 import Link from "next/link";
 import { Price } from "@/components/product/product-price";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
@@ -95,7 +96,7 @@ export default async function Page(props: {
           <div className="h-full w-full basis-full lg:basis-4/6">
             <Suspense
               fallback={
-                <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
+                <Skeleton className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
               }
             >
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
@@ -121,7 +122,7 @@ export default async function Page(props: {
                           id="product-title-link"
                           data-umami-event="Product title clicked"
                         >
-                          <h3 className="text-xs font-medium text-foreground">
+                          <h3 className="text-sm font-medium text-foreground">
                             {product.title}
                           </h3>
                         </Link>
