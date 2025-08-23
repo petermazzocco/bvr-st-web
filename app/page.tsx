@@ -216,14 +216,9 @@ export default function Page() {
             </p>
           </div>
 
-          <Accordion
-            type="single"
-            collapsible
-            defaultValue="item-1"
-            className="w-full"
-          >
+          <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1" className="border-b border-gray-200">
-              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90">
+              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
                 <span className="text-lg font-medium text-gray-900 tracking-wide">
                   01 ELEVATING
                 </span>
@@ -254,7 +249,7 @@ export default function Page() {
             </AccordionItem>
 
             <AccordionItem value="item-2" className="border-b border-gray-200">
-              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90">
+              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
                 <span className="text-lg font-medium text-gray-900 tracking-wide">
                   02 DISRUPTING
                 </span>
@@ -284,7 +279,7 @@ export default function Page() {
             </AccordionItem>
 
             <AccordionItem value="item-3" className="border-b border-gray-200">
-              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90">
+              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
                 <span className="text-lg font-medium text-gray-900 tracking-wide">
                   03 INNOVATING
                 </span>
