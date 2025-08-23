@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { PortableText } from "next-sanity";
 import { getBlogPostBySlug } from "@/server/sanity/actions";
 import { notFound } from "next/navigation";
-import { PostImage } from "@/components/blog/post-image";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddToNewsletterForm } from "@/components/forms/add-to-newsletter-form";

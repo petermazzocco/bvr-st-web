@@ -7,15 +7,9 @@ import { Toaster } from "sonner";
 import { cookies } from "next/headers";
 import { getCart } from "@/lib/shopify";
 import { CartProvider } from "@/components/cart/cart-context";
-import { AuthProvider } from "@/components/auth/auth-context";
 import Script from "next/script";
 import { underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
-import {
-  getUserDetails,
-  getAuthTokenServer,
-  getUserIdFromTokenServer,
-} from "@/server/user/actions";
 import TerminalWrapper from "@/contexts/terminal-wrapper";
 
 export const metadata: Metadata = {
@@ -106,39 +100,6 @@ export default async function RootLayout({
 
   const cart = getCart(cartId);
 
-  // Get initial auth state server-side
-  let initialAuthState = {
-    token: null as string | null,
-    userId: null as string | null,
-    isAuthenticated: false,
-    isMember: false,
-  };
-
-  try {
-    const authToken = await getAuthTokenServer();
-    const userId = await getUserIdFromTokenServer();
-
-    if (authToken && userId) {
-      const userResult = await getUserDetails(authToken, userId);
-      if (userResult.success && userResult.data) {
-        initialAuthState = {
-          token: authToken,
-          userId: userId,
-          isAuthenticated: true,
-          isMember: userResult.data.isMember || false,
-        };
-      }
-    }
-  } catch (error) {
-    // Continue with default auth state if error occurs
-    initialAuthState = {
-      token: null,
-      userId: null,
-      isAuthenticated: false,
-      isMember: false,
-    };
-  }
-
   const isUnderConstructionFlag = await underConstructionFlag();
 
   return (
@@ -155,22 +116,20 @@ export default async function RootLayout({
           backgroundAttachment: "fixed",
         }}
       >
-        <AuthProvider initialAuthState={initialAuthState}>
-          <CartProvider cartPromise={cart}>
-            {isUnderConstructionFlag ? (
-              <UnderConstructionPage />
-            ) : (
-              <TerminalWrapper packageName="bvr-st-co">
-                <Navbar />
-                <main>
-                  {children}
-                  <Toaster closeButton position="bottom-center" richColors />
-                </main>
-                <Footer />
-              </TerminalWrapper>
-            )}
-          </CartProvider>
-        </AuthProvider>
+        <CartProvider cartPromise={cart}>
+          {isUnderConstructionFlag ? (
+            <UnderConstructionPage />
+          ) : (
+            <TerminalWrapper packageName="bvr-st-co">
+              <Navbar />
+              <main>
+                {children}
+                <Toaster closeButton position="bottom-center" richColors />
+              </main>
+              <Footer />
+            </TerminalWrapper>
+          )}
+        </CartProvider>
       </body>
 
       {/* Umami Analytics */}

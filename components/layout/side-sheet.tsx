@@ -7,15 +7,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Collection } from "@/lib/shopify/types";
-import { Vendor } from "@/lib/types";
-import clsx from "clsx";
 import { getCollections } from "@/lib/shopify";
 import { getAllPartneredStores } from "@/server/vendor/actions";
 
 const helpLinks = [
   { name: "Become A Partner", href: "/contact" },
-  { name: "Returns & Exchanges", href: "/legal/return-policy" },
+  { name: "Returns & Exchanges", href: "/legal/return" },
   { name: "Terms of Service", href: "legal/terms" },
   { name: "Privacy Policy", href: "legal/privacy" },
   { name: "Contact Us", href: "/contact" },
