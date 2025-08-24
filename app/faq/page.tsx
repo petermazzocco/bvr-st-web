@@ -6,11 +6,10 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = createMetadata({
   title: "FAQ",
-  description:
-    "Frequently asked questions about BVR ST CO. Find answers about ordering, shipping, returns, partnerships, and more about our streetwear and Oregon State merchandise.",
+  description: "Frequently asked questions about BVR ST CO.",
   canonical: "https://bvrstco.com/faq",
   image: {
-    url: "https://bvrstco.com/faq.jpg",
+    url: "https://bvrstco.com/logo.png",
     alt: "BVR ST CO FAQ",
   },
 });
@@ -26,14 +25,12 @@ export default function Page() {
           <div className="flex flex-col text-xs text-muted-foreground leading-relaxed gap-10 mb-16">
             <div>
               <p className="font-bold text-foreground mb-2">
-                Are you an NIL (name, image and likeness) collective?
+                Are you an NIL (name, image and likeness) Collective?
               </p>
               <p>
-                Yes, and no. We are an NIL collective in the sense that we will
-                support Oregon State student-athletes by using their name, image
-                and likeness for marketing opportunities. However, we do not
-                operate like a traditional collective. We encourage you to read
-                our about us section to learn more.
+                No, we are not an NIL collective. We are a innovative studio
+                that focused on creating offerings in which we will work with
+                student-athletes at Oregon State for marketing.
               </p>
             </div>
 
@@ -43,8 +40,8 @@ export default function Page() {
               </p>
               <p>
                 The &apos;CO&apos; in BVR ST CO is intentionally left ambiguous
-                because it can represent Collective, Community, or Company—each
-                applying in its own unique way.
+                because it can represent Community or Company—both applying in
+                its own unique way.
               </p>
             </div>
 
@@ -69,10 +66,10 @@ export default function Page() {
                 Are you competing with Dam Nation Collective?
               </p>
               <p>
-                No, and the furthest from it. We view BVR ST CO as a
-                complimentary piece to the great work being done at Dam Nation
-                and Oregon State. In fact, we encourage you to become a member
-                of{" "}
+                Since we are not an NIL collective, we are not competing with
+                Dam Nation. We view BVR ST CO as a complimentary studio to the
+                great work being done at Dam Nation and Oregon State. In fact,
+                we encourage you to become a member of{" "}
                 <a
                   href="https://damnationnil.com/pages/support-now"
                   className=" underline"
@@ -81,20 +78,6 @@ export default function Page() {
                   Dam Nation
                 </a>{" "}
                 now and support their mission.
-              </p>
-            </div>
-
-            <div>
-              <p className="font-bold text-foreground mb-2">
-                Why do you not take contributions?
-              </p>
-              <p>
-                We believe that the most sustainable way forward for supporting
-                Oregon State student-athletes is by offering products, services,
-                and experiences that are either made internally or externally,
-                and are marketed by those same Oregon State student-athletes. We
-                encourage you to purchase, consume or use those offerings
-                instead.
               </p>
             </div>
 

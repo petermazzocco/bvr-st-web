@@ -99,7 +99,7 @@ export default function Page() {
                   BVR ST CO
                 </h1>
                 <div className="text-muted text-[0.6rem] font-light tracking-[0.3em] uppercase mt-2">
-                  A NEW VISION
+                  FOR BEAVERS. BY BEAVERS.
                 </div>
               </div>
 
@@ -155,7 +155,7 @@ export default function Page() {
                   BVR ST CO
                 </h1>
                 <div className="text-muted text-xs lg:text-sm font-light tracking-[0.3em] uppercase ml-2">
-                  A NEW VISION
+                  FOR BEAVERS. BY BEAVERS.
                 </div>
               </div>
             </div>
@@ -167,8 +167,8 @@ export default function Page() {
                   ABOUT
                 </div>
                 <p className="text-white text-sm font-light leading-relaxed">
-                  The collective that&apos;s building the future of college
-                  athletics
+                  The innovative studio that&apos;s building the future for
+                  Oregon State
                 </p>
               </div>
 
@@ -211,7 +211,7 @@ export default function Page() {
               WHO WE ARE
             </h2>
             <p className="text-muted-foreground text-sm font-light tracking-[0.1em]">
-              OPERATIONAL STATUS OVERVIEW
+              STUDIO OPERATIONAL OVERVIEW
             </p>
           </div>
 
@@ -234,12 +234,12 @@ export default function Page() {
                     to the entrepreneurs who transformed startups into tech
                     giants, Beaver Nation has shaped the future. Now we&apos;re
                     channeling that innovation directly into supporting our
-                    student-athletes through authentic NIL opportunities,
+                    student-athletes through authentic marketing opportunities,
                     genuine partnerships, and cutting-edge revenue streams.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
-                      Real NIL Opportunities • Genuine Partnerships •
+                      Marketing Opportunities • Genuine Partnerships •
                       Sustainable Growth
                     </p>
                   </div>
@@ -256,15 +256,15 @@ export default function Page() {
               <AccordionContent className="px-6 pb-6">
                 <div className="pt-4 space-y-4">
                   <p className="text-gray-700 font-medium">
-                    Disrupting Traditional Collective Models
+                    Disrupting Traditional Methods
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    We believe the current model is outdated. Instead of asking
-                    for donations or contributions, we&apos;re creating products
-                    and services that provide real value to fans while
-                    generating sustainable revenue. Every one of our offerings
-                    will focus on being unique, maintaining high-quality, and
-                    ensuring long-term sustainability.
+                    We believe the current methods of support are outdated.
+                    Instead of asking for donations or contributions, we&apos;re
+                    developing products and services that provide real value to
+                    fans while generating sustainable revenue. Every one of our
+                    offerings will focus on being unique, maintaining
+                    high-quality, and ensuring long-term sustainability.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
@@ -288,9 +288,9 @@ export default function Page() {
                   </p>
                   <p className="text-gray-600 leading-relaxed">
                     We&apos;re architecting a new movement where the Silicon
-                    Valley mindset meets the NIL landscape. Through innovative
-                    development strategies and curated partnerships, every
-                    product and service we develop and/or promote will be
+                    Valley mindset meets the collegiate landscape. Through
+                    innovative development strategies and curated partnerships,
+                    every product and service we develop and/or promote will be
                     innovative, forward-thinking, and create ever-lasting
                     impact.
                   </p>

@@ -99,12 +99,11 @@ export default function Page() {
           </h2>
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
-              BVR ST CO (Beaver Street Co) is an innovative NIL (name, image and
-              likeness) collective that leverages Oregon State&apos;s strong
-              alumni network and tech heritage to offer forward-thinking
-              products and services that will be marketed, modeled, and
-              co-created by Beaver student-athletes by Beaver student-athletes
-              through their NIL.
+              BVR ST CO (Beaver Street Co) is an innovative studio that
+              leverages Oregon State&apos;s strong alumni network and tech
+              heritage to offer forward-thinking products and services that will
+              be marketed, modeled, and co-created by Beaver student-athletess
+              to maximize their earning opportunities.
             </p>
           </div>
           <Separator className="my-8" />
@@ -117,28 +116,17 @@ export default function Page() {
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
               We&apos;re committed to supporting Oregon State student-athletes
-              through authentic NIL partnerships with forward-thinking brands,
-              influencers, and creators. Every student-athlete we work with
-              receives genuine opportunities to monetize their Name, Image, and
-              Likeness—exactly as NIL was intended to work.
+              through authentic marketing partnerships with our own internal
+              offerings and with forward-thinking brands, influencers, and
+              creators. The current collegiate landscape allows us to utilize
+              student-athletes&apos; unique identities and reach in exchange for
+              financial compensation.
             </p>
             <p>
-              Rather than asking for donations, we believe in offering products
-              and services to fans in return. That is why every marketing
-              collaboration with our student-athletes centers around these
+              Rather than asking for contributions, we believe in offering
+              products and services to fans in return. That is why every
+              marketing opportunity with a student-athlete centers around these
               offerings that you can use, purchase, and enjoy.
-            </p>
-            <p>
-              Our goal is to make every athlete at Oregon State eligible to earn
-              income for their Name, Image, and Likeness. Additionally, a
-              majority of our profits are reinvested into marketing efforts that
-              showcase and financially benefit the student-athletes who market,
-              model and co-create these offerings.
-            </p>
-            <p>
-              When the time comes, we will provide transparent pricing so you
-              can see how your money is being used to support the
-              student-athletes.
             </p>
           </div>{" "}
           <Separator className="my-8" />

@@ -45,7 +45,7 @@ export const GetNotifiedModal = () => {
             <AvatarFallback>OS</AvatarFallback>
           </Avatar>
           <DialogHeader>
-            <DialogTitle>The New Oregon State Starts With You</DialogTitle>
+            <DialogTitle>Join the BVR ST CO studio</DialogTitle>
             <DialogDescription>
               Sign up now and be the first to know when we launch our products,
               experiences, and services.
