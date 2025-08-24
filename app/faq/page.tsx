@@ -28,9 +28,9 @@ export default function Page() {
                 Are you an NIL (name, image and likeness) Collective?
               </p>
               <p>
-                No, we are not an NIL collective. We are a innovative studio
-                that focused on creating offerings in which we will work with
-                student-athletes at Oregon State for marketing.
+                No, we are not an NIL collective. We are an innovative studio
+                that develops products and works with Oregon State
+                student-athletes for marketing campaigns.
               </p>
             </div>
 
