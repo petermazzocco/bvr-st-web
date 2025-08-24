@@ -14,8 +14,7 @@ import TerminalWrapper from "@/contexts/terminal-wrapper";
 
 export const metadata: Metadata = {
   title: "BVR ST CO",
-  description:
-    "Engineering the future of college athletics through Oregon State.",
+  description: "An innovative studio supporting Oregon State student-athletes",
   keywords: [
     "oregon state beavers",
     "dam nation collective",
@@ -49,14 +48,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BVR ST CO",
     description:
-      "Engineering the future of college athletics through Oregon State.",
+      "An innovative studio supporting Oregon State student-athletes",
     url: "https://bvrstco.com",
     siteName: "BVR ST CO",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://bvrstco.com/logo.png",
+        url: "https://bvrstco.com/opengraph/index.png",
         width: 1200,
         height: 630,
         alt: "BVR ST CO",
@@ -67,10 +66,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BVR ST CO",
     description:
-      "Engineering the future of college athletics through Oregon State.",
+      "An innovative studio supporting Oregon State student-athletes",
     creator: "@bvrstco",
     site: "@bvrstco",
-    images: ["https://bvrstco.com/logo.png"],
+    images: ["https://bvrstco.com/opengraph/index.png"],
   },
   metadataBase: new URL("https://bvrstco.com"),
   alternates: {

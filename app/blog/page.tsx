@@ -5,6 +5,18 @@ import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Metadata } from "next";
+import { generateMetadata as createMetadata } from "@/lib/metadata";
+
+export const metadata: Metadata = createMetadata({
+  title: "Blog",
+  description: "The latest from BVR ST CO",
+  canonical: "https://bvrstco.com/blog",
+  image: {
+    url: "https://bvrstco.com/opengraph/blog.png",
+    alt: "BVR ST CO Blog",
+  },
+});
 
 export default async function Page() {
   const posts = await getBlogPosts();

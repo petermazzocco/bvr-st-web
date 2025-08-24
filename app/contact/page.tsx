@@ -14,9 +14,12 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = createMetadata({
   title: "Contact Us",
-  description:
-    "Get in touch with BVR ST CO. Send us a message or apply to become a partner store. We're here to help with any questions.",
+  description: "Get in touch with BVR ST CO.",
   canonical: "https://bvrstco.com/contact",
+  image: {
+    url: "https://bvrstco.com/opengraph/contact.png",
+    alt: "BVR ST CO Contact",
+  },
 });
 
 export default function ContactPage() {

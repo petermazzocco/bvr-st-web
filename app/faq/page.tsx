@@ -9,7 +9,7 @@ export const metadata: Metadata = createMetadata({
   description: "Frequently asked questions about BVR ST CO.",
   canonical: "https://bvrstco.com/faq",
   image: {
-    url: "https://bvrstco.com/logo.png",
+    url: "https://bvrstco.com/opengraph/faq.png",
     alt: "BVR ST CO FAQ",
   },
 });

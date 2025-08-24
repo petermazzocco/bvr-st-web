@@ -11,7 +11,7 @@ export const metadata: Metadata = createMetadata({
   description: "Learn about BVR ST CO's mission.",
   canonical: "https://bvrstco.com/about",
   image: {
-    url: "https://bvrstco.com/about.jpg",
+    url: "https://bvrstco.com/opengraph/about.png",
     alt: "BVR ST CO About Us",
   },
 });
