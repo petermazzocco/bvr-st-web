@@ -20,6 +20,7 @@ const TEAM_MEMBERS = [
   {
     name: "Peter Mazzocco",
     title: "Founder",
+    nickname: "The Digital DAM",
     image: "/team/peter.png",
     socials: [
       {
@@ -63,6 +64,7 @@ const TEAM_MEMBERS = [
   {
     name: "Travis Jones",
     title: "Co-Founder",
+    nickname: "Jupiter Williams",
     image: "/team/travis.png",
     socials: [
       {
@@ -93,34 +95,16 @@ export default function Page() {
             id="mission"
             className="text-lg text-left font-bold text-foreground  mb-4"
           >
-            Mission
+            Who We Are
           </h2>
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
-              It&apos;s no secret, college athletics is becoming expensive.
-              While major programs and collectives burn through millions via
-              traditional fundraising models, Oregon State possesses an untapped
-              competitive advantage: the alumni that are building our future.
-            </p>
-
-            <p>
-              From the engineers who designed the processors powering
-              today&apos;s AI revolution to the entrepreneurs who have
-              transformed startups into tech giants, Beaver Nation has played a
-              major role in all of it. It&apos;s time we leverage this, and BVR
-              ST CO. exists to do that.
-            </p>
-
-            <p>
-              We&apos;re creating the first collective that operates like a tech
-              startup—developing cutting-edge products and services, partnering
-              with innovative brands and creators, and creating modern solutions
-              for traditional barriers.
-            </p>
-
-            <p>
-              Join us and support the student-athletes by doing what Beavers do
-              best—build the future.
+              BVR ST CO (Beaver Street Co) is an innovative NIL (name, image and
+              likeness) collective that leverages Oregon State&apos;s strong
+              alumni network and tech heritage to offer forward-thinking
+              products and services that will be marketed, modeled, and
+              co-created by Beaver student-athletes by Beaver student-athletes
+              through their NIL.
             </p>
           </div>
           <Separator className="my-8" />
@@ -151,19 +135,25 @@ export default function Page() {
               showcase and financially benefit the student-athletes who market,
               model and co-create these offerings.
             </p>
+            <p>
+              When the time comes, we will provide transparent pricing so you
+              can see how your money is being used to support the
+              student-athletes.
+            </p>
           </div>{" "}
           <Separator className="my-8" />
           <h2
             id="team"
             className="text-lg text-left font-bold  text-foreground"
           >
-            Team
+            Meet The Team
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {TEAM_MEMBERS.map((member, i) => (
               <TeamMemberCard
                 key={i}
                 name={member.name}
+                nickname={member.nickname}
                 title={member.title}
                 image={member.image}
                 socials={member.socials}

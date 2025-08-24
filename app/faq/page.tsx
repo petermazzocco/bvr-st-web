@@ -19,79 +19,86 @@ export default function Page() {
   return (
     <div className="min-h-screen pt-16">
       <div className=" py-16 ">
-        <div className="bg-background max-w-4xl mx-auto p-4 rounded-lg text-left">
+        <div className="bg-background max-w-4xl mx-auto p-4 rounded-lg text-left border shadow-sm">
           <h2 className="text-lg text-left font-bold mb-4 text-foreground">
             Frequently Asked Questions
           </h2>
           <div className="flex flex-col text-xs text-muted-foreground leading-relaxed gap-10 mb-16">
             <div>
               <p className="font-bold text-foreground mb-2">
-                What is BVR ST CO?
+                Are you an NIL (name, image and likeness) collective?
               </p>
               <p>
-                BVR ST CO (Beaver Street Co LLC) is an initiative focused on
-                creating a renewed Oregon State culture. We curate exclusive
-                drops, forge partnerships with boundary-pushing brands,
-                entities, and influencers, and create experiences that blend
-                digital and creative innovation with raw, tech-like energy. This
-                is not your average grandma and grandpa collective. Expect
-                nothing boring to be found here.
+                Yes, and no. We are an NIL collective in the sense that we will
+                support Oregon State student-athletes by using their name, image
+                and likeness for marketing opportunities. However, we do not
+                operate like a traditional collective. We encourage you to read
+                our about us section to learn more.
               </p>
             </div>
 
             <div>
               <p className="font-bold text-foreground mb-2">
-                Are you a NIL collective?
+                What does the CO stand for?
               </p>
               <p>
-                Technically, we are an NIL collective. However, we are not a
-                traditional collective and will take a different route compared
-                to more traditional approaches.
+                The &apos;CO&apos; in BVR ST CO is intentionally left ambiguous
+                because it can represent Collective, Community, or Company—each
+                applying in its own unique way.
               </p>
             </div>
 
-            {/*<div>
-              <p className="font-bold text-foreground mb-2">
-                If you&apos;re not an NIL collective, why do you have a
-                membership?
-              </p>
-              <p>
-                Our membership is for those who want early access, exclusive
-                discounts, and personalized experiences. You are welcome to join
-                our community and enjoy the benefits of being a member, but we
-                will not force you to join.
-              </p>
-            </div>*/}
-
             <div>
               <p className="font-bold text-foreground mb-2">
-                Are you affiliated with Oregon State University and/or Dam
-                Nation Collective?
+                Are you affiliated with or officially recognized by Oregon State
+                University and/or Dam Nation Collective?
               </p>
               <p>
                 While we celebrate and proudly support Oregon State University
                 and all that is has to offer, Beaver Street Co LLC operates
-                independently from any official entity. We are fans and alumni
-                creating culture-driven products and experiences for the Beaver
-                community.
+                independently from any official entity, including any official
+                third-party partners of Oregon State. We are fans and alumni
+                creating innovative products, services, and experiences for the
+                Beaver community and supporting the student-athletes by
+                marketing their name, image, and likeness.
               </p>
             </div>
 
-            {/*<div>
+            <div>
               <p className="font-bold text-foreground mb-2">
-                Where does my money go?
+                Are you competing with Dam Nation Collective?
               </p>
               <p>
-                Your purchases and membership subscriptions contribute to the
-                growth and sustainability of Beaver Street Co LLC (like
-                supporting our student-intern led staff, expenses, etc.) and the
-                Oregon State student-athletes for legit NIL marketing. We work
-                directly with the student-athletes on all marketing efforts.
-                Rest assured that your money is being used the{" "}
-                <strong>right way.</strong>
+                No, and the furthest from it. We view BVR ST CO as a
+                complimentary piece to the great work being done at Dam Nation
+                and Oregon State. In fact, we encourage you to become a member
+                of{" "}
+                <a
+                  href="https://damnationnil.com/pages/support-now"
+                  className=" underline"
+                  target="_blank"
+                >
+                  Dam Nation
+                </a>{" "}
+                now and support their mission.
               </p>
             </div>
 
+            <div>
+              <p className="font-bold text-foreground mb-2">
+                Why do you not take contributions?
+              </p>
+              <p>
+                We believe that the most sustainable way forward for supporting
+                Oregon State student-athletes is by offering products, services,
+                and experiences that are either made internally or externally,
+                and are marketed by those same Oregon State student-athletes. We
+                encourage you to purchase, consume or use those offerings
+                instead.
+              </p>
+            </div>
+
+            {/*
             <div>
               <p id="pricing" className="font-bold text-foreground mb-2">
                 How is your pricing structured?

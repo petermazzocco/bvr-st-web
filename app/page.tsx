@@ -234,8 +234,8 @@ export default function Page() {
                     to the entrepreneurs who transformed startups into tech
                     giants, Beaver Nation has shaped the future. Now we&apos;re
                     channeling that innovation directly into supporting our
-                    student-athletes through authentic NIL partnerships and
-                    cutting-edge revenue streams.
+                    student-athletes through authentic NIL opportunities,
+                    genuine partnerships, and cutting-edge revenue streams.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
@@ -259,17 +259,16 @@ export default function Page() {
                     Disrupting Traditional Collective Models
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    While major programs spend millions using outdated
-                    fundraising models, we&apos;re doing it differently. Instead
-                    of asking for donations, we&apos;re creating products and
-                    services that provide real value to fans while generating
-                    sustainable revenue. Every purchase from our offerings
-                    supports authentic NIL opportunities for student-athletes
-                    across every sport—exactly as NIL was intended to work.
+                    We believe the current model is outdated. Instead of asking
+                    for donations or contributions, we&apos;re creating products
+                    and services that provide real value to fans while
+                    generating sustainable revenue. Every one of our offerings
+                    will focus on being unique, maintaining high-quality, and
+                    ensuring long-term sustainability.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
-                      Value Creation • Product Innovation • Market Disruption
+                      Product Innovation • Market Disruption • Customer-Centric
                     </p>
                   </div>
                 </div>
@@ -288,15 +287,17 @@ export default function Page() {
                     Innovating The Future of College Athletics
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    We&apos;re architecting a new paradigm where the Silicon
-                    Valley mindset meets Beaver Nation. Through innovative
-                    programs and strategic partnerships, every product we
-                    develop or promote will be innovative and forward-thinking.
+                    We&apos;re architecting a new movement where the Silicon
+                    Valley mindset meets the NIL landscape. Through innovative
+                    development strategies and curated partnerships, every
+                    product and service we develop and/or promote will be
+                    innovative, forward-thinking, and create ever-lasting
+                    impact.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
-                      Innovative Programs • Strategic Partnerships • Long-term
-                      Impact
+                      Innovative Development • Strategic Partnerships •
+                      Long-term Impact
                     </p>
                   </div>
                 </div>
