@@ -229,13 +229,13 @@ export default function Page() {
                   </p>
                   <p className="text-gray-600 leading-relaxed">
                     We&apos;re elevating Oregon State athletics by leveraging
-                    our greatest competitive advantage: the alumni who built
-                    Silicon Valley. From the engineers behind today&apos;s AI
-                    processors to the entrepreneurs who transformed startups
-                    into tech giants, Beaver Nation has shaped the future. Now
-                    we&apos;re channeling that innovation directly into
-                    supporting our student-athletes through authentic NIL
-                    partnerships and cutting-edge revenue streams.
+                    our greatest competitive advantage: the alumni who built our
+                    world. From the engineers behind today&apos;s AI processors
+                    to the entrepreneurs who transformed startups into tech
+                    giants, Beaver Nation has shaped the future. Now we&apos;re
+                    channeling that innovation directly into supporting our
+                    student-athletes through authentic NIL partnerships and
+                    cutting-edge revenue streams.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
@@ -259,14 +259,13 @@ export default function Page() {
                     Disrupting Traditional Collective Models
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    While major programs burn through millions via outdated
-                    fundraising models, we&apos;re operating like a tech
-                    startup. Instead of asking for donations, we&apos;re
-                    creating products and services that provide real value to
-                    fans while generating sustainable revenue. Every purchase
-                    from our offerings supports authentic NIL opportunities for
-                    student-athletes across every sport—exactly as NIL was
-                    intended to work.
+                    While major programs spend millions using outdated
+                    fundraising models, we&apos;re doing it differently. Instead
+                    of asking for donations, we&apos;re creating products and
+                    services that provide real value to fans while generating
+                    sustainable revenue. Every purchase from our offerings
+                    supports authentic NIL opportunities for student-athletes
+                    across every sport—exactly as NIL was intended to work.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
@@ -289,15 +288,14 @@ export default function Page() {
                     Innovating The Future of College Athletics
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    We&apos;re architecting a new paradigm where Silicon Valley
-                    mindset meets Beaver Nation heritage. Through innovative
-                    programs and strategic partnerships, every Oregon State
-                    student-athlete will have opportunities to earn income
-                    through their Name, Image, and Likeness.
+                    We&apos;re architecting a new paradigm where the Silicon
+                    Valley mindset meets Beaver Nation. Through innovative
+                    programs and strategic partnerships, every product we
+                    develop or promote will be innovative and forward-thinking.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
-                      Affiliate Program • Brand Partnerships • Sustainable
+                      Innovative Programs • Strategic Partnerships • Long-term
                       Impact
                     </p>
                   </div>
