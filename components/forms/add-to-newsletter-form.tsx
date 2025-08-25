@@ -16,6 +16,25 @@ const addToNewsLetterSchema = z.object({
 
 type FormData = z.infer<typeof addToNewsLetterSchema>;
 
+// Loading states array
+const LOADING_STATES = [
+  "INSERTING RECORD...",
+  "COMMITTING TO DB...",
+  "WRITING TO DATABASE...",
+  "EXECUTING INSERT...",
+  "PERSISTING DATA...",
+  "DEPLOYING SUBSCRIBER...",
+  "PUSHING TO PRODUCTION...",
+  "COMPILING SUBSCRIBER...",
+  "SYNCING WITH SERVER...",
+  "INITIALIZING USER...",
+  "BOOTSTRAPPING ACCOUNT...",
+  "PROCESSING SIGNUP...",
+  "REGISTERING USER...",
+  "ONBOARDING...",
+  "ACTIVATING SUBSCRIPTION...",
+];
+
 export const AddToNewsletterForm = () => {
   const [message, formAction, pending] = useActionState(addToNewsletter, null);
   const [formData, setFormData] = useState<Partial<FormData>>({
@@ -25,6 +44,26 @@ export const AddToNewsletterForm = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
     {},
   );
+  const [currentLoadingText, setCurrentLoadingText] = useState("");
+
+  // Initialize and rotate loading text
+  useEffect(() => {
+    if (pending) {
+      // Set initial random loading state
+      const randomIndex = Math.floor(Math.random() * LOADING_STATES.length);
+      setCurrentLoadingText(LOADING_STATES[randomIndex]);
+
+      // Rotate through loading states every 2 seconds
+      const interval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * LOADING_STATES.length);
+        setCurrentLoadingText(LOADING_STATES[randomIndex]);
+      }, 2000);
+
+      return () => clearInterval(interval);
+    } else {
+      setCurrentLoadingText("");
+    }
+  }, [pending]);
 
   // Handle server action messages with toast
   useEffect(() => {
@@ -138,8 +177,30 @@ export const AddToNewsletterForm = () => {
         id="user-added-to-newsletter"
         data-umami-event="User added to newsletter"
       >
-        <span className="transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem] group-hover:animate-pulse">
-          GET NOTIFIED
+        <span className="transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem] group-hover:animate-pulse flex flex-row items-center">
+          {pending && (
+            <svg
+              className="animate-spin -ml-1 mr-3 h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          )}
+          {pending ? currentLoadingText : "GET NOTIFIED"}
         </span>
         <ArrowUpRightIcon
           className="-me-1 ms-2 opacity-60 group-hover:opacity-100 transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem] group-hover:animate-pulse"
