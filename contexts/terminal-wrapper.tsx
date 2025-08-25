@@ -51,7 +51,7 @@ const LoadingBar: React.FC<{ delay: number }> = ({ delay }) => {
 
   return (
     <div className="text-md font-vt tracking-wider">
-      <div>Installing... {progress}%</div>
+      <div>mounting... {progress}%</div>
       <div className="font-mono text-sm">
         <span className="text-green-400">{"█".repeat(filledBars)}</span>
         <span className="text-gray-500">{"░".repeat(emptyBars)}</span>
@@ -423,18 +423,20 @@ const TerminalWrapper: React.FC<TerminalWrapperProps> = ({
           >
             <Terminal>
               <AnimatedSpan delay={200}>
-                $ brew install {packageName}
+                $ booting bvr_st_co.exe...
               </AnimatedSpan>
-              <AnimatedSpan delay={400}>Downloading bvr-st-co</AnimatedSpan>
+              {/*<AnimatedSpan delay={400}>
+                installing bvr-st-co drives
+              </AnimatedSpan>*/}
               <LoadingBar delay={700} />
               <AnimatedSpan delay={2000} className="text-secondary">
-                ✓ Installation completed successfully!
+                ✓ installation completed successfully!
               </AnimatedSpan>
               <AnimatedSpan delay={3000}>
-                Printing a code to the console...
+                system ready. printing a code to the console...
               </AnimatedSpan>
               <AnimatedSpan delay={4000} className="text-primary">
-                Welcome to the future of Oregon State.
+                welcome to the future of oregon state.
               </AnimatedSpan>
             </Terminal>
           </div>
