@@ -423,7 +423,7 @@ const TerminalWrapper: React.FC<TerminalWrapperProps> = ({
           >
             <Terminal>
               <AnimatedSpan delay={200}>
-                $ booting bvr_st_co.exe...
+                $ booting bvr_st_co_v1.exe...
               </AnimatedSpan>
               {/*<AnimatedSpan delay={400}>
                 installing bvr-st-co drives
