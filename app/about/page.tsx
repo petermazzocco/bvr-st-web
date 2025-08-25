@@ -102,8 +102,8 @@ export default function Page() {
               BVR ST CO (Beaver Street Co) is an innovative studio that
               leverages Oregon State&apos;s strong alumni network and tech
               heritage to offer forward-thinking products and services that will
-              be marketed, modeled, and co-created by Beaver student-athletess
-              to maximize their earning opportunities.
+              be marketed, modeled, and co-created by Beaver student-athletes to
+              maximize their earning opportunities.
             </p>
           </div>
           <Separator className="my-8" />
