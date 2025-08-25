@@ -89,6 +89,7 @@ export function Footer() {
                   <Link
                     href="/blog"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    prefetch
                   >
                     Blog
                   </Link>

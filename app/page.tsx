@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -87,7 +87,7 @@ export default function Page() {
             {/* Top section with centered content */}
             <div className="flex-1 flex flex-col items-center justify-center">
               {/* ELEVATE. DISRUPT. INNOVATE. text for mobile */}
-              <div className="text-white/70 text-xs font-light tracking-[0.15em] space-y-1 mb-8 text-center">
+              <div className="text-white/70 text-sm font-light tracking-[0.15em] space-y-1 mb-8 text-center">
                 <p>ELEVATE.</p>
                 <p>DISRUPT.</p>
                 <p>INNOVATE.</p>
@@ -98,26 +98,24 @@ export default function Page() {
                 <h1 className="text-[5rem] leading-[0.75] font-thin tracking-[-0.02em] text-background mix-blend-screen">
                   BVR ST CO
                 </h1>
-                <div className="text-muted text-[0.6rem] font-light tracking-[0.3em] uppercase mt-2">
+                <div className="text-muted text-sm font-light tracking-[0.3em] uppercase mt-2">
                   FOR BEAVERS. BY BEAVERS.
                 </div>
-              </div>
-
-              {/* About section - centered */}
-              <div className="space-y-2 text-center max-w-[400px] hidden md:block">
-                <div className="text-primary text-[0.6rem] font-light tracking-[0.2em] uppercase">
-                  ABOUT
-                </div>
-                <p className="text-white text-xs font-light leading-relaxed">
-                  The collective that&apos;s building the future of college
-                  athletics
-                </p>
               </div>
             </div>
 
             {/* Bottom quarter section for buttons */}
             <div className="h-1/4 flex flex-col justify-center items-center pb-[25vh]">
               <div className="flex flex-col gap-2 w-full max-w-[400px]">
+                <div className="space-y-2 text-left w-fit">
+                  <div className="text-primary text-xs font-light flex items-center tracking-[0.2em] uppercase">
+                    <ChevronRight className="mr-1" size={16} /> ABOUT
+                  </div>
+                  <p className="text-white text-xs font-light leading-relaxed">
+                    The innovative studio that&apos;s building the future for
+                    Oregon State.
+                  </p>
+                </div>
                 <Button
                   variant="outline"
                   asChild
@@ -128,6 +126,7 @@ export default function Page() {
                     id="learn-more-button"
                     data-umami-event="Homepage learn more clicked"
                     className="flex items-center justify-center w-full text-[0.6rem] tracking-[0.1em] group-hover:text-primary"
+                    prefetch
                   >
                     <span className="transition-transform group-hover:translate-x-0.5 group-hover:text-primary group-hover:translate-y-[-0.125rem]">
                       LEARN MORE
@@ -163,8 +162,8 @@ export default function Page() {
             {/* Bottom right content - Desktop positioning */}
             <div className="absolute bottom-8 right-8 lg:bottom-16 lg:right-12 max-w-xs">
               <div className="mb-8 space-y-2">
-                <div className="text-primary text-xs font-light tracking-[0.2em] uppercase">
-                  ABOUT
+                <div className="text-primary text-xs font-light flex items-center tracking-[0.2em] uppercase">
+                  <ChevronRight className="mr-1" size={16} /> ABOUT
                 </div>
                 <p className="text-white text-sm font-light leading-relaxed">
                   The innovative studio that&apos;s building the future for
@@ -183,6 +182,7 @@ export default function Page() {
                     id="learn-more-button"
                     data-umami-event="Homepage learn more clicked"
                     className="flex items-center justify-center w-full text-xs tracking-[0.1em] group-hover:text-primary"
+                    prefetch
                   >
                     <span className="transition-transform group-hover:translate-x-0.5 group-hover:text-primary group-hover:translate-y-[-0.125rem]">
                       LEARN MORE

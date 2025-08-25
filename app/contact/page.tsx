@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { ContactForm } from "@/components/forms/contact-form";
 import { generateMetadata as createMetadata } from "@/lib/metadata";
+import { Button } from "@/components/ui/button";
+import { ArrowUpRight, ArrowUpRightIcon } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -25,26 +27,30 @@ export const metadata: Metadata = createMetadata({
 export default function ContactPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <Card className="mx-auto max-w-2xl border-none rouded-lg">
+      <Card className="mx-auto max-w-md border shadow-sm rounded-lg">
         <CardHeader>
           <CardTitle className="text-2xl">Contact Us</CardTitle>
           <CardDescription>
             Send us a message and we&apos;ll get back to you as soon as
-            possible.
+            possible. Please include your name, phone number, email address, and
+            a brief description of your inquiry.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ContactForm />
-        </CardContent>
-        <CardFooter className="text-center text-xs text-muted-foreground">
-          Or email us directly at{" "}
-          <a
-            href="mailto:info@bvrstco.com"
-            className="text-primary underline hover:text-primary/80 ml-1"
-          >
-            info@bvrstco.com
+          <a href="mailto:info@bvrstco.com" target="_blank" className="group">
+            <Button
+              variant="default"
+              className="transition-transform group-hover:translate-x-0.5  group-hover:translate-y-[-0.125rem]"
+            >
+              Reach Out
+              <ArrowUpRight
+                className="-me-1 ms-2 opacity-60 group-hover:opacity-100  transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem]"
+                size={12}
+                aria-hidden="true"
+              />
+            </Button>
           </a>
-        </CardFooter>
+        </CardContent>
       </Card>
     </div>
   );
