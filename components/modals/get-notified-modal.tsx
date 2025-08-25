@@ -26,7 +26,7 @@ export const GetNotifiedModal = () => {
             className=" group bg-primary"
           >
             <span className="transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem] group-hover:animate-pulse">
-              GET NOTIFIED
+              SIGN UP
             </span>
             <ArrowUpRightIcon
               className="-me-1 ms-2 opacity-60  group-hover:opacity-100 transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem] group-hover:animate-pulse"
