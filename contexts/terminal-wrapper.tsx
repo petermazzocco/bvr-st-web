@@ -417,8 +417,11 @@ const TerminalWrapper: React.FC<TerminalWrapperProps> = ({
           </div>
 
           {/* Terminal */}
-          <div ref={terminalRef} className="min-w-[425px] max-w-[425px] z-30">
-            <Terminal className="max-w-none">
+          <div
+            ref={terminalRef}
+            className="min-w-[350px] max-w-[350px] sm:min-w-[425px] sm:max-w-[425px] z-30"
+          >
+            <Terminal>
               <AnimatedSpan delay={200}>
                 $ brew install {packageName}
               </AnimatedSpan>
