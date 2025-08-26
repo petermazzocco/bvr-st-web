@@ -112,6 +112,15 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
+                    href="https://github.com/bvr-str"
+                    target="_blank"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    GitHub
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="https://www.instagram.com/bvrstco"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
