@@ -204,8 +204,8 @@ export default function Page() {
       </div>
 
       {/* Aircraft Systems Accordion Section - Normal flow */}
-      <section className="bg-background py-16 px-0 sm:px-6 relative z-20">
-        <div className="max-w-4xl mx-auto">
+      <section className="bg-background py-16 px-0 sm:px-6 relative z-20 flex items-center ">
+        <div className="w-full mx-10">
           <div className="mb-12 text-center">
             <h2 className="text-3xl font-thin tracking-[-0.02em] text-gray-900 mb-4">
               WHO WE ARE

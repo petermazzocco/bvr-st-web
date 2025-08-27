@@ -11,6 +11,7 @@ import Script from "next/script";
 import { underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
 import TerminalWrapper from "@/contexts/terminal-wrapper";
+import SmoothScrolling from "@/contexts/smooth-scrolling";
 
 export const metadata: Metadata = {
   title: "BVR ST CO",
@@ -120,12 +121,14 @@ export default async function RootLayout({
             <UnderConstructionPage />
           ) : (
             <TerminalWrapper packageName="bvr-st-co">
-              <Navbar />
-              <main>
-                {children}
-                <Toaster closeButton position="bottom-center" richColors />
-              </main>
-              <Footer />
+              <SmoothScrolling>
+                <Navbar />
+                <main>
+                  {children}
+                  <Toaster closeButton position="bottom-center" richColors />
+                </main>
+                <Footer />
+              </SmoothScrolling>
             </TerminalWrapper>
           )}
         </CartProvider>

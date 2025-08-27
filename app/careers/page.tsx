@@ -50,77 +50,70 @@ export default async function Page() {
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className=" pb-6">
-                    <ScrollArea className="h-[30rem] bg-muted/20 rounded-lg pb-4">
-                      <div className="pt-4 space-y-4 bg-muted/20 px-6 ">
-                        {Array.isArray(career?.description) && (
-                          <PortableText
-                            value={career.description}
-                            components={{
-                              block: {
-                                h1: ({ children }) => (
-                                  <h1 className="text-3xl font-bold mb-4 mt-8">
-                                    {children}
-                                  </h1>
-                                ),
-                                h2: ({ children }) => (
-                                  <h2 className="text-2xl font-bold mb-3 mt-6">
-                                    {children}
-                                  </h2>
-                                ),
-                                h3: ({ children }) => (
-                                  <h3 className="text-xl font-bold mb-2 mt-4">
-                                    {children}
-                                  </h3>
-                                ),
-                                h4: ({ children }) => (
-                                  <h4 className="text-lg font-bold mb-2 mt-4">
-                                    {children}
-                                  </h4>
-                                ),
-                                blockquote: ({ children }) => (
-                                  <blockquote className="border-l-4 text-sm border-border/10 pl-4 italic mb-4">
-                                    {children}
-                                  </blockquote>
-                                ),
-                                normal: ({ children }) => (
-                                  <p className="mb-4 leading-7 text-sm">
-                                    {children}
-                                  </p>
-                                ),
-                              },
-                              marks: {
-                                link: ({ value, children }) => (
-                                  <a
-                                    className="text-primary hover:underline"
-                                    href={value.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {children}
-                                  </a>
-                                ),
-                              },
-                            }}
-                          />
-                        )}
-                        <Separator className="my-4" />
-                        <h3 className="text-lg font-semibold text-foreground">
-                          Interested in joining us?
-                        </h3>
-                        <p className="text-sm text-foreground/70">
-                          Fill out the form below to begin your application for
-                          the position of{" "}
-                          <span className="font-medium">{career.title}</span>.
-                        </p>
-                        <div className="pt-2 max-w-md flex flex-col justify-center items-center w-full">
-                          <ApplyNowForm jobTitle={career.title} />
-                        </div>
+                    <div className="pt-4 space-y-4  px-6 ">
+                      {Array.isArray(career?.description) && (
+                        <PortableText
+                          value={career.description}
+                          components={{
+                            block: {
+                              h1: ({ children }) => (
+                                <h1 className="text-3xl font-bold mb-4 mt-8">
+                                  {children}
+                                </h1>
+                              ),
+                              h2: ({ children }) => (
+                                <h2 className="text-2xl font-bold mb-3 mt-6">
+                                  {children}
+                                </h2>
+                              ),
+                              h3: ({ children }) => (
+                                <h3 className="text-xl font-bold mb-1 mt-1">
+                                  {children}
+                                </h3>
+                              ),
+                              h4: ({ children }) => (
+                                <h4 className="text-lg font-bold mb-1 mt-1">
+                                  {children}
+                                </h4>
+                              ),
+                              blockquote: ({ children }) => (
+                                <blockquote className="border-l-4 text-sm border-border/10 pl-4 italic mb-4">
+                                  {children}
+                                </blockquote>
+                              ),
+                              normal: ({ children }) => (
+                                <p className="mb-1 leading-7 text-sm">
+                                  {children}
+                                </p>
+                              ),
+                            },
+                            marks: {
+                              link: ({ value, children }) => (
+                                <a
+                                  className="text-primary hover:underline"
+                                  href={value.href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {children}
+                                </a>
+                              ),
+                            },
+                          }}
+                        />
+                      )}
+                      <Separator className="my-4" />
+                      <h3 className="text-lg font-semibold text-foreground">
+                        Interested in joining us?
+                      </h3>
+                      <p className="text-sm text-foreground/70">
+                        Fill out the form below to begin your application for
+                        the position of{" "}
+                        <span className="font-medium">{career.title}</span>.
+                      </p>
+                      <div className="pt-2 max-w-md flex flex-col justify-center items-center w-full">
+                        <ApplyNowForm jobTitle={career.title} />
                       </div>
-                    </ScrollArea>
-                    <div className="flex items-center justify-center text-muted-foreground space-x-1.5 py-3">
-                      <ChevronDown size={10} />
-                      <span className="text-xs">Scroll for more</span>
-                      <ChevronDown size={10} />
                     </div>
                   </AccordionContent>
                 </AccordionItem>
