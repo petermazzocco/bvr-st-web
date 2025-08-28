@@ -76,7 +76,7 @@ export default function Page() {
         {/* Top corner text - Responsive positioning */}
         <div className="absolute top-4 right-4 sm:top-8 sm:right-24 z-20">
           <div className="text-white/80 text-xs sm:text-sm font-light tracking-[0.2em] border border-white/20 px-2 py-1 sm:px-3 sm:py-1.5 backdrop-blur-xl">
-            (v1.0.0)
+            (v1.0.1)
           </div>
         </div>
 
@@ -204,8 +204,8 @@ export default function Page() {
       </div>
 
       {/* Aircraft Systems Accordion Section - Normal flow */}
-      <section className="bg-background py-16 px-0 sm:px-6 relative z-20">
-        <div className="max-w-4xl mx-auto">
+      <section className="bg-background py-16 px-0 sm:px-6 relative z-20 flex items-center ">
+        <div className="w-full mx-10">
           <div className="mb-12 text-center">
             <h2 className="text-3xl font-thin tracking-[-0.02em] text-gray-900 mb-4">
               WHO WE ARE
@@ -217,7 +217,7 @@ export default function Page() {
 
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1" className="border-b border-gray-200">
-              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
+              <AccordionTrigger className="py-6 text-left hover:underline [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
                 <span className="text-lg font-medium text-gray-900 tracking-wide">
                   01 ELEVATING
                 </span>
@@ -248,7 +248,7 @@ export default function Page() {
             </AccordionItem>
 
             <AccordionItem value="item-2" className="border-b border-gray-200">
-              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
+              <AccordionTrigger className="py-6 text-left hover:underline [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
                 <span className="text-lg font-medium text-gray-900 tracking-wide">
                   02 DISRUPTING
                 </span>
@@ -276,7 +276,7 @@ export default function Page() {
             </AccordionItem>
 
             <AccordionItem value="item-3" className="border-b border-gray-200">
-              <AccordionTrigger className="py-6 px-6 text-left hover:no-underline hover:bg-gray-50 [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
+              <AccordionTrigger className="py-6 text-left hover:underline  [&[data-state=open]>svg]:rotate-90 [&[data-state=open]>span]:text-primary">
                 <span className="text-lg font-medium text-gray-900 tracking-wide">
                   03 INNOVATING
                 </span>

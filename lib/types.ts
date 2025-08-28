@@ -764,6 +764,7 @@ export interface Career {
   title: string;
   description: string;
   pay: string;
+  slug: string;
   createdAt: string;
 }
 
