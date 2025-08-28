@@ -1,6 +1,6 @@
 // components/SmoothScrolling.js
 "use client"; // Important for client-side components in Next.js App Router
-import { ReactLenis } from "@studio-freight/react-lenis";
+import { ReactLenis } from "lenis/react";
 
 function SmoothScrolling({ children }: { children: React.ReactNode }) {
   return (
