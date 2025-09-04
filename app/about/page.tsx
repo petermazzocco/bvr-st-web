@@ -84,6 +84,23 @@ const TEAM_MEMBERS = [
       },
     ],
   },
+  {
+    name: "Michael Milord",
+    title: "Director of Engineering",
+    nickname: "Milord",
+    image: "/team/milord.png",
+    socials: [
+      {
+        icon: (
+          <SocialIcon
+            url="https://www.linkedin.com/in/michael-milord/"
+            target="_blank"
+          />
+        ),
+        url: "https://www.linkedin.com/in/michael-milord/",
+      },
+    ],
+  },
 ];
 
 export default function Page() {
