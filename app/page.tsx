@@ -11,6 +11,7 @@ import {
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function Page() {
   const [scrollY, setScrollY] = useState(0);
@@ -76,7 +77,7 @@ export default function Page() {
         {/* Top corner text - Responsive positioning */}
         <div className="absolute top-4 right-4 sm:top-8 sm:right-24 z-20">
           <div className="text-white/80 text-xs sm:text-sm font-light tracking-[0.2em] border border-white/20 px-2 py-1 sm:px-3 sm:py-1.5 backdrop-blur-xl">
-            (v1.0.1)
+            (v1.0.2)
           </div>
         </div>
 
@@ -112,14 +113,14 @@ export default function Page() {
                     <ChevronRight className="mr-1" size={16} /> ABOUT
                   </div>
                   <p className="text-white text-xs font-light leading-relaxed">
-                    The innovative studio that&apos;s building the future for
+                    The innovative studio that&apos;s building the future at
                     Oregon State.
                   </p>
                 </div>
                 <Button
                   variant="outline"
                   asChild
-                  className="group border-white/30 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white hover:text-white transition-all duration-300 h-8"
+                  className="group border-white/30 bg-white/5 backdrop-blur-sm hover:bg-primary/30 text-white hover:text-white transition-all duration-300 h-8"
                 >
                   <Link
                     href="/blog/welcome-to-bvr-st-co"
@@ -203,6 +204,95 @@ export default function Page() {
         </div>
       </div>
 
+      <section className="bg-foreground py-16 px-0 sm:px-6 relative z-20 flex items-center ">
+        <div className="w-full mx-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex flex-col items-start justify-center space-y-12 w-full md:w-1/2">
+              <div className="flex flex-col items-start justify-between">
+                <h2 className="text-3xl font-thin tracking-[-0.02em] text-muted">
+                  PROJECT 1
+                </h2>
+                <p className="text-muted text-lg font-light tracking-[0.1em]">
+                  COORDINATOR
+                </p>
+              </div>
+              <ul className="text-muted text-sm font-light tracking-[0.05em] space-y-2 list-none">
+                <li className="flex items-start">
+                  <span className="text-white mr-2">•</span>
+                  <span>
+                    A first-of-its-kind agentic framework for real-time
+                    strategic decision making
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-white mr-2">•</span>
+                  <span>
+                    Powered by{" "}
+                    <span className="font-bold" style={{ color: "#76B900" }}>
+                      NVIDIA Nemotron
+                    </span>{" "}
+                    with dual-mode cognitive architecture
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-white mr-2">•</span>
+                  <span>
+                    Trained and deployed locally on{" "}
+                    <span className="font-bold" style={{ color: "#76B900" }}>
+                      NVIDIA DGX Spark
+                    </span>{" "}
+                    for enhanced security and data privacy
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-white mr-2">•</span>
+                  <span>
+                    Processes multiple data types through OBSERVE, THINK,
+                    ACTION, and VERIFY cycles
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-white mr-2">•</span>
+                  <span>
+                    Features fine-tuning with LoRA and zero-knowledge security
+                  </span>
+                </li>
+              </ul>
+              <div className="w-full flex justify-start mt-4">
+                <Button
+                  variant="outline"
+                  asChild
+                  className="group border-white/30 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white hover:text-white transition-all duration-300 h-11"
+                >
+                  <Link
+                    href="https://coordinator.bvrstco.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center px-6 text-xs tracking-[0.1em] group-hover:text-primary"
+                  >
+                    <span className="transition-transform group-hover:translate-x-0.5 group-hover:text-primary group-hover:translate-y-[-0.125rem]">
+                      LEARN MORE ABOUT COORDINATOR
+                    </span>
+                    <ArrowUpRight
+                      className="-me-1 ms-2 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem]"
+                      size={12}
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <div className="flex items-center justify-center w-full md:w-1/2">
+              <Image
+                src="/assets/icons/COORDINATOR_ICON_WHITE.svg"
+                alt="Project 1"
+                width={300}
+                height={300}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Aircraft Systems Accordion Section - Normal flow */}
       <section className="bg-background py-16 px-0 sm:px-6 relative z-20 flex items-center ">
         <div className="w-full mx-10">
