@@ -265,7 +265,7 @@ export default function Page() {
                   className="group border-white/30 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white hover:text-white transition-all duration-300 h-11"
                 >
                   <Link
-                    href="https://coordinator.bvrstco.com"
+                    href="/blog/introducing-coordinator"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center px-6 text-xs tracking-[0.1em] group-hover:text-primary"
