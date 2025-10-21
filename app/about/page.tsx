@@ -115,6 +115,23 @@ const TEAM_MEMBERS = [
       },
     ],
   },
+  {
+    name: "Giang Doan",
+    title: "Systems Development Engineer",
+    nickname: "",
+    image: "/team/giang.jpg",
+    socials: [
+      {
+        icon: (
+          <SocialIcon
+            url="https://www.linkedin.com/in/giang-doan-464058185/"
+            target="_blank"
+          />
+        ),
+        url: "https://www.linkedin.com/in/giang-doan-464058185/",
+      },
+    ],
+  },
 ];
 
 export default function Page() {
