@@ -25,12 +25,14 @@ export default function Page() {
           <div className="flex flex-col text-xs text-muted-foreground leading-relaxed gap-10 mb-16">
             <div>
               <p className="font-bold text-foreground mb-2">
-                Are you an NIL (name, image and likeness) Collective?
+                Are you an NIL (name, image and likeness) Collective for Oregon
+                Stte?
               </p>
               <p>
                 No, we are not an NIL collective. We are an innovative studio
-                that develops products and works with Oregon State
-                student-athletes for marketing campaigns.
+                that develops products and provides opportunities for Oregon
+                State students and/or student-athletes for internships and/or
+                marketing campaigns.
               </p>
             </div>
 

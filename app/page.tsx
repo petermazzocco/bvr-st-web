@@ -77,7 +77,7 @@ export default function Page() {
         {/* Top corner text - Responsive positioning */}
         <div className="absolute top-4 right-4 sm:top-8 sm:right-24 z-20">
           <div className="text-white/80 text-xs sm:text-sm font-light tracking-[0.2em] border border-white/20 px-2 py-1 sm:px-3 sm:py-1.5 backdrop-blur-xl">
-            (v1.0.2)
+            (v1.0.3)
           </div>
         </div>
 
@@ -100,7 +100,7 @@ export default function Page() {
                   BVR ST CO
                 </h1>
                 <div className="text-muted text-sm font-light tracking-[0.3em] uppercase mt-2">
-                  FOR BEAVERS. BY BEAVERS.
+                  THE FUTURE OF ATHLETICS
                 </div>
               </div>
             </div>
@@ -113,8 +113,8 @@ export default function Page() {
                     <ChevronRight className="mr-1" size={16} /> ABOUT
                   </div>
                   <p className="text-white text-xs font-light leading-relaxed">
-                    The innovative studio that&apos;s building the future at
-                    Oregon State.
+                    The innovative studio that&apos;s building the future of
+                    sports at Oregon State.
                   </p>
                 </div>
                 <Button
@@ -155,7 +155,7 @@ export default function Page() {
                   BVR ST CO
                 </h1>
                 <div className="text-muted text-xs lg:text-sm font-light tracking-[0.3em] uppercase ml-2">
-                  FOR BEAVERS. BY BEAVERS.
+                  THE FUTURE OF ATHLETICS
                 </div>
               </div>
             </div>
@@ -167,8 +167,8 @@ export default function Page() {
                   <ChevronRight className="mr-1" size={16} /> ABOUT
                 </div>
                 <p className="text-white text-sm font-light leading-relaxed">
-                  The innovative studio that&apos;s building the future for
-                  Oregon State
+                  The innovative studio that&apos;s building the future of
+                  sports at Oregon State.
                 </p>
               </div>
 
@@ -315,22 +315,21 @@ export default function Page() {
               <AccordionContent className="px-6 pb-6">
                 <div className="pt-4 space-y-4">
                   <p className="text-gray-700 font-medium">
-                    Elevating Student-Athlete Opportunities Through Innovation
+                    Elevating Athletics Through Innovation
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    We&apos;re elevating Oregon State athletics by leveraging
-                    our greatest competitive advantage: the alumni who built our
-                    world. From the engineers behind today&apos;s AI processors
-                    to the entrepreneurs who transformed startups into tech
-                    giants, Beaver Nation has shaped the future. Now we&apos;re
-                    channeling that innovation directly into supporting our
-                    student-athletes through authentic marketing opportunities,
-                    genuine partnerships, and cutting-edge revenue streams.
+                    We&apos;re elevating athletics by leveraging the greatest
+                    competitive advantage: artifical intelligence. Much of
+                    artifical intelligence has been shapred by the alumni of
+                    Oregon State. From the engineers behind today&apos;s AI
+                    processors to the entrepreneurs who transformed startups
+                    into tech giants, Beaver Nation has created the future. Now
+                    we&apos;re channeling that innovation directly into
+                    improving athletics.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
-                      Marketing Opportunities • Genuine Partnerships •
-                      Sustainable Growth
+                      Sports-Tech • Artifical Intelligence • Transformation
                     </p>
                   </div>
                 </div>
@@ -349,16 +348,16 @@ export default function Page() {
                     Disrupting Traditional Methods
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    We believe the current methods of support are outdated.
-                    Instead of asking for donations or contributions, we&apos;re
+                    We believe the current methods of athletics are outdated.
+                    Instead of relying on traditional technology, we&apos;re
                     developing products and services that provide real value to
-                    fans while generating sustainable revenue. Every one of our
-                    offerings will focus on being unique, maintaining
+                    athletic programs. Every one of our offerings will focus on
+                    being at the forefront of innovation, maintaining
                     high-quality, and ensuring long-term sustainability.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
-                      Product Innovation • Market Disruption • Customer-Centric
+                      Product Innovation • Market Disruption • Sustainability
                     </p>
                   </div>
                 </div>
@@ -377,12 +376,12 @@ export default function Page() {
                     Innovating The Future of College Athletics
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    We&apos;re architecting a new movement where the Silicon
-                    Valley mindset meets the collegiate landscape. Through
-                    innovative development strategies and curated partnerships,
-                    every product and service we develop and/or promote will be
-                    innovative, forward-thinking, and create ever-lasting
-                    impact.
+                    We&apos;re architecting a new movement where the future of
+                    artificial intelligence meets the athletic landscape.
+                    Through innovative development strategies and curated
+                    partnerships, every product and service we develop and/or
+                    promote will be innovative, forward-thinking, and create
+                    ever-lasting impact.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">

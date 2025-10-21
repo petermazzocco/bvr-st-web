@@ -101,6 +101,20 @@ const TEAM_MEMBERS = [
       },
     ],
   },
+  {
+    name: "Kyle Bjornstad",
+    title: "Senior Advisor",
+    nickname: "",
+    image: "/team/kyle.jpg",
+    socials: [
+      {
+        icon: (
+          <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
+        ),
+        url: "https://www.x.com/kylebjornstad1/",
+      },
+    ],
+  },
 ];
 
 export default function Page() {
@@ -117,10 +131,9 @@ export default function Page() {
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
               BVR ST CO (Beaver Street Co) is an innovative studio that
-              leverages Oregon State&apos;s strong alumni network and tech
-              heritage to offer forward-thinking products and services that will
-              be marketed, modeled, and co-created by Beaver student-athletes to
-              maximize their earning opportunities.
+              leverages Oregon State&apos;s strong tech network and heritage to
+              offer forward-thinking products and services that will transform
+              athletics.
             </p>
           </div>
           <Separator className="my-8" />
@@ -133,17 +146,11 @@ export default function Page() {
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
               We&apos;re committed to supporting Oregon State student-athletes
-              through authentic marketing partnerships with our own internal
-              offerings and with forward-thinking brands, influencers, and
-              creators. The current collegiate landscape allows us to utilize
-              student-athletes&apos; unique identities and reach in exchange for
-              financial compensation.
-            </p>
-            <p>
-              Rather than asking for contributions, we believe in offering
-              products and services to fans in return. That is why every
-              marketing opportunity with a student-athlete centers around these
-              offerings that you can use, purchase, and enjoy.
+              through internships and authentic marketing partnerships with our
+              own internal offerings and with forward-thinking brands,
+              influencers, and creators. The current collegiate landscape allows
+              us to utilize student-athletes&apos; unique identities and reach
+              in exchange for financial compensation.
             </p>
           </div>{" "}
           <Separator className="my-8" />
