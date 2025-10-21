@@ -319,8 +319,8 @@ export default function Page() {
                   </p>
                   <p className="text-gray-600 leading-relaxed">
                     We&apos;re elevating athletics by leveraging the greatest
-                    competitive advantage: artifical intelligence. Much of
-                    artifical intelligence has been shapred by the alumni of
+                    competitive advantage: artificial intelligence. Much of
+                    artificial intelligence has been shaprd by the alumni of
                     Oregon State. From the engineers behind today&apos;s AI
                     processors to the entrepreneurs who transformed startups
                     into tech giants, Beaver Nation has created the future. Now
