@@ -293,6 +293,23 @@ export default function Page() {
           </div>
         </div>
       </section>
+      {/* Partners */}
+      <section className="bg-background py-10 px-0 sm:px-6 relative z-20 flex items-center justify-center">
+        <div className="w-full mx-10 max-w-4xl">
+          <div className="flex flex-col items-center justify-center gap-8 text-center">
+            <Image
+              src="/assets/inception.webp"
+              alt="NVIDIA Inception Program"
+              width={600}
+              height={200}
+              className="w-full max-w-md"
+            />
+            <p className="text-muted-foreground text-lg font-light tracking-[0.1em]">
+              We are proudly part of the NVIDIA Inception Program
+            </p>
+          </div>
+        </div>
+      </section>
       {/* Aircraft Systems Accordion Section - Normal flow */}
       <section className="bg-background py-16 px-0 sm:px-6 relative z-20 flex items-center ">
         <div className="w-full mx-10">
