@@ -38,7 +38,7 @@ export default async function Page() {
         }
       >
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
-          {posts?.data?.map((post) => (
+          {posts?.data?.reverse().map((post) => (
             <article key={post._id}>
               <Link
                 href={`/blog/${post.slug.current}`}
