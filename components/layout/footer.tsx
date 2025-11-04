@@ -138,7 +138,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://www.linkedin.com/in/bvrstco"
+                    href="https://www.linkedin.com/company/bvr-st-co"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
