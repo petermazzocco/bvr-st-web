@@ -12,6 +12,7 @@ import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
 
 export default function Page() {
   const [scrollY, setScrollY] = useState(0);
@@ -296,9 +297,9 @@ export default function Page() {
       {/* Partners */}
       <section className="bg-background py-10 px-0 sm:px-6 relative z-20 flex items-center justify-center">
         <div className="w-full mx-10 max-w-4xl">
-          <div className="flex flex-col items-center justify-center gap-8 text-center">
+          <div className="flex flex-col items-center justify-center gap-2 text-center">
             <Image
-              src="/assets/inception.webp"
+              src="/assets/inception.svg"
               alt="NVIDIA Inception Program"
               width={600}
               height={200}
@@ -310,6 +311,7 @@ export default function Page() {
           </div>
         </div>
       </section>
+      <Separator className="mx-auto container" />
       {/* Aircraft Systems Accordion Section - Normal flow */}
       <section className="bg-background py-16 px-0 sm:px-6 relative z-20 flex items-center ">
         <div className="w-full mx-10">
