@@ -101,20 +101,20 @@ const TEAM_MEMBERS = [
       },
     ],
   },
-  {
-    name: "Kyle Bjornstad",
-    title: "Senior Advisor",
-    nickname: "",
-    image: "/team/kyle.jpg",
-    socials: [
-      {
-        icon: (
-          <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
-        ),
-        url: "https://www.x.com/kylebjornstad1/",
-      },
-    ],
-  },
+  // {
+  //   name: "Kyle Bjornstad",
+  //   title: "Senior Advisor",
+  //   nickname: "",
+  //   image: "/team/kyle.jpg",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
+  //       ),
+  //       url: "https://www.x.com/kylebjornstad1/",
+  //     },
+  //   ],
+  // },
   {
     name: "Giang Doan",
     title: "Systems Development Engineer",
