@@ -102,7 +102,7 @@ const TEAM_MEMBERS = [
     ],
   },
   {
-    name: "Matt Pfiefer",
+    name: "Matt Pfeifer",
     title: "Head of Product",
     nickname: "",
     image: "/team/matt.jpeg",
