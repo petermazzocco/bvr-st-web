@@ -101,6 +101,27 @@ const TEAM_MEMBERS = [
       },
     ],
   },
+  {
+    name: "Matt Pfiefer",
+    title: "Head of Product",
+    nickname: "",
+    image: "/team/matt.jpeg",
+    socials: [
+      {
+        icon: (
+          <SocialIcon
+            url="https://www.linkedin.com/in/matthew-pfeifer/"
+            target="_blank"
+          />
+        ),
+        url: "https://www.linkedin.com/in/matthew-pfeifer/",
+      },
+      {
+        icon: <SocialIcon url="https://x.com/trustless_matt" target="_blank" />,
+        url: "https://x.com/trustless_matt",
+      },
+    ],
+  },
   // {
   //   name: "Kyle Bjornstad",
   //   title: "Senior Advisor",
