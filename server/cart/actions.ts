@@ -12,48 +12,10 @@ import {
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getAffiliates } from "@/server/sanity/actions";
 
 // Member discount code configuration
 const MEMBER_DISCOUNT_CODE =
   process.env.MEMBER_DISCOUNT_CODE || "1340709601393";
-
-/**
- * Validates if an affiliate code is valid by checking against active affiliates
- * @param affiliateCode - The affiliate code to validate
- * @returns Promise<boolean> indicating if the code is valid
- */
-async function validateAffiliateCode(
-  affiliateCode: string | null | undefined,
-): Promise<boolean> {
-  if (!affiliateCode) {
-    return false;
-  }
-
-  try {
-    const affiliatesResult = await getAffiliates();
-
-    if (!affiliatesResult.success || !affiliatesResult.data) {
-      return false;
-    }
-
-    const affiliates = affiliatesResult.data;
-
-    const validAffiliate = affiliates.find(
-      (affiliate) =>
-        affiliate.isActive &&
-        affiliate.code.toString() === affiliateCode.toString(),
-    );
-
-    if (validAffiliate) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    return false;
-  }
-}
 
 /**
  * Checks if a customer is eligible for the member discount by querying the price rule
@@ -154,19 +116,6 @@ export async function addItem(prevState: any, formData: FormData) {
     await addToCart(cartId, [
       { merchandiseId: selectedVariantId, quantity: 1 },
     ]);
-
-    // Set affiliate metafield if affiliate is provided and valid
-    if (affiliate) {
-      const isValidAffiliate = await validateAffiliateCode(affiliate);
-
-      if (isValidAffiliate) {
-        try {
-          await setCartAttribute(cartId, affiliate);
-        } catch (attributeError) {}
-      } else {
-      }
-    } else {
-    }
 
     revalidateTag(TAGS.cart);
   } catch (e) {
