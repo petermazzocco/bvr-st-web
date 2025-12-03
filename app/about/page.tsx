@@ -168,28 +168,101 @@ export default function Page() {
           </h2>
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
-              BVR ST CO (Beaver Street Co) is an innovative studio that
-              leverages Oregon State&apos;s strong tech network and heritage to
-              offer forward-thinking products and services that will transform
-              athletics.
+              BVR ST is Oregon State Athletics&apos; innovation studio,
+              dedicated to creating sustainable competitive advantages through
+              cutting-edge technology and collaboration. Our mission centers on
+              three strategic pillars.
             </p>
           </div>
           <Separator className="my-8" />
           <h2
-            id="pricing"
+            id="pillars"
             className="text-lg text-left font-bold text-foreground mb-4"
           >
-            Supporting Student-Athletes
+            Our Strategic Pillars
           </h2>
-          <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
+          <div className="flex flex-col gap-6 text-xs text-muted-foreground leading-relaxed">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                Strategic Partnerships
+              </h3>
+              <p>
+                By aligning with NVIDIA and Oregon State&apos;s academic
+                programs, we serve as the bridge connecting world-class
+                technology partners with our athletic programs, ensuring our
+                teams have access to industry-leading innovation.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                Student Development
+              </h3>
+              <p>
+                We provide genuine, hands-on opportunities for students to gain
+                real-world experience developing performance-enhancing products
+                and services for all of athletics. Students don&apos;t just
+                learn—they build solutions that directly impact competitive
+                outcomes.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                Scalable Innovation
+              </h3>
+              <p>
+                When we create successful products and services internally, we
+                don&apos;t keep them to ourselves. We commercialize proven
+                solutions and offer them to other universities and athletic
+                programs, generating revenue while advancing athletics broadly.
+              </p>
+            </div>
+          </div>
+          <Separator className="my-8" />
+          <h2
+            id="students"
+            className="text-lg text-left font-bold text-foreground mb-4"
+          >
+            Supporting Students
+          </h2>
+          <div className="flex flex-col gap-6 text-xs text-muted-foreground leading-relaxed">
             <p>
-              We&apos;re committed to supporting Oregon State student-athletes
-              through internships and authentic marketing partnerships with our
-              own internal offerings and with forward-thinking brands,
-              influencers, and creators. The current collegiate landscape allows
-              us to utilize student-athletes&apos; unique identities and reach
-              in exchange for financial compensation.
+              At BVR ST, we&apos;re committed to providing students with
+              meaningful opportunities to gain real-world experience while
+              contributing to cutting-edge innovation in collegiate athletics.
             </p>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                Internship Pipeline
+              </h3>
+              <p className="mb-3">
+                Our structured internship program offers students hands-on
+                experience developing performance-enhancing products and
+                services for Oregon State Athletics. Students work alongside
+                industry professionals on real projects that directly impact
+                competitive outcomes.
+              </p>
+              <p>
+                Through our partnerships with NVIDIA and Oregon State&apos;s
+                academic programs, interns gain access to industry-leading
+                technology and mentorship while building solutions that matter.
+                This isn&apos;t just resume-building—it&apos;s genuine product
+                development experience that prepares students for careers in
+                technology and innovation.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                Student-Athlete Partnerships
+              </h3>
+              <p>
+                We&apos;re also committed to supporting Oregon State
+                student-athletes through authentic marketing partnerships with
+                our own internal offerings and with forward-thinking brands,
+                influencers, and creators. The current collegiate landscape
+                allows us to utilize student-athletes&apos; unique identities
+                and reach in exchange for financial compensation.
+              </p>
+            </div>
           </div>{" "}
           <Separator className="my-8" />
           <h2

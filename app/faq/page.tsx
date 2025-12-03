@@ -29,10 +29,10 @@ export default function Page() {
                 Stte?
               </p>
               <p>
-                No, we are not an NIL collective. We are an innovative studio
-                that develops products and provides opportunities for Oregon
-                State students and/or student-athletes for internships and/or
-                marketing campaigns.
+                No, we are not an NIL collective. BVR ST is Oregon State
+                Athletics innovation studio, dedicated to creating sustainable
+                competitive advantages through cutting-edge technology and
+                collaboration.
               </p>
             </div>
 
@@ -50,36 +50,16 @@ export default function Page() {
             <div>
               <p className="font-bold text-foreground mb-2">
                 Are you affiliated with or officially recognized by Oregon State
-                University and/or Dam Nation Collective?
+                University?
               </p>
               <p>
                 While we celebrate and proudly support Oregon State University
                 and all that is has to offer, Beaver Street Co LLC operates
                 independently from any official entity, including any official
-                third-party partners of Oregon State. We are fans and alumni
-                creating innovative products, services, and experiences for the
-                Beaver community and supporting the student-athletes by
-                marketing their name, image, and likeness.
-              </p>
-            </div>
-
-            <div>
-              <p className="font-bold text-foreground mb-2">
-                Are you competing with Dam Nation Collective?
-              </p>
-              <p>
-                Since we are not an NIL collective, we are not competing with
-                Dam Nation. We view BVR ST CO as a complimentary studio to the
-                great work being done at Dam Nation and Oregon State. In fact,
-                we encourage you to become a member of{" "}
-                <a
-                  href="https://damnationnil.com/pages/support-now"
-                  className=" underline"
-                  target="_blank"
-                >
-                  Dam Nation
-                </a>{" "}
-                now and support their mission.
+                third-party partners of Oregon State and the University itself.
+                We are fans and alumni creating innovative products, services,
+                and experiences for the Beaver community and supporting the
+                student-athletes by marketing their name, image, and likeness.
               </p>
             </div>
 
@@ -174,8 +154,8 @@ export default function Page() {
 
             <div>
               <p className="font-bold text-foreground mb-2">
-                How can I contact BVR ST CO for opportunities as a
-                student-athlete or a brand looking to partner?
+                How can I contact BVR ST CO for opportunities as a brand looking
+                to partner?
               </p>
               <p>
                 You can reach us through our contact form, email, or social

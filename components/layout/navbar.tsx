@@ -49,7 +49,7 @@ export function Navbar() {
       <div className="flex items-center justify-center">
         <Link href="/">
           <Image
-            src="/assets/BEAVER-ST-CO_HORIZONTAL-04.svg"
+            src="/assets/BEAVER-ST-CO_HORIZONTAL-03.svg"
             alt="BVR ST CO."
             width={170}
             height={50}
