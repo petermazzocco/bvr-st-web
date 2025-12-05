@@ -5,8 +5,7 @@ import "./globals.css";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
-import { getCart } from "@/lib/shopify";
-import { CartProvider } from "@/components/cart/cart-context";
+
 import Script from "next/script";
 import { underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
@@ -96,9 +95,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const cartId = cookieStore.get("cartId")?.value;
-
-  const cart = getCart(cartId);
 
   const isUnderConstructionFlag = await underConstructionFlag();
 
@@ -116,22 +112,20 @@ export default async function RootLayout({
           backgroundAttachment: "fixed",
         }}
       >
-        <CartProvider cartPromise={cart}>
-          {isUnderConstructionFlag ? (
-            <UnderConstructionPage />
-          ) : (
-            <TerminalWrapper packageName="bvr-st-co">
-              <SmoothScrolling>
-                <Navbar />
-                <main>
-                  {children}
-                  <Toaster closeButton position="bottom-center" richColors />
-                </main>
-                <Footer />
-              </SmoothScrolling>
-            </TerminalWrapper>
-          )}
-        </CartProvider>
+        {isUnderConstructionFlag ? (
+          <UnderConstructionPage />
+        ) : (
+          <TerminalWrapper packageName="bvr-st-co">
+            <SmoothScrolling>
+              <Navbar />
+              <main>
+                {children}
+                <Toaster closeButton position="bottom-center" richColors />
+              </main>
+              <Footer />
+            </SmoothScrolling>
+          </TerminalWrapper>
+        )}
       </body>
 
       {/* Umami Analytics */}

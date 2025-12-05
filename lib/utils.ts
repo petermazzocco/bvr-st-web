@@ -1,23 +1,16 @@
 import { clsx, type ClassValue } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import Cookies from "js-cookie";
-import { AUCTION_PRODUCT_TAG } from "@/lib/constants";
-import { Product } from "@/lib/shopify/types";
-
-// Note: Authentication token functions have been removed since we now use
-// HTTP-only cookies for security. Token management is handled server-side.
-// Client-side auth state is provided via AuthProvider props from the server.
 
 /**
  * Creates a complete URL by combining a pathname with URL search parameters
- * @param pathname - The base path for the URL (e.g., "/products")
+ * @param pathname - The base path for the URL (e.g., "/blog")
  * @param params - URLSearchParams object containing query parameters
  * @returns Complete URL string with pathname and query string
  * @example
  * ```typescript
- * const params = new URLSearchParams({ page: "1", category: "shoes" });
- * createUrl("/products", params); // Returns "/products?page=1&category=shoes"
+ * const params = new URLSearchParams({ page: "1", category: "news" });
+ * createUrl("/blog", params); // Returns "/blog?page=1&category=news"
  * ```
  */
 export const createUrl = (
@@ -46,39 +39,6 @@ export const ensureStartsWith = (stringToCheck: string, startsWith: string) =>
     : `${startsWith}${stringToCheck}`;
 
 /**
- * Validates that all required Shopify environment variables are present and properly formatted
- * Checks for required variables and validates SHOPIFY_STORE_DOMAIN format
- * @throws Error if any required environment variables are missing or malformed
- */
-export const validateEnvironmentVariables = () => {
-  const requiredEnvironmentVariables = [
-    "SHOPIFY_STORE_DOMAIN",
-    "SHOPIFY_STOREFRONT_ACCESS_TOKEN",
-  ];
-  const missingEnvironmentVariables = [] as string[];
-  requiredEnvironmentVariables.forEach((envVar) => {
-    if (!process.env[envVar]) {
-      missingEnvironmentVariables.push(envVar);
-    }
-  });
-  if (missingEnvironmentVariables.length) {
-    throw new Error(
-      `The following environment variables are missing. Your site will not work without them. Read more: https://vercel.com/docs/integrations/shopify#configure-environment-variables\n\n${missingEnvironmentVariables.join(
-        "\n",
-      )}\n`,
-    );
-  }
-  if (
-    process.env.SHOPIFY_STORE_DOMAIN?.includes("[") ||
-    process.env.SHOPIFY_STORE_DOMAIN?.includes("]")
-  ) {
-    throw new Error(
-      "Your `SHOPIFY_STORE_DOMAIN` environment variable includes brackets (ie. `[` and / or `]`). Your site will not work with them there. Please remove them.",
-    );
-  }
-};
-
-/**
  * Utility function for conditionally joining CSS class names
  * Combines clsx for conditional classes with tailwind-merge to handle Tailwind CSS conflicts
  * @param inputs - Array of class values (strings, objects, arrays, etc.)
@@ -91,8 +51,4 @@ export const validateEnvironmentVariables = () => {
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-export function isAuctionProduct(product: Product): boolean {
-  return product.tags.includes(AUCTION_PRODUCT_TAG);
 }

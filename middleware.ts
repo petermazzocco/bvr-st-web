@@ -2,11 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { underConstructionFlag } from "./lib/flags";
 
-const BLOCKED_ROUTES = ["/collections", "/products", "/stores"];
-
 export async function middleware(request: NextRequest) {
   const isUnderConstructionFlag = await underConstructionFlag();
-  const { pathname } = request.nextUrl;
 
   const response = NextResponse.next();
 
@@ -14,13 +11,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  const isBlockedRoute = BLOCKED_ROUTES.some((route) =>
-    pathname.startsWith(route),
-  );
-
-  if (isBlockedRoute) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
   return response;
 }
 
