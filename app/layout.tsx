@@ -9,8 +9,8 @@ import { cookies } from "next/headers";
 import Script from "next/script";
 import { underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
-import TerminalWrapper from "@/contexts/terminal-wrapper";
-import SmoothScrolling from "@/contexts/smooth-scrolling";
+import { PageTransitionContext } from "@/contexts/page-transition-context";
+import { SmoothScrollingContext } from "@/contexts/smooth-scrolling-context";
 
 export const metadata: Metadata = {
   title: "BVR ST CO",
@@ -115,16 +115,16 @@ export default async function RootLayout({
         {isUnderConstructionFlag ? (
           <UnderConstructionPage />
         ) : (
-          <TerminalWrapper packageName="bvr-st-co">
-            <SmoothScrolling>
+          <PageTransitionContext>
+            <SmoothScrollingContext>
               <Navbar />
               <main>
                 {children}
                 <Toaster closeButton position="bottom-center" richColors />
               </main>
               <Footer />
-            </SmoothScrolling>
-          </TerminalWrapper>
+            </SmoothScrollingContext>
+          </PageTransitionContext>
         )}
       </body>
 
