@@ -61,6 +61,20 @@ const TEAM_MEMBERS = [
       },
     ],
   },
+  // {
+  //   name: "Kyle Bjornstad",
+  //   title: "Co-Founder",
+  //   nickname: "",
+  //   image: "/team/kyle.jpg",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
+  //       ),
+  //       url: "https://www.x.com/kylebjornstad1/",
+  //     },
+  //   ],
+  // },
   {
     name: "Travis Jones",
     title: "Co-Founder",
@@ -122,20 +136,6 @@ const TEAM_MEMBERS = [
       },
     ],
   },
-  // {
-  //   name: "Kyle Bjornstad",
-  //   title: "Senior Advisor",
-  //   nickname: "",
-  //   image: "/team/kyle.jpg",
-  //   socials: [
-  //     {
-  //       icon: (
-  //         <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
-  //       ),
-  //       url: "https://www.x.com/kylebjornstad1/",
-  //     },
-  //   ],
-  // },
   {
     name: "Giang Doan",
     title: "Systems Development Engineer",
@@ -168,10 +168,10 @@ export default function Page() {
           </h2>
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
-              BVR ST is Oregon State Athletics&apos; innovation studio,
-              dedicated to creating sustainable competitive advantages through
-              cutting-edge technology and collaboration. Our mission centers on
-              three strategic pillars.
+              BVR ST is Oregon State&apos;s innovation studio, dedicated to
+              creating sustainable competitive advantages through cutting-edge
+              technology and collaboration. Our mission centers on three
+              strategic pillars.
             </p>
           </div>
           <Separator className="my-8" />
@@ -187,10 +187,10 @@ export default function Page() {
                 Strategic Partnerships
               </h3>
               <p>
-                By aligning with NVIDIA and Oregon State&apos;s academic
-                programs, we serve as the bridge connecting world-class
-                technology partners with our athletic programs, ensuring our
-                teams have access to industry-leading innovation.
+                By aligning with NVIDIA and Oregon State, we serve as the bridge
+                connecting world-class technology partners with Oregon State,
+                ensuring our programs have access to industry-leading
+                innovation.
               </p>
             </div>
             <div>
@@ -201,8 +201,7 @@ export default function Page() {
                 We provide genuine, hands-on opportunities for students to gain
                 real-world experience developing performance-enhancing products
                 and services for all of athletics. Students don&apos;t just
-                learn—they build solutions that directly impact competitive
-                outcomes.
+                learn—they build solutions that directly impact outcomes.
               </p>
             </div>
             <div>
@@ -212,8 +211,8 @@ export default function Page() {
               <p>
                 When we create successful products and services internally, we
                 don&apos;t keep them to ourselves. We commercialize proven
-                solutions and offer them to other universities and athletic
-                programs, generating revenue while advancing athletics broadly.
+                solutions and offer them to other universities and programs,
+                generating revenue while advancing the industry.
               </p>
             </div>
           </div>
@@ -228,7 +227,7 @@ export default function Page() {
             <p>
               At BVR ST, we&apos;re committed to providing students with
               meaningful opportunities to gain real-world experience while
-              contributing to cutting-edge innovation in collegiate athletics.
+              contributing to cutting-edge innovation.
             </p>
             <div>
               <h3 className="text-sm font-semibold text-foreground mb-2">
@@ -237,9 +236,9 @@ export default function Page() {
               <p className="mb-3">
                 Our structured internship program offers students hands-on
                 experience developing performance-enhancing products and
-                services for Oregon State Athletics. Students work alongside
-                industry professionals on real projects that directly impact
-                competitive outcomes.
+                services for Oregon State. Students work alongside industry
+                professionals on real projects that directly impact competitive
+                outcomes.
               </p>
               <p>
                 Through our partnerships with NVIDIA and Oregon State&apos;s

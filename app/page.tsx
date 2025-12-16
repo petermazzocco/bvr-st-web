@@ -78,7 +78,7 @@ export default function Page() {
         {/* Top corner text - Responsive positioning */}
         <div className="absolute top-4 right-4 sm:top-8 sm:right-24 z-20">
           <div className="text-white/80 text-xs sm:text-sm font-light tracking-[0.2em] border border-white/20 px-2 py-1 sm:px-3 sm:py-1.5 backdrop-blur-xl">
-            (v1.0.4)
+            (v1.0.5)
           </div>
         </div>
 
@@ -101,7 +101,7 @@ export default function Page() {
                   BVR ST CO
                 </h1>
                 <div className="text-muted text-sm font-base tracking-[0.3em] uppercase mt-2">
-                  THE FUTURE OF ATHLETICS
+                  THE FUTURE OF OREGON STATE
                 </div>
               </div>
             </div>
@@ -114,8 +114,8 @@ export default function Page() {
                     <ChevronRight className="mr-1" size={16} /> ABOUT
                   </div>
                   <p className="text-white text-xs font-light leading-relaxed">
-                    The innovative studio that&apos;s building the future of
-                    sports at Oregon State.
+                    The innovative studio that&apos;s building the at Oregon
+                    State.
                   </p>
                 </div>
                 <Button
@@ -156,7 +156,7 @@ export default function Page() {
                   BVR ST CO
                 </h1>
                 <div className="text-muted text-xs lg:text-sm font-base drop-shadow-sm drop-shadow-black tracking-[0.3em] uppercase ml-2">
-                  THE FUTURE OF ATHLETICS
+                  THE FUTURE OF OREGON STATE
                 </div>
               </div>
             </div>
@@ -335,10 +335,10 @@ export default function Page() {
                     Strategic Partnerships
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    By aligning with NVIDIA and Oregon State&apos;s academic
-                    programs, we serve as the bridge connecting world-class
-                    technology partners with our athletic programs, ensuring our
-                    teams have access to industry-leading innovation.
+                    By aligning with NVIDIA and Oregon State, we serve as the
+                    bridge connecting world-class technology partners with
+                    Oregon State, ensuring our programs have access to
+                    industry-leading innovation.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
@@ -364,9 +364,8 @@ export default function Page() {
                   <p className="text-gray-600 leading-relaxed">
                     We provide genuine, hands-on opportunities for students to
                     gain real-world experience developing performance-enhancing
-                    products and services for collegiate athletics. Students
-                    don&apos;t just learn—they build solutions that directly
-                    impact competitive outcomes.
+                    products and services. Students don&apos;t just learn—they
+                    build solutions that directly impact outcomes.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
@@ -394,7 +393,7 @@ export default function Page() {
                     we don&apos;t keep them to ourselves. We commercialize
                     proven solutions and offer them to other universities and
                     athletic programs, generating revenue while advancing
-                    collegiate athletics broadly.
+                    industries broadly.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
