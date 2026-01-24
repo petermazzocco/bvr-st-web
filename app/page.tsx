@@ -78,7 +78,7 @@ export default function Page() {
         {/* Top corner text - Responsive positioning */}
         <div className="absolute top-4 right-4 sm:top-8 sm:right-24 z-20">
           <div className="text-white/80 text-xs sm:text-sm font-light tracking-[0.2em] border border-white/20 px-2 py-1 sm:px-3 sm:py-1.5 backdrop-blur-xl">
-            (v1.0.5)
+            (v1.0.6)
           </div>
         </div>
 

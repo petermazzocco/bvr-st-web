@@ -145,6 +145,15 @@ export function Footer() {
                     LinkedIn
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="https://threads.com/@bvrstco"
+                    target="_blank"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Threads
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
