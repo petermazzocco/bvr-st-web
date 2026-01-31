@@ -98,7 +98,7 @@ export default function Page() {
               {/* Main brand text - centered */}
               <div className="text-center mb-8">
                 <h1 className="text-[5rem] leading-[0.75] font-thin tracking-[-0.02em] text-background mix-blend-screen">
-                  BVR ST CO
+                  BVR ST STUDIO
                 </h1>
                 <div className="text-muted text-sm font-base tracking-[0.3em] uppercase mt-2">
                   THE FUTURE OF OREGON STATE
@@ -152,8 +152,8 @@ export default function Page() {
             {/* Large brand text - Desktop positioning */}
             <div className="absolute bottom-24 left-8 md:bottom-32 md:left-10 lg:bottom-16 lg:left-10">
               <div className="space-y-4">
-                <h1 className="text-[5rem] leading-[0.8] md:text-[8rem] lg:text-[10rem] xl:text-[13rem] lg:leading-[0.8] font-thin tracking-[-0.01em] text-background mix-blend-screen">
-                  BVR ST CO
+                <h1 className="text-[4rem] leading-[0.8] md:text-[6rem] lg:text-[7rem] xl:text-[9rem] lg:leading-[0.8] font-thin tracking-[-0.01em] text-background mix-blend-screen">
+                  BVR ST STUDIO
                 </h1>
                 <div className="text-muted text-xs lg:text-sm font-base drop-shadow-sm drop-shadow-black tracking-[0.3em] uppercase ml-2">
                   THE FUTURE OF OREGON STATE
@@ -205,93 +205,6 @@ export default function Page() {
         </div>
       </div>
 
-      <section className="bg-foreground py-16 px-0 sm:px-6 relative z-20 flex items-center ">
-        <div className="w-full mx-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex flex-col items-start justify-center space-y-12 w-full md:w-1/2">
-              <div className="flex flex-col items-start justify-between">
-                <h2 className="text-3xl font-thin tracking-[-0.02em] text-muted">
-                  PROJECT 1
-                </h2>
-                <p className="text-muted text-lg font-light tracking-[0.1em]">
-                  COORDINATOR
-                </p>
-              </div>
-              <ul className="text-muted text-sm font-light tracking-[0.05em] space-y-2 list-none">
-                <li className="flex items-start">
-                  <span className="text-white mr-2">•</span>
-                  <span>
-                    Real-time competitive intelligence powered by{" "}
-                    <span className="font-bold" style={{ color: "#76B900" }}>
-                      NVIDIA GPU
-                    </span>{" "}
-                    infrastructure
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-white mr-2">•</span>
-                  <span>
-                    Agentic framework for strategic decision-making that
-                    analyzes game footage and models opponent tendencies
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-white mr-2">•</span>
-                  <span>
-                    Browser-based access with role-specific insights for
-                    coordinators, coaches, and analysts
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-white mr-2">•</span>
-                  <span>
-                    Adaptive fine-tuning capabilities that evolve with your
-                    team&apos;s strategy
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-white mr-2">•</span>
-                  <span>
-                    Built on scalable GPU cluster architecture for maximum
-                    performance and easy client connections
-                  </span>
-                </li>
-              </ul>
-              <div className="w-full flex justify-start mt-4">
-                <Button
-                  variant="outline"
-                  asChild
-                  className="group border-white/30 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-white hover:text-white transition-all duration-300 h-11"
-                >
-                  <Link
-                    href="https://getcoordinator.ai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center px-6 text-xs tracking-[0.1em] group-hover:text-primary"
-                  >
-                    <span className="transition-transform group-hover:translate-x-0.5 group-hover:text-primary group-hover:translate-y-[-0.125rem]">
-                      LEARN MORE ABOUT COORDINATOR
-                    </span>
-                    <ArrowUpRight
-                      className="-me-1 ms-2 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem]"
-                      size={12}
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-            <div className="flex items-center justify-center w-full md:w-1/2">
-              <Image
-                src="/assets/icons/COORDINATOR_ICON_WHITE.svg"
-                alt="Project 1"
-                width={300}
-                height={300}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
       {/* Partners */}
       <section className="bg-background py-10 px-0 sm:px-6 relative z-20 flex items-center justify-center">
         <div className="w-full mx-10 max-w-4xl">
@@ -335,10 +248,10 @@ export default function Page() {
                     Strategic Partnerships
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    By aligning with NVIDIA and Oregon State, we serve as the
-                    bridge connecting world-class technology partners with
-                    Oregon State, ensuring our programs have access to
-                    industry-leading innovation.
+                    By aligning with NVIDIA through the Inception Program, we
+                    serve as the bridge connecting world-class technology
+                    partners with Oregon State athletics, ensuring our athletic
+                    programs have access to industry-leading innovation.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">
@@ -362,10 +275,11 @@ export default function Page() {
                     Student Development
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    We provide genuine, hands-on opportunities for students to
-                    gain real-world experience developing performance-enhancing
-                    products and services. Students don&apos;t just learn—they
-                    build solutions that directly impact outcomes.
+                    We provide genuine, hands-on opportunities for Oregon State
+                    University students to gain real-world experience developing
+                    products and services that push athletics further. Students
+                    don&apos;t just learn—they build solutions that directly
+                    impact outcomes.
                   </p>
                   <div className="pt-2">
                     <p className="text-sm text-gray-500 font-light tracking-wide uppercase">

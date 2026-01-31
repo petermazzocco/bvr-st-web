@@ -6,7 +6,7 @@ export function UnderConstructionPage() {
           <h2 className="text-lg font-base tracking-wider">
             We are under construction
           </h2>
-          <h1 className="text-3xl font-bold tracking-wider">BVR ST CO</h1>
+          <h1 className="text-3xl font-bold tracking-wider">BVR ST STUDIO</h1>
           <p className="text-md font-semibold">Check back soon.</p>
         </div>
       </div>

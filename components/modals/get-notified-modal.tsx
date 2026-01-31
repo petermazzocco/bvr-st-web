@@ -45,7 +45,7 @@ export const GetNotifiedModal = () => {
             <AvatarFallback>OS</AvatarFallback>
           </Avatar>
           <DialogHeader>
-            <DialogTitle>Join the BVR ST CO studio</DialogTitle>
+            <DialogTitle>Join the BVR ST STUDIO movement</DialogTitle>
             <DialogDescription>
               Sign up now and be the first to know when we launch our products,
               experiences, and services.

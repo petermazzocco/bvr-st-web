@@ -49,8 +49,8 @@ export function Navbar() {
       <div className="flex items-center justify-center">
         <Link href="/">
           <Image
-            src="/assets/BEAVER-ST-CO_HORIZONTAL-03.svg"
-            alt="BVR ST CO."
+            src="/assets/BEAVER-ST-STUDIO_HORIZ-03.svg"
+            alt="BVR ST STUDIO."
             width={170}
             height={50}
           />

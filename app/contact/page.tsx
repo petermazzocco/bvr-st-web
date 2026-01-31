@@ -16,11 +16,11 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = createMetadata({
   title: "Contact Us",
-  description: "Get in touch with BVR ST CO.",
-  canonical: "https://bvrstco.com/contact",
+  description: "Get in touch with BVR ST STUDIO.",
+  canonical: "https://bvrst.studio/contact",
   image: {
-    url: "https://bvrstco.com/opengraph/contact.png",
-    alt: "BVR ST CO Contact",
+    url: "https://bvrst.studio/opengraph/index.png",
+    alt: "BVR ST STUDIO Contact",
   },
 });
 
@@ -37,7 +37,11 @@ export default function ContactPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <a href="mailto:info@bvrstco.com" target="_blank" className="group">
+          <a
+            href="mailto:info@bvrststudio.com"
+            target="_blank"
+            className="group"
+          >
             <Button
               variant="default"
               className="transition-transform group-hover:translate-x-0.5  group-hover:translate-y-[-0.125rem]"

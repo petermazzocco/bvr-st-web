@@ -10,8 +10,7 @@ import Image from "next/image";
 
 type TeamMemberCardProps = {
   name: string;
-  title: string;
-  nickname: string;
+
   image: string;
   socials: {
     icon: JSX.Element;
@@ -21,8 +20,7 @@ type TeamMemberCardProps = {
 
 export const TeamMemberCard = ({
   name,
-  title,
-  nickname,
+
   image,
   socials,
 }: TeamMemberCardProps) => {
@@ -52,11 +50,7 @@ export const TeamMemberCard = ({
         </AspectRatio>
         <CardTitle>
           <h2>{name}</h2>
-          <p className="text-xs text-muted-foreground font-thin">{nickname}</p>
         </CardTitle>
-        <CardDescription>
-          <p className="text-xs text-muted-foreground">{title}</p>
-        </CardDescription>
       </CardHeader>
       <CardContent></CardContent>
     </Card>

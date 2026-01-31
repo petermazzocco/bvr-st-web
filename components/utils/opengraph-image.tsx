@@ -22,7 +22,7 @@ export default async function OpengraphImage(
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imgSrc || "/logo.png"}
-            alt="BVR ST CO"
+            alt="BVR ST STUDIO"
             width={32}
             height={28}
           />

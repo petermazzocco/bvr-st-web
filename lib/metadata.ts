@@ -20,11 +20,11 @@ export interface MetadataOptions {
   tags?: string[];
 }
 
-const DEFAULT_SITE_NAME = "BVR ST CO";
+const DEFAULT_SITE_NAME = "BVR ST STUDIO";
 const DEFAULT_DESCRIPTION =
   "An innovative studio supporting Oregon State student-athletes";
-const DEFAULT_IMAGE = "https://bvrstco.com/og-image.jpg";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
+const DEFAULT_IMAGE = "https://bvrst.studio/og-image.jpg";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrst.studio";
 
 export function generateMetadata(options: MetadataOptions = {}): Metadata {
   const {
@@ -82,8 +82,8 @@ export function generateMetadata(options: MetadataOptions = {}): Metadata {
       title: fullTitle,
       description,
       images: [imageUrl],
-      creator: "@bvrstco",
-      site: "@bvrstco",
+      creator: "@bvrststudio",
+      site: "@bvrststudio",
     },
     alternates: {
       ...(canonical && { canonical }),

@@ -10,11 +10,11 @@ import { generateMetadata as createMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
   title: "Blog",
-  description: "The latest from BVR ST CO",
-  canonical: "https://bvrstco.com/blog",
+  description: "The latest from BVR ST STUDIO",
+  canonical: "https://bvrst.studio/blog",
   image: {
-    url: "https://bvrstco.com/opengraph/blog.png",
-    alt: "BVR ST CO Blog",
+    url: "https://bvrst.studio/opengraph/index.png",
+    alt: "BVR ST STUDIO Blog",
   },
 });
 

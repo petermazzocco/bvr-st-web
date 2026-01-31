@@ -7,7 +7,7 @@ type Route = {
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-  : "https://bvrstco.com";
+  : "https://bvrst.studio";
 
 export const dynamic = "force-dynamic";
 

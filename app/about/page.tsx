@@ -8,19 +8,17 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = createMetadata({
   title: "About Us",
-  description: "Learn about BVR ST CO's mission.",
-  canonical: "https://bvrstco.com/about",
+  description: "Learn about BVR ST STUDIO's mission.",
+  canonical: "https://bvrst.studio/about",
   image: {
-    url: "https://bvrstco.com/opengraph/about.png",
-    alt: "BVR ST CO About Us",
+    url: "https://bvrst.studio/opengraph/index.png",
+    alt: "BVR ST STUDIO About Us",
   },
 });
 
 const TEAM_MEMBERS = [
   {
     name: "Peter Mazzocco",
-    title: "Founder",
-    nickname: "The Digital DAM",
     image: "/team/peter.png",
     socials: [
       {
@@ -63,7 +61,6 @@ const TEAM_MEMBERS = [
   },
   // {
   //   name: "Kyle Bjornstad",
-  //   title: "Co-Founder",
   //   nickname: "",
   //   image: "/team/kyle.jpg",
   //   socials: [
@@ -77,8 +74,6 @@ const TEAM_MEMBERS = [
   // },
   {
     name: "Travis Jones",
-    title: "Co-Founder",
-    nickname: "Jupiter Williams",
     image: "/team/travis.png",
     socials: [
       {
@@ -98,61 +93,61 @@ const TEAM_MEMBERS = [
       },
     ],
   },
-  {
-    name: "Michael Milord",
-    title: "Director of Engineering",
-    nickname: "Milord",
-    image: "/team/milord.png",
-    socials: [
-      {
-        icon: (
-          <SocialIcon
-            url="https://www.linkedin.com/in/michael-milord/"
-            target="_blank"
-          />
-        ),
-        url: "https://www.linkedin.com/in/michael-milord/",
-      },
-    ],
-  },
-  {
-    name: "Matt Pfeifer",
-    title: "Head of Product",
-    nickname: "",
-    image: "/team/matt.jpeg",
-    socials: [
-      {
-        icon: (
-          <SocialIcon
-            url="https://www.linkedin.com/in/matthew-pfeifer/"
-            target="_blank"
-          />
-        ),
-        url: "https://www.linkedin.com/in/matthew-pfeifer/",
-      },
-      {
-        icon: <SocialIcon url="https://x.com/trustless_matt" target="_blank" />,
-        url: "https://x.com/trustless_matt",
-      },
-    ],
-  },
-  {
-    name: "Giang Doan",
-    title: "Systems Development Engineer",
-    nickname: "",
-    image: "/team/giang.jpg",
-    socials: [
-      {
-        icon: (
-          <SocialIcon
-            url="https://www.linkedin.com/in/giang-doan-464058185/"
-            target="_blank"
-          />
-        ),
-        url: "https://www.linkedin.com/in/giang-doan-464058185/",
-      },
-    ],
-  },
+  // {
+  //   name: "Michael Milord",
+  //   title: "Director of Engineering",
+  //   nickname: "Milord",
+  //   image: "/team/milord.png",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon
+  //           url="https://www.linkedin.com/in/michael-milord/"
+  //           target="_blank"
+  //         />
+  //       ),
+  //       url: "https://www.linkedin.com/in/michael-milord/",
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Matt Pfeifer",
+  //   title: "Head of Product",
+  //   nickname: "",
+  //   image: "/team/matt.jpeg",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon
+  //           url="https://www.linkedin.com/in/matthew-pfeifer/"
+  //           target="_blank"
+  //         />
+  //       ),
+  //       url: "https://www.linkedin.com/in/matthew-pfeifer/",
+  //     },
+  //     {
+  //       icon: <SocialIcon url="https://x.com/trustless_matt" target="_blank" />,
+  //       url: "https://x.com/trustless_matt",
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Giang Doan",
+  //   title: "Systems Development Engineer",
+  //   nickname: "",
+  //   image: "/team/giang.jpg",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon
+  //           url="https://www.linkedin.com/in/giang-doan-464058185/"
+  //           target="_blank"
+  //         />
+  //       ),
+  //       url: "https://www.linkedin.com/in/giang-doan-464058185/",
+  //     },
+  //   ],
+  // },
 ];
 
 export default function Page() {
@@ -168,10 +163,10 @@ export default function Page() {
           </h2>
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
-              BVR ST is Oregon State&apos;s innovation studio, dedicated to
-              creating sustainable competitive advantages through cutting-edge
-              technology and collaboration. Our mission centers on three
-              strategic pillars.
+              BVR ST STUDIO is Oregon State&apos;s innovation studio, dedicated
+              to creating sustainable competitive advantages through
+              cutting-edge technology and collaboration. Our mission centers on
+              three strategic pillars.
             </p>
           </div>
           <Separator className="my-8" />
@@ -223,45 +218,26 @@ export default function Page() {
           >
             Supporting Students
           </h2>
-          <div className="flex flex-col gap-6 text-xs text-muted-foreground leading-relaxed">
+          <div className="flex flex-col gap-4 text-xs text-muted-foreground leading-relaxed">
             <p>
               At BVR ST, we&apos;re committed to providing students with
               meaningful opportunities to gain real-world experience while
               contributing to cutting-edge innovation.
             </p>
-            <div>
-              <h3 className="text-sm font-semibold text-foreground mb-2">
-                Internship Pipeline
-              </h3>
-              <p className="mb-3">
-                Our structured internship program offers students hands-on
-                experience developing performance-enhancing products and
-                services for Oregon State. Students work alongside industry
-                professionals on real projects that directly impact competitive
-                outcomes.
-              </p>
-              <p>
-                Through our partnerships with NVIDIA and Oregon State&apos;s
-                academic programs, interns gain access to industry-leading
-                technology and mentorship while building solutions that matter.
-                This isn&apos;t just resume-building—it&apos;s genuine product
-                development experience that prepares students for careers in
-                technology and innovation.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-foreground mb-2">
-                Student-Athlete Partnerships
-              </h3>
-              <p>
-                We&apos;re also committed to supporting Oregon State
-                student-athletes through authentic marketing partnerships with
-                our own internal offerings and with forward-thinking brands,
-                influencers, and creators. The current collegiate landscape
-                allows us to utilize student-athletes&apos; unique identities
-                and reach in exchange for financial compensation.
-              </p>
-            </div>
+            <p>
+              Our structured internship program offers students hands-on
+              experience developing performance-enhancing products and services
+              for Oregon State. Students work alongside industry professionals
+              on real projects that directly impact competitive outcomes.
+            </p>
+            <p>
+              Through our partnerships with NVIDIA and Oregon State&apos;s
+              academic programs, interns gain access to industry-leading
+              technology and mentorship while building solutions for athletics
+              that matter. This isn&apos;t just resume-building—it&apos;s
+              genuine product development experience that prepares students for
+              careers in technology and innovation.
+            </p>
           </div>{" "}
           <Separator className="my-8" />
           <h2
@@ -275,8 +251,6 @@ export default function Page() {
               <TeamMemberCard
                 key={i}
                 name={member.name}
-                nickname={member.nickname}
-                title={member.title}
                 image={member.image}
                 socials={member.socials}
               />

@@ -15,22 +15,22 @@ export async function generateMetadata(props: {
 
   if (!post.data) {
     return {
-      title: "Post Not Found | BVR ST CO",
+      title: "Post Not Found | BVR ST STUDIO",
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrstco.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrst.studio";
   // @ts-expect-error improper typing
   const imageUrl = post.data?.image?.asset?.url;
 
   return {
-    title: `${post.data.title} | BVR ST CO`,
-    description: `Read ${post.data.title} on BVR ST CO blog`,
+    title: `${post.data.title} | BVR ST STUDIO`,
+    description: `Read ${post.data.title} on BVR ST STUDIO blog`,
     openGraph: {
-      title: `${post.data.title} | BVR ST CO`,
-      description: `Read ${post.data.title} on BVR ST CO blog`,
+      title: `${post.data.title} | BVR ST STUDIO`,
+      description: `Read ${post.data.title} on BVR ST STUDIO blog`,
       url: `${siteUrl}/blog/${params.slug}`,
-      siteName: "BVR ST CO",
+      siteName: "BVR ST STUDIO",
       images: imageUrl
         ? [
             {
@@ -48,8 +48,8 @@ export async function generateMetadata(props: {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${post.data.title} | BVR ST CO`,
-      description: `Read ${post.data.title} on BVR ST CO blog`,
+      title: `${post.data.title} | BVR ST STUDIO`,
+      description: `Read ${post.data.title} on BVR ST STUDIO blog`,
       images: imageUrl ? [imageUrl] : [],
     },
   };
