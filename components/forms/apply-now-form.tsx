@@ -118,7 +118,8 @@ ${formData.fullName}`);
         }
       }
     }
-  }, [message, formData.fullName, jobTitle]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message]);
 
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

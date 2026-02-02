@@ -17,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date().toISOString(),
   }));
 
-  let fetchedRoutes: Route[] = [];
+  const fetchedRoutes: Route[] = [];
 
   return [...routesMap, ...fetchedRoutes];
 }
