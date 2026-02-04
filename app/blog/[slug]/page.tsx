@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PortableText } from "next-sanity";
+import { PortableText } from "@portabletext/react";
 import { getBlogPostBySlug } from "@/server/sanity/actions";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";

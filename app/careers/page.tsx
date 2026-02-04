@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { PortableText } from "next-sanity";
+import { PortableText } from "@portabletext/react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ApplyNowForm } from "@/components/forms/apply-now-form";
 import { ChevronDown } from "lucide-react";

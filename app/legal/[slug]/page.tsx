@@ -1,4 +1,4 @@
-import { PortableText } from "next-sanity";
+import { PortableText } from "@portabletext/react";
 import { notFound } from "next/navigation";
 import { getLegalDocBySlug } from "@/server/sanity/actions";
 import { Suspense } from "react";
