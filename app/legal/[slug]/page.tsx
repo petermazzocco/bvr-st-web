@@ -19,13 +19,6 @@ export default async function Page({
   return (
     <main className="relative z-10 bg-background container mx-auto max-w-4xl p-8 flex flex-col gap-4 min-h-screen rounded-none sm:rounded-lg shadow-sm border mb-10">
       <div className="prose max-w-none">
-        <Suspense fallback={<Skeleton className="h-8 w-12" />}>
-          {doc.data.updatedAt && (
-            <p className="text-muted-foreground text-sm mb-6">
-              Updated: {new Date(doc.data.updatedAt).toLocaleDateString()}
-            </p>
-          )}
-        </Suspense>
         <Suspense fallback={<Skeleton className="h-screen w-full" />}>
           {doc.data.body && Array.isArray(doc.data.body) && (
             <PortableText
