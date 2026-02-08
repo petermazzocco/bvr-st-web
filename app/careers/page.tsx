@@ -118,6 +118,13 @@ export default async function Page() {
                   </AccordionContent>
                 </AccordionItem>
               ))}
+            {careers.data && careers?.data?.length === 0 && (
+              <div>
+                <p className="text-sm text-foreground/70">
+                  No positions are available at this time.
+                </p>
+              </div>
+            )}
           </Accordion>
         </div>
       </div>
