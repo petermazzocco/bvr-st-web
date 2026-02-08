@@ -71,7 +71,7 @@ export const ApplyNowForm = ({ jobTitle }: ApplyNowFormProps) => {
 
   // Create email link with subject and body
   const createEmailLink = () => {
-    const to = "info@bvrstco.com";
+    const to = "info@bvrst.studio";
     const subject = encodeURIComponent(
       `Application for ${jobTitle} - ${formData.fullName}`,
     );

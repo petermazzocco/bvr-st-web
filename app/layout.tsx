@@ -6,7 +6,6 @@ import { Footer } from "@/components/layout/footer";
 import { Toaster } from "sonner";
 import { cookies } from "next/headers";
 
-import Script from "next/script";
 import { underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
 import { PageTransitionContext } from "@/contexts/page-transition-context";
@@ -113,13 +112,6 @@ export default async function RootLayout({
           </PageTransitionContext>
         )}
       </body>
-
-      {/* Umami Analytics */}
-      <Script
-        src="https://umami.bvrstco.com/script.js"
-        data-website-id="58e0fb69-5e77-4c91-b2af-f0dac2eddf69"
-        defer
-      />
     </html>
   );
 }
