@@ -16,139 +16,139 @@ export const metadata: Metadata = createMetadata({
   },
 });
 
-const TEAM_MEMBERS = [
-  {
-    name: "Peter Mazzocco",
-    image: "/team/peter.png",
-    socials: [
-      {
-        icon: (
-          <SocialIcon
-            url="https://linkedin.com/in/petermazzocco"
-            target="_blank"
-          />
-        ),
-        url: "https://linkedin.com/in/petermazzocco",
-      },
-      {
-        icon: (
-          <SocialIcon
-            url="https://bsky.app/profile/thedigitaldam.com"
-            target="_blank"
-          />
-        ),
-        url: "https://bsky.app/profile/thedigitaldam.com",
-      },
-      {
-        icon: (
-          <SocialIcon
-            url="https://www.instagram.com/thedigitaldam/"
-            target="_blank"
-          />
-        ),
-        url: "https://www.instagram.com/thedigitaldam",
-      },
-      {
-        icon: (
-          <SocialIcon
-            url="https://www.youtube.com/@thedigitaldam/"
-            target="_blank"
-          />
-        ),
-        url: "https://www.youtube.com/@thedigitaldam",
-      },
-    ],
-  },
-  // {
-  //   name: "Kyle Bjornstad",
-  //   nickname: "",
-  //   image: "/team/kyle.jpg",
-  //   socials: [
-  //     {
-  //       icon: (
-  //         <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
-  //       ),
-  //       url: "https://www.x.com/kylebjornstad1/",
-  //     },
-  //   ],
-  // },
-  {
-    name: "Travis Jones",
-    image: "/team/travis.png",
-    socials: [
-      {
-        icon: (
-          <SocialIcon
-            url="https://www.instagram.com/jupiterwilliams/"
-            target="_blank"
-          />
-        ),
-        url: "https://www.instagram.com/jupiterwilliams",
-      },
-      {
-        icon: (
-          <SocialIcon url="https://x.com/JupiterWil1iams" target="_blank" />
-        ),
-        url: "https://x.com/JupiterWil1iams",
-      },
-    ],
-  },
-  // {
-  //   name: "Michael Milord",
-  //   title: "Director of Engineering",
-  //   nickname: "Milord",
-  //   image: "/team/milord.png",
-  //   socials: [
-  //     {
-  //       icon: (
-  //         <SocialIcon
-  //           url="https://www.linkedin.com/in/michael-milord/"
-  //           target="_blank"
-  //         />
-  //       ),
-  //       url: "https://www.linkedin.com/in/michael-milord/",
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: "Matt Pfeifer",
-  //   title: "Head of Product",
-  //   nickname: "",
-  //   image: "/team/matt.jpeg",
-  //   socials: [
-  //     {
-  //       icon: (
-  //         <SocialIcon
-  //           url="https://www.linkedin.com/in/matthew-pfeifer/"
-  //           target="_blank"
-  //         />
-  //       ),
-  //       url: "https://www.linkedin.com/in/matthew-pfeifer/",
-  //     },
-  //     {
-  //       icon: <SocialIcon url="https://x.com/trustless_matt" target="_blank" />,
-  //       url: "https://x.com/trustless_matt",
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: "Giang Doan",
-  //   title: "Systems Development Engineer",
-  //   nickname: "",
-  //   image: "/team/giang.jpg",
-  //   socials: [
-  //     {
-  //       icon: (
-  //         <SocialIcon
-  //           url="https://www.linkedin.com/in/giang-doan-464058185/"
-  //           target="_blank"
-  //         />
-  //       ),
-  //       url: "https://www.linkedin.com/in/giang-doan-464058185/",
-  //     },
-  //   ],
-  // },
-];
+// const TEAM_MEMBERS = [
+//   {
+//     name: "Peter Mazzocco",
+//     image: "/team/peter.png",
+//     socials: [
+//       {
+//         icon: (
+//           <SocialIcon
+//             url="https://linkedin.com/in/petermazzocco"
+//             target="_blank"
+//           />
+//         ),
+//         url: "https://linkedin.com/in/petermazzocco",
+//       },
+//       {
+//         icon: (
+//           <SocialIcon
+//             url="https://bsky.app/profile/thedigitaldam.com"
+//             target="_blank"
+//           />
+//         ),
+//         url: "https://bsky.app/profile/thedigitaldam.com",
+//       },
+//       {
+//         icon: (
+//           <SocialIcon
+//             url="https://www.instagram.com/thedigitaldam/"
+//             target="_blank"
+//           />
+//         ),
+//         url: "https://www.instagram.com/thedigitaldam",
+//       },
+//       {
+//         icon: (
+//           <SocialIcon
+//             url="https://www.youtube.com/@thedigitaldam/"
+//             target="_blank"
+//           />
+//         ),
+//         url: "https://www.youtube.com/@thedigitaldam",
+//       },
+//     ],
+//   },
+//   // {
+//   //   name: "Kyle Bjornstad",
+//   //   nickname: "",
+//   //   image: "/team/kyle.jpg",
+//   //   socials: [
+//   //     {
+//   //       icon: (
+//   //         <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
+//   //       ),
+//   //       url: "https://www.x.com/kylebjornstad1/",
+//   //     },
+//   //   ],
+//   // },
+//   {
+//     name: "Travis Jones",
+//     image: "/team/travis.png",
+//     socials: [
+//       {
+//         icon: (
+//           <SocialIcon
+//             url="https://www.instagram.com/jupiterwilliams/"
+//             target="_blank"
+//           />
+//         ),
+//         url: "https://www.instagram.com/jupiterwilliams",
+//       },
+//       {
+//         icon: (
+//           <SocialIcon url="https://x.com/JupiterWil1iams" target="_blank" />
+//         ),
+//         url: "https://x.com/JupiterWil1iams",
+//       },
+//     ],
+//   },
+//   // {
+//   //   name: "Michael Milord",
+//   //   title: "Director of Engineering",
+//   //   nickname: "Milord",
+//   //   image: "/team/milord.png",
+//   //   socials: [
+//   //     {
+//   //       icon: (
+//   //         <SocialIcon
+//   //           url="https://www.linkedin.com/in/michael-milord/"
+//   //           target="_blank"
+//   //         />
+//   //       ),
+//   //       url: "https://www.linkedin.com/in/michael-milord/",
+//   //     },
+//   //   ],
+//   // },
+//   // {
+//   //   name: "Matt Pfeifer",
+//   //   title: "Head of Product",
+//   //   nickname: "",
+//   //   image: "/team/matt.jpeg",
+//   //   socials: [
+//   //     {
+//   //       icon: (
+//   //         <SocialIcon
+//   //           url="https://www.linkedin.com/in/matthew-pfeifer/"
+//   //           target="_blank"
+//   //         />
+//   //       ),
+//   //       url: "https://www.linkedin.com/in/matthew-pfeifer/",
+//   //     },
+//   //     {
+//   //       icon: <SocialIcon url="https://x.com/trustless_matt" target="_blank" />,
+//   //       url: "https://x.com/trustless_matt",
+//   //     },
+//   //   ],
+//   // },
+//   // {
+//   //   name: "Giang Doan",
+//   //   title: "Systems Development Engineer",
+//   //   nickname: "",
+//   //   image: "/team/giang.jpg",
+//   //   socials: [
+//   //     {
+//   //       icon: (
+//   //         <SocialIcon
+//   //           url="https://www.linkedin.com/in/giang-doan-464058185/"
+//   //           target="_blank"
+//   //         />
+//   //       ),
+//   //       url: "https://www.linkedin.com/in/giang-doan-464058185/",
+//   //     },
+//   //   ],
+//   // },
+// ];
 
 export default function Page() {
   return (
@@ -239,7 +239,7 @@ export default function Page() {
               careers in technology and innovation.
             </p>
           </div>{" "}
-          <Separator className="my-8" />
+          {/*<Separator className="my-8" />
           <h2
             id="team"
             className="text-lg text-left font-bold  text-foreground"
@@ -255,7 +255,7 @@ export default function Page() {
                 socials={member.socials}
               />
             ))}
-          </div>
+          </div>*/}
         </div>
       </div>
     </div>

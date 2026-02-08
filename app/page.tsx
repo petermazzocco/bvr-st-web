@@ -250,7 +250,7 @@ export default function Page() {
                   <p className="text-gray-600 leading-relaxed">
                     By aligning with NVIDIA through the Inception Program, we
                     serve as the bridge connecting world-class technology
-                    partners with Oregon State athletics, ensuring our athletic
+                    partners with Oregon State Athletics, ensuring our athletic
                     programs have access to industry-leading innovation.
                   </p>
                   <div className="pt-2">

@@ -30,18 +30,17 @@ export default function Page() {
               </p>
               <p>
                 While we celebrate and proudly support Oregon State University
-                and all that is has to offer, BVR ST STUDIO LLC operates
+                and all that is has to offer, BVR ST STUDIO operates
                 independently from any official entity, including any official
                 third-party partners of Oregon State and the University itself.
                 We are fans and alumni creating innovative products, services,
-                and experiences for the Beaver community and supporting the
-                student-athletes by marketing their name, image, and likeness.
+                and experiences for the Beaver community.
               </p>
             </div>
 
             <div>
               <p className="font-bold text-foreground mb-2">
-                Are you an NIL (name, image and likeness) Collective for Oregon
+                Are you an NIL (name, image and likeness) collective for Oregon
                 Stte?
               </p>
               <p>
