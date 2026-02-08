@@ -154,6 +154,15 @@ export function Footer() {
                     Threads
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="https://twitter.com/bvrststudio"
+                    target="_blank"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Twitter
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

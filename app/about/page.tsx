@@ -16,139 +16,132 @@ export const metadata: Metadata = createMetadata({
   },
 });
 
-// const TEAM_MEMBERS = [
-//   {
-//     name: "Peter Mazzocco",
-//     image: "/team/peter.png",
-//     socials: [
-//       {
-//         icon: (
-//           <SocialIcon
-//             url="https://linkedin.com/in/petermazzocco"
-//             target="_blank"
-//           />
-//         ),
-//         url: "https://linkedin.com/in/petermazzocco",
-//       },
-//       {
-//         icon: (
-//           <SocialIcon
-//             url="https://bsky.app/profile/thedigitaldam.com"
-//             target="_blank"
-//           />
-//         ),
-//         url: "https://bsky.app/profile/thedigitaldam.com",
-//       },
-//       {
-//         icon: (
-//           <SocialIcon
-//             url="https://www.instagram.com/thedigitaldam/"
-//             target="_blank"
-//           />
-//         ),
-//         url: "https://www.instagram.com/thedigitaldam",
-//       },
-//       {
-//         icon: (
-//           <SocialIcon
-//             url="https://www.youtube.com/@thedigitaldam/"
-//             target="_blank"
-//           />
-//         ),
-//         url: "https://www.youtube.com/@thedigitaldam",
-//       },
-//     ],
-//   },
-//   // {
-//   //   name: "Kyle Bjornstad",
-//   //   nickname: "",
-//   //   image: "/team/kyle.jpg",
-//   //   socials: [
-//   //     {
-//   //       icon: (
-//   //         <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
-//   //       ),
-//   //       url: "https://www.x.com/kylebjornstad1/",
-//   //     },
-//   //   ],
-//   // },
-//   {
-//     name: "Travis Jones",
-//     image: "/team/travis.png",
-//     socials: [
-//       {
-//         icon: (
-//           <SocialIcon
-//             url="https://www.instagram.com/jupiterwilliams/"
-//             target="_blank"
-//           />
-//         ),
-//         url: "https://www.instagram.com/jupiterwilliams",
-//       },
-//       {
-//         icon: (
-//           <SocialIcon url="https://x.com/JupiterWil1iams" target="_blank" />
-//         ),
-//         url: "https://x.com/JupiterWil1iams",
-//       },
-//     ],
-//   },
-//   // {
-//   //   name: "Michael Milord",
-//   //   title: "Director of Engineering",
-//   //   nickname: "Milord",
-//   //   image: "/team/milord.png",
-//   //   socials: [
-//   //     {
-//   //       icon: (
-//   //         <SocialIcon
-//   //           url="https://www.linkedin.com/in/michael-milord/"
-//   //           target="_blank"
-//   //         />
-//   //       ),
-//   //       url: "https://www.linkedin.com/in/michael-milord/",
-//   //     },
-//   //   ],
-//   // },
-//   // {
-//   //   name: "Matt Pfeifer",
-//   //   title: "Head of Product",
-//   //   nickname: "",
-//   //   image: "/team/matt.jpeg",
-//   //   socials: [
-//   //     {
-//   //       icon: (
-//   //         <SocialIcon
-//   //           url="https://www.linkedin.com/in/matthew-pfeifer/"
-//   //           target="_blank"
-//   //         />
-//   //       ),
-//   //       url: "https://www.linkedin.com/in/matthew-pfeifer/",
-//   //     },
-//   //     {
-//   //       icon: <SocialIcon url="https://x.com/trustless_matt" target="_blank" />,
-//   //       url: "https://x.com/trustless_matt",
-//   //     },
-//   //   ],
-//   // },
-//   // {
-//   //   name: "Giang Doan",
-//   //   title: "Systems Development Engineer",
-//   //   nickname: "",
-//   //   image: "/team/giang.jpg",
-//   //   socials: [
-//   //     {
-//   //       icon: (
-//   //         <SocialIcon
-//   //           url="https://www.linkedin.com/in/giang-doan-464058185/"
-//   //           target="_blank"
-//   //         />
-//   //       ),
-//   //       url: "https://www.linkedin.com/in/giang-doan-464058185/",
-//   //     },
-//   //   ],
-//   // },
-// ];
+const TEAM_MEMBERS = [
+  {
+    name: "Kyle Bjornstad",
+    nickname: "",
+    title: "Co-founder",
+    image: "/team/kyle.jpg",
+    socials: [
+      {
+        icon: (
+          <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
+        ),
+        url: "https://www.x.com/kylebjornstad1/",
+      },
+    ],
+  },
+  {
+    name: "Peter Mazzocco",
+    image: "/team/peter.png",
+    title: "Co-founder",
+    socials: [
+      {
+        icon: (
+          <SocialIcon
+            url="https://linkedin.com/in/petermazzocco"
+            target="_blank"
+          />
+        ),
+        url: "https://linkedin.com/in/petermazzocco",
+      },
+      {
+        icon: (
+          <SocialIcon
+            url="https://threads.com/@petermazzocco"
+            target="_blank"
+          />
+        ),
+        url: "https://threads.com/@petermazzocco",
+      },
+      {
+        icon: (
+          <SocialIcon
+            url="https://www.instagram.com/petermazzocco/"
+            target="_blank"
+          />
+        ),
+        url: "https://www.instagram.com/petermazzocco/",
+      },
+    ],
+  },
+  // {
+  //   name: "Travis Jones",
+  //   image: "/team/travis.png",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon
+  //           url="https://www.instagram.com/jupiterwilliams/"
+  //           target="_blank"
+  //         />
+  //       ),
+  //       url: "https://www.instagram.com/jupiterwilliams",
+  //     },
+  //     {
+  //       icon: (
+  //         <SocialIcon url="https://x.com/JupiterWil1iams" target="_blank" />
+  //       ),
+  //       url: "https://x.com/JupiterWil1iams",
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Michael Milord",
+  //   title: "Director of Engineering",
+  //   nickname: "Milord",
+  //   image: "/team/milord.png",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon
+  //           url="https://www.linkedin.com/in/michael-milord/"
+  //           target="_blank"
+  //         />
+  //       ),
+  //       url: "https://www.linkedin.com/in/michael-milord/",
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Matt Pfeifer",
+  //   title: "Head of Product",
+  //   nickname: "",
+  //   image: "/team/matt.jpeg",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon
+  //           url="https://www.linkedin.com/in/matthew-pfeifer/"
+  //           target="_blank"
+  //         />
+  //       ),
+  //       url: "https://www.linkedin.com/in/matthew-pfeifer/",
+  //     },
+  //     {
+  //       icon: <SocialIcon url="https://x.com/trustless_matt" target="_blank" />,
+  //       url: "https://x.com/trustless_matt",
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Giang Doan",
+  //   title: "Systems Development Engineer",
+  //   nickname: "",
+  //   image: "/team/giang.jpg",
+  //   socials: [
+  //     {
+  //       icon: (
+  //         <SocialIcon
+  //           url="https://www.linkedin.com/in/giang-doan-464058185/"
+  //           target="_blank"
+  //         />
+  //       ),
+  //       url: "https://www.linkedin.com/in/giang-doan-464058185/",
+  //     },
+  //   ],
+  // },
+];
 
 export default function Page() {
   return (
@@ -182,10 +175,10 @@ export default function Page() {
                 Strategic Partnerships
               </h3>
               <p>
-                By aligning with NVIDIA through the Inception Program, we
-                serve as the bridge connecting world-class technology
-                partners with Oregon State Athletics, ensuring our athletic
-                programs have access to industry-leading innovation.
+                By aligning with NVIDIA through the Inception Program, we serve
+                as the bridge connecting world-class technology partners with
+                Oregon State Athletics, ensuring our athletic programs have
+                access to industry-leading innovation.
               </p>
             </div>
             <div>
@@ -196,8 +189,8 @@ export default function Page() {
                 We provide genuine, hands-on opportunities for Oregon State
                 University students to gain real-world experience developing
                 products and services that push athletics further. Students
-                don&apos;t just learn—they build solutions that directly
-                impact outcomes.
+                don&apos;t just learn—they build solutions that directly impact
+                outcomes.
               </p>
             </div>
             <div>
@@ -205,11 +198,10 @@ export default function Page() {
                 Scalable Innovation
               </h3>
               <p>
-                When we create successful products and services internally,
-                we don&apos;t keep them to ourselves. We commercialize
-                proven solutions and offer them to other universities and
-                athletic programs, generating revenue while advancing
-                industries broadly.
+                When we create successful products and services internally, we
+                don&apos;t keep them to ourselves. We commercialize proven
+                solutions and offer them to other universities and athletic
+                programs, generating revenue while advancing industries broadly.
               </p>
             </div>
           </div>
@@ -222,7 +214,7 @@ export default function Page() {
           </h2>
           <div className="flex flex-col gap-4 text-xs text-muted-foreground leading-relaxed">
             <p>
-              At BVR ST, we&apos;re committed to providing students with
+              At BVR ST STUDIO, we&apos;re committed to providing students with
               meaningful opportunities to gain real-world experience while
               contributing to cutting-edge innovation.
             </p>
@@ -241,7 +233,7 @@ export default function Page() {
               careers in technology and innovation.
             </p>
           </div>{" "}
-          {/*<Separator className="my-8" />
+          <Separator className="my-8" />
           <h2
             id="team"
             className="text-lg text-left font-bold  text-foreground"
@@ -255,9 +247,10 @@ export default function Page() {
                 name={member.name}
                 image={member.image}
                 socials={member.socials}
+                title={member.title as string}
               />
             ))}
-          </div>*/}
+          </div>
         </div>
       </div>
     </div>
