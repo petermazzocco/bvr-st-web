@@ -40,8 +40,7 @@ export default function Page() {
 
             <div>
               <p className="font-bold text-foreground mb-2">
-                Are you an NIL (name, image and likeness) collective for Oregon
-                Stte?
+                Are you an NIL (name, image, and likeness) collective for Oregon State?
               </p>
               <p>
                 No, we are not an NIL collective. BVR ST is Oregon State

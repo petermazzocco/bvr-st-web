@@ -11,7 +11,7 @@ export function Footer() {
               <h2 className="text-lg">BVR ST STUDIO</h2>
             </div>
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} Beaver Street Studio LLC. All rights
+              © {new Date().getFullYear()} Beaver Street Studio, LLC. All rights
               reserved.
             </p>
           </div>

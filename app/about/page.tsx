@@ -182,10 +182,10 @@ export default function Page() {
                 Strategic Partnerships
               </h3>
               <p>
-                By aligning with NVIDIA and Oregon State, we serve as the bridge
-                connecting world-class technology partners with Oregon State,
-                ensuring our programs have access to industry-leading
-                innovation.
+                By aligning with NVIDIA through the Inception Program, we
+                serve as the bridge connecting world-class technology
+                partners with Oregon State Athletics, ensuring our athletic
+                programs have access to industry-leading innovation.
               </p>
             </div>
             <div>
@@ -193,10 +193,11 @@ export default function Page() {
                 Student Development
               </h3>
               <p>
-                We provide genuine, hands-on opportunities for students to gain
-                real-world experience developing performance-enhancing products
-                and services for all of athletics. Students don&apos;t just
-                learn—they build solutions that directly impact outcomes.
+                We provide genuine, hands-on opportunities for Oregon State
+                University students to gain real-world experience developing
+                products and services that push athletics further. Students
+                don&apos;t just learn—they build solutions that directly
+                impact outcomes.
               </p>
             </div>
             <div>
@@ -204,10 +205,11 @@ export default function Page() {
                 Scalable Innovation
               </h3>
               <p>
-                When we create successful products and services internally, we
-                don&apos;t keep them to ourselves. We commercialize proven
-                solutions and offer them to other universities and programs,
-                generating revenue while advancing the industry.
+                When we create successful products and services internally,
+                we don&apos;t keep them to ourselves. We commercialize
+                proven solutions and offer them to other universities and
+                athletic programs, generating revenue while advancing
+                industries broadly.
               </p>
             </div>
           </div>
