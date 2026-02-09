@@ -3,6 +3,7 @@ import { generateMetadata as createMetadata } from "@/lib/metadata";
 import { Separator } from "@/components/ui/separator";
 import { SocialIcon } from "react-social-icons";
 import { TeamMemberCard } from "@/components/cards/team-member-card";
+import { Icon } from "@radix-ui/react-select";
 
 export const dynamic = "force-static";
 
@@ -24,10 +25,17 @@ const TEAM_MEMBERS = [
     image: "/team/kyle.jpg",
     socials: [
       {
-        icon: (
-          <SocialIcon url="https://www.x.com/kylebjornstad1/" target="_blank" />
+        Icon: (
+          <SocialIcon
+            url="https://www.instagram.com/bjorn2lead/"
+            target="_blank"
+          />
         ),
-        url: "https://www.x.com/kylebjornstad1/",
+        url: "https://www.instagram.com/bjorn2lead/",
+      },
+      {
+        icon: <SocialIcon url="https://x.com/bjorn2lead" target="_blank" />,
+        url: "https://x.com/bjorn2lead",
       },
     ],
   },
