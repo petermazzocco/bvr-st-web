@@ -25,7 +25,7 @@ const TEAM_MEMBERS = [
     image: "/team/kyle.jpg",
     socials: [
       {
-        Icon: (
+        icon: (
           <SocialIcon
             url="https://www.instagram.com/bjorn2lead/"
             target="_blank"
