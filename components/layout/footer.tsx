@@ -120,7 +120,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://github.com/bvr-str"
+                    href="https://github.com/bvr-st-studio"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
