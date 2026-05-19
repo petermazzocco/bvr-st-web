@@ -41,7 +41,7 @@ const programSchema = {
     "@type": "Offer",
     category: "NIL",
     description:
-      "Oregon State student-athletes are paid a flat rate per completed session, backed by a $100,000 launch funding pool.",
+      "Oregon State student-athletes are paid a flat rate per completed session as a structured NIL opportunity for technical contribution to sports AI.",
   },
 };
 
@@ -87,7 +87,7 @@ export default function Page() {
 
       {/* Hero */}
       <header className="relative min-h-[70vh] flex flex-col justify-center overflow-hidden px-6 py-24">
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/10" />
         <div className="relative z-10 w-full max-w-4xl mx-auto text-foreground">
           <p className="text-primary text-sm font-bold tracking-[0.25em] uppercase mb-6">
             A New Initiative from BVR ST STUDIO
@@ -332,8 +332,8 @@ export default function Page() {
               Athlete Testers.
             </strong>{" "}
             Current Oregon State student-athletes across any sport Scout
-            supports. Structured as a genuine NIL opportunity with paid sessions
-            and a dedicated launch funding pool.
+            supports. Structured as a genuine NIL opportunity with paid
+            sessions.
           </li>
           <li>
             <strong className="font-medium text-gray-900">
@@ -351,7 +351,7 @@ export default function Page() {
       {/* NIL */}
       <Section
         eyebrow="Paid Opportunities for Athletes"
-        title="$100,000 committed at launch"
+        title="Genuine NIL for sport expertise"
       >
         <p>
           Sport expertise is real, valuable work, and the Scout Program treats
@@ -362,18 +362,23 @@ export default function Page() {
           onboarding.
         </p>
         <p>
-          At launch, BVR ST STUDIO is committing{" "}
-          <strong className="font-medium text-gray-900">
-            $100,000 in dedicated funding
-          </strong>{" "}
-          to compensate Oregon State student-athletes participating in the Scout
-          Program. The pool is open to{" "}
+          The Scout Program is open to{" "}
           <strong className="font-medium text-gray-900">
             every eligible OSU student-athlete.
           </strong>{" "}
           There are no roster restrictions, no sport-by-sport caps, and no
           quotas. Once enrolled and onboarded, athletes opt into testing windows
           as their schedule allows, complete the session, and get paid.
+        </p>
+        <p>
+          Most NIL deals today are built around image, likeness, and
+          endorsement. The Scout Program is built around something different:
+          technical work that only student-athletes can do. Athletes bring sport
+          expertise that no annotation contractor and no general-purpose AI can
+          replicate, and the Scout Program is structured to compensate that
+          expertise directly. We see this as a model for what NIL can look like
+          when companies invest in athletes for the work they&apos;re uniquely
+          positioned to contribute.
         </p>
       </Section>
 

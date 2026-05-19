@@ -37,20 +37,17 @@ export default function Page() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Button
-              variant="outline"
               asChild
-              className="group border-primary/30 bg-foreground backdrop-blur-sm hover:bg-foreground/70 text-background hover:text-background transition-all duration-300 h-11 px-8"
+              className="group bg-primary hover:bg-primary/90 text-white h-12 px-8"
             >
               <Link
                 href="/scout"
-                id="scout-program-button"
-                data-umami-event="Homepage Scout Program clicked"
-                className="flex items-center justify-center text-xs tracking-[0.15em] uppercase group-hover:text-primary"
-                prefetch
+                data-umami-event="Scout Program apply clicked"
+                className="flex items-center justify-center text-xs tracking-[0.15em] uppercase"
               >
-                <span>Learn More</span>
+                <span>Learn More / Get Involved</span>
                 <ArrowUpRight
-                  className="-me-1 ms-2 opacity-60 group-hover:opacity-100 group-hover:text-primary transition-transform group-hover:translate-x-0.5 group-hover:translate-y-[-0.125rem]"
+                  className="ms-2 opacity-70 group-hover:opacity-100 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   size={14}
                   aria-hidden="true"
                 />
