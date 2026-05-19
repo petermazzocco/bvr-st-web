@@ -7,13 +7,14 @@ import {
 } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
+import type { ReactElement } from "react";
 
 type TeamMemberCardProps = {
   name: string;
   title: string;
   image: string;
   socials: {
-    icon: JSX.Element;
+    icon: ReactElement;
     url: string;
   }[];
 };

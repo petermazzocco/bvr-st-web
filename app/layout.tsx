@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 
 import { underConstructionFlag } from "@/lib/flags";
 import { UnderConstructionPage } from "@/components/utils/under-construction-page";
-import { PageTransitionContext } from "@/contexts/page-transition-context";
 import { SmoothScrollingContext } from "@/contexts/smooth-scrolling-context";
 
 export const metadata: Metadata = {
@@ -100,16 +99,14 @@ export default async function RootLayout({
         {isUnderConstructionFlag ? (
           <UnderConstructionPage />
         ) : (
-          <PageTransitionContext>
-            <SmoothScrollingContext>
-              <Navbar />
-              <main>
-                {children}
-                <Toaster closeButton position="bottom-center" richColors />
-              </main>
-              <Footer />
-            </SmoothScrollingContext>
-          </PageTransitionContext>
+          <SmoothScrollingContext>
+            <Navbar />
+            <main>
+              {children}
+              <Toaster closeButton position="bottom-center" richColors />
+            </main>
+            <Footer />
+          </SmoothScrollingContext>
         )}
       </body>
     </html>

@@ -12,7 +12,7 @@ const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const routesMap = [""].map((route) => ({
+  const routesMap = ["", "/scout"].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
   }));
