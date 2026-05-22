@@ -103,11 +103,11 @@ export function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="https://bsky.app/profile/bvrst.studio"
+                    href="https://discord.gg/garbkjn5mJ"
                     target="_blank"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Bluesky
+                    Discord
                   </Link>
                 </li>
                 <li>

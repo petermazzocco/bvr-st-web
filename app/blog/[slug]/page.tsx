@@ -71,110 +71,118 @@ export default async function PostPage({
   const postImageUrl = post.data?.image?.asset?.url || null;
 
   return (
-    <div className="min-h-screen">
-      {/* Mobile: Regular banner image */}
+    <div className="bg-background text-foreground min-h-screen">
+      <div className="mx-auto w-full max-w-6xl border-x border-border">
+        {/* Desktop spacer */}
+        <div className="hidden md:block h-[calc(10vh-64px)]" />
 
-      {/* Desktop: Spacer to push content down initially */}
-      <div className="hidden md:block h-[calc(10vh-64px)]" />
-
-      {/* Content */}
-      <main className="relative z-10 bg-background container mx-auto max-w-4xl p-8 flex flex-col gap-4 h-fit rounded-none sm:rounded-lg shadow-sm border mb-10">
-        <article className="prose flex flex-col gap-2">
-          <Suspense fallback={<Skeleton className="w-14 h-5" />}>
-            <h1 className="text-2xl font-bold mb-2">
-              {post.data?.title || ""}
-            </h1>
-            <div className="flex flex-row text-xs mb-2">
-              <Avatar className="mr-2 w-12 h-12">
-                <AvatarImage
-                  //@ts-expect-error - invalid type
-                  src={post.data?.author_image.asset.url || "/logo.png"}
-                  alt={post.data?.author}
-                  className="object-cover"
-                />
-                <AvatarFallback>
-                  {post.data?.author?.slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col justify-center items-start">
-                <p>{post.data.author}</p>
-                <p className="text-muted-foreground">
-                  {new Date(post?.data?.publishedAt).toLocaleDateString()}
-                </p>
+        {/* Article content */}
+        <main className="relative z-10 container mx-auto max-w-4xl px-6 py-12 md:px-12 flex flex-col gap-4 mb-10">
+          <article className="flex flex-col gap-2">
+            <Suspense fallback={<Skeleton className="w-14 h-5" />}>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-primary mb-2">
+                BVR ST STUDIO — Blog
+              </p>
+              <h1 className="text-3xl font-thin tracking-[-0.02em] text-foreground md:text-5xl mb-4">
+                {post.data?.title || ""}
+              </h1>
+              <div className="flex flex-row items-center text-xs mb-6 pb-6 border-b border-border">
+                <Avatar className="mr-3 w-10 h-10">
+                  <AvatarImage
+                    //@ts-expect-error - invalid type
+                    src={post.data?.author_image.asset.url || "/logo.png"}
+                    alt={post.data?.author}
+                    className="object-cover"
+                  />
+                  <AvatarFallback>
+                    {post.data?.author?.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col justify-center items-start gap-0.5">
+                  <p className="text-foreground font-medium">{post.data.author}</p>
+                  <p className="text-muted-foreground">
+                    {new Date(post?.data?.publishedAt).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
-            </div>
-          </Suspense>
-          <Suspense fallback={<Skeleton className="w-full h-screen" />}>
-            {Array.isArray(post?.data?.body) && (
-              <PortableText
-                value={post.data.body}
-                components={{
-                  block: {
-                    h1: ({ children }) => (
-                      <h1 className="text-3xl font-bold mb-4 mt-8">
-                        {children}
-                      </h1>
-                    ),
-                    h2: ({ children }) => (
-                      <h2 className="text-2xl font-bold mb-3 mt-6">
-                        {children}
-                      </h2>
-                    ),
-                    h3: ({ children }) => (
-                      <h3 className="text-xl font-bold mb-2 mt-4">
-                        {children}
-                      </h3>
-                    ),
-                    h4: ({ children }) => (
-                      <h4 className="text-lg font-bold mb-2 mt-4">
-                        {children}
-                      </h4>
-                    ),
-                    blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 text-sm border-border/10 pl-4 italic mb-4">
-                        {children}
-                      </blockquote>
-                    ),
-                    normal: ({ children }) => (
-                      <p className="mb-4 leading-7 text-sm">{children}</p>
-                    ),
-                  },
-                  marks: {
-                    link: ({ value, children }) => (
-                      <a
-                        className="text-primary hover:underline"
-                        href={value.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {children}
-                      </a>
-                    ),
-                  },
-                }}
-              />
-            )}
-          </Suspense>
-        </article>
-      </main>
+            </Suspense>
 
-      {/* Newsletter signup card */}
-      <div className="w-full flex justify-center mb-10">
-        <div className="bg-background max-w-[400px] mx-auto p-6 rounded-lg flex flex-col gap-2 items-center shadow-sm border">
-          <Avatar className="w-14 h-14 bg-muted-foreground">
-            <AvatarImage
-              src="/assets/icons/BEAVER-ST-CO_ICON-03.svg"
-              alt="Avatar"
-              className="p-3"
-            />
-            <AvatarFallback>OS</AvatarFallback>
-          </Avatar>
-          <h2 className="text-md text-left">Stay up to date on the latest:</h2>
-          <p className="mb-4  text-xs text-muted-foreground">
-            Join our newsletter and be the first to know when we launch our
-            products, experiences, and services.
-          </p>
-          <AddToNewsletterForm />
+            <Suspense fallback={<Skeleton className="w-full h-screen" />}>
+              {Array.isArray(post?.data?.body) && (
+                <PortableText
+                  value={post.data.body}
+                  components={{
+                    block: {
+                      h1: ({ children }) => (
+                        <h1 className="text-3xl font-thin tracking-[-0.02em] text-foreground mb-4 mt-8">
+                          {children}
+                        </h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="text-2xl font-thin tracking-[-0.02em] text-foreground mb-3 mt-6">
+                          {children}
+                        </h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-xl font-medium text-foreground mb-2 mt-4">
+                          {children}
+                        </h3>
+                      ),
+                      h4: ({ children }) => (
+                        <h4 className="text-lg font-medium text-foreground mb-2 mt-4">
+                          {children}
+                        </h4>
+                      ),
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-primary pl-4 italic mb-4 text-muted-foreground text-sm">
+                          {children}
+                        </blockquote>
+                      ),
+                      normal: ({ children }) => (
+                        <p className="mb-4 leading-7 text-sm font-light text-muted-foreground">
+                          {children}
+                        </p>
+                      ),
+                    },
+                    marks: {
+                      link: ({ value, children }) => (
+                        <a
+                          className="text-primary hover:underline"
+                          href={value.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {children}
+                        </a>
+                      ),
+                    },
+                  }}
+                />
+              )}
+            </Suspense>
+          </article>
+        </main>
+
+        {/* Newsletter signup */}
+        <div className="w-full border-t border-border px-6 py-16 md:px-12 flex justify-center mb-10">
+          <div className="bg-card border border-border max-w-[400px] w-full mx-auto p-8 rounded-lg flex flex-col gap-2 items-center">
+            <Avatar className="w-14 h-14 bg-secondary">
+              <AvatarImage
+                src="/assets/icons/BEAVER-ST-CO_ICON-03.svg"
+                alt="Avatar"
+                className="p-3"
+              />
+              <AvatarFallback>OS</AvatarFallback>
+            </Avatar>
+            <h2 className="text-sm font-medium text-foreground text-center mt-2">
+              Stay up to date on the latest
+            </h2>
+            <p className="mb-4 text-xs font-light leading-relaxed text-muted-foreground text-center">
+              Join our newsletter and be the first to know when we launch our
+              products, experiences, and services.
+            </p>
+            <AddToNewsletterForm />
+          </div>
         </div>
       </div>
     </div>

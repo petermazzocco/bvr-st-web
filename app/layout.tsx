@@ -88,13 +88,7 @@ export default async function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/oxp4xny.css" />
       </head>
       <body
-        className={`${inter.variable} ${vt.variable} antialiased min-h-screen`}
-        style={{
-          backgroundImage: "url(/topo.jpeg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
+        className={`${inter.variable} ${vt.variable} antialiased min-h-screen bg-background`}
       >
         {isUnderConstructionFlag ? (
           <UnderConstructionPage />

@@ -14,63 +14,78 @@ export const metadata: Metadata = createMetadata({
   },
 });
 
+const faqs = [
+  {
+    n: "01",
+    q: "Are you affiliated with or officially recognized by Oregon State University?",
+    a: "While we celebrate and proudly support Oregon State University and all that it has to offer, BVR ST STUDIO operates independently from any official entity, including any official third-party partners of Oregon State and the university itself. We are fans and alumni creating innovative products, services, and experiences for the Beaver community.",
+  },
+  {
+    n: "02",
+    q: "Are you an NIL (name, image, and likeness) collective for Oregon State?",
+    a: "No, we are not an NIL collective. BVR ST STUDIO is an innovation studio dedicated to creating sustainable competitive advantages through cutting-edge technology and collaboration.",
+  },
+  {
+    n: "03",
+    q: "How can I contact BVR ST STUDIO for opportunities, questions and/or support?",
+    a: "You can reach us through our contact form, email, or social media channels. We typically respond within 24-48 hours during business days.",
+  },
+];
+
 export default function Page() {
   return (
-    <div className="min-h-screen pt-16">
-      <div className=" py-16 ">
-        <div className="bg-background max-w-4xl mx-auto p-4 rounded-lg text-left border shadow-sm">
-          <h2 className="text-lg text-left font-bold mb-4 text-foreground">
+    <main className="bg-background text-foreground">
+      <div className="mx-auto w-full max-w-6xl border-x border-border">
+        {/* Header */}
+        <section className="border-b border-border px-6 py-12 md:px-12 md:py-20">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-primary">
+            Support
+          </p>
+          <h1 className="mt-4 text-3xl font-thin tracking-[-0.02em] text-foreground md:text-5xl">
             Frequently Asked Questions
-          </h2>
-          <div className="flex flex-col text-xs text-muted-foreground leading-relaxed gap-10 mb-16">
-            <div>
-              <p className="font-bold text-foreground mb-2">
-                Are you affiliated with or officially recognized by Oregon State
-                University?
-              </p>
-              <p>
-                While we celebrate and proudly support Oregon State University
-                and all that is has to offer, BVR ST STUDIO operates
-                independently from any official entity, including any official
-                third-party partners of Oregon State and the university itself.
-                We are fans and alumni creating innovative products, services,
-                and experiences for the Beaver community.
-              </p>
-            </div>
+          </h1>
+        </section>
 
-            <div>
-              <p className="font-bold text-foreground mb-2">
-                Are you an NIL (name, image, and likeness) collective for Oregon
-                State?
-              </p>
-              <p>
-                No, we are not an NIL collective. BVR ST STUDIO is a innovation
-                studio dedicated to creative sustainable competitive advantages
-                through cutting-edge technology and collaboration.
-              </p>
-            </div>
-
-            <div>
-              <p className="font-bold text-foreground mb-2">
-                How can I contact BVR ST STUDIO for opportunities, questions
-                and/or support?
-              </p>
-              <p>
-                You can reach us through our contact form, email, or social
-                media channels. We typically respond within 24-48 hours during
-                business days.
-              </p>
-            </div>
-
-            <div className="italic mt-8">
-              Have more questions?{" "}
-              <Link href="/contact" className="underline">
-                Don&apos;t hesitate to reach out, we&apos;re here to help.{" "}
-              </Link>
-            </div>
+        {/* FAQ items */}
+        <section className="border-b border-border px-6 py-12 md:px-12 md:py-16">
+          <div className="flex flex-col divide-y divide-border">
+            {faqs.map((item) => (
+              <div
+                key={item.n}
+                className="flex flex-col gap-3 py-10 md:flex-row md:gap-16"
+              >
+                <span className="shrink-0 font-mono text-sm font-bold text-primary">
+                  {item.n}
+                </span>
+                <div className="flex flex-col gap-3">
+                  <p className="text-lg font-medium text-foreground">
+                    {item.q}
+                  </p>
+                  <p className="font-light leading-relaxed text-muted-foreground">
+                    {item.a}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+        </section>
+
+        {/* CTA */}
+        <section className="px-6 py-20 md:px-12 md:py-28">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-primary">
+            Still have questions?
+          </p>
+          <p className="mt-4 font-light leading-relaxed text-muted-foreground">
+            Don&apos;t hesitate to reach out — we&apos;re here to help.{" "}
+            <Link
+              href="/contact"
+              className="text-foreground underline underline-offset-4 transition-colors hover:text-primary"
+            >
+              Contact us here.
+            </Link>
+          </p>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

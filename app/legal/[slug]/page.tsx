@@ -48,7 +48,7 @@ export default async function Page({
                   ),
                   em: ({ children }) => <em className="italic">{children}</em>,
                   code: ({ children }) => (
-                    <code className="bg-gray-100 px-1 py-0.5 rounded text-sm">
+                    <code className="bg-secondary text-foreground px-1 py-0.5 rounded text-sm">
                       {children}
                     </code>
                   ),
