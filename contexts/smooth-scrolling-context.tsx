@@ -8,7 +8,7 @@ export function SmoothScrollingContext({
   children: React.ReactNode;
 }) {
   return (
-    <ReactLenis root options={{ lerp: 0.1, duration: 1.3, smoothWheel: true }}>
+    <ReactLenis root options={{ lerp: 0.1, duration: 0.7, smoothWheel: true }}>
       {children}
     </ReactLenis>
   );
