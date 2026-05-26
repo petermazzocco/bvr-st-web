@@ -101,7 +101,7 @@ export default function Page() {
                   BVR ST STUDIO
                 </h1>
                 <div className="text-muted text-sm font-base tracking-[0.3em] uppercase mt-2">
-                  THE FUTURE OF OREGON STATE
+                  THE FUTURE OF COLLEGE ATHLETICS
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function Page() {
                   BVR ST STUDIO
                 </h1>
                 <div className="text-muted text-xs lg:text-sm font-base drop-shadow-sm drop-shadow-black tracking-[0.3em] uppercase ml-2">
-                  THE FUTURE OF OREGON STATE
+                  THE FUTURE OF COLLEGE ATHLETICS
                 </div>
               </div>
             </div>
@@ -169,7 +169,7 @@ export default function Page() {
                 </div>
                 <p className="text-white text-sm font-light leading-relaxed">
                   The innovative studio that&apos;s building the future of
-                  sports at Oregon State.
+                  sports in Corvallis.
                 </p>
               </div>
 
@@ -250,7 +250,7 @@ export default function Page() {
                   <p className="text-gray-600 leading-relaxed">
                     By aligning with NVIDIA through the Inception Program, we
                     serve as the bridge connecting world-class technology
-                    partners with Oregon State Athletics, ensuring our athletic
+                    partners with college athletics in Corvallis, ensuring our athletic
                     programs have access to industry-leading innovation.
                   </p>
                   <div className="pt-2">
@@ -275,8 +275,8 @@ export default function Page() {
                     Student Development
                   </p>
                   <p className="text-gray-600 leading-relaxed">
-                    We provide genuine, hands-on opportunities for Oregon State
-                    University students to gain real-world experience developing
+                    We provide genuine, hands-on opportunities for collegiate
+                    student-athletes and students to gain real-world experience developing
                     products and services that push athletics further. Students
                     don&apos;t just learn—they build solutions that directly
                     impact outcomes.

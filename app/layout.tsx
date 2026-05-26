@@ -13,15 +13,15 @@ import { SmoothScrollingContext } from "@/contexts/smooth-scrolling-context";
 
 export const metadata: Metadata = {
   title: "BVR ST STUDIO",
-  description: "An innovative studio supporting Oregon State student-athletes",
+  description: "An innovative studio building the future of college athletics",
   keywords: [
-    "oregon state beavers",
-    "oregon state",
-    "oregon state studio",
-    "oregon state nvidia",
-    "oregon state beavers studio nvidia",
-    "osu beavers technology",
-    "beavers nvidia",
+    "college athletics studio",
+    "collegiate sports innovation",
+    "corvallis innovation studio",
+    "college athletics technology",
+    "nvidia inception",
+    "future of college athletics",
+    "student-athlete technology",
   ],
   authors: [{ name: "BVR ST STUDIO" }],
   creator: "BVR ST STUDIO",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BVR ST STUDIO",
     description:
-      "An innovative studio supporting Oregon State student-athletes",
+      "An innovative studio building the future of college athletics",
     url: "https://bvrst.studio",
     siteName: "BVR ST STUDIO",
     locale: "en_US",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BVR ST STUDIO",
     description:
-      "An innovative studio supporting Oregon State student-athletes",
+      "An innovative studio building the future of college athletics",
     creator: "@bvrststudio",
     site: "@bvrststudio",
     images: ["https://bvrst.studio/opengraph/index.png"],

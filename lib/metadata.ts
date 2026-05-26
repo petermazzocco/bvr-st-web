@@ -22,7 +22,7 @@ export interface MetadataOptions {
 
 const DEFAULT_SITE_NAME = "BVR ST STUDIO";
 const DEFAULT_DESCRIPTION =
-  "An innovative studio supporting Oregon State student-athletes";
+  "An innovative studio building the future of college athletics";
 const DEFAULT_IMAGE = "https://bvrst.studio/og-image.jpg";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bvrst.studio";
 

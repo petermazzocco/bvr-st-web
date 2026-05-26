@@ -25,23 +25,23 @@ export default function Page() {
           <div className="flex flex-col text-xs text-muted-foreground leading-relaxed gap-10 mb-16">
             <div>
               <p className="font-bold text-foreground mb-2">
-                Are you affiliated with or officially recognized by Oregon State
-                University?
+                Are you affiliated with or officially recognized by any
+                university?
               </p>
               <p>
-                While we celebrate and proudly support Oregon State University
-                and all that is has to offer, BVR ST STUDIO operates
+                While we celebrate and proudly support college athletics in
+                Corvallis and all that it has to offer, BVR ST STUDIO operates
                 independently from any official entity, including any official
-                third-party partners of Oregon State and the university itself.
-                We are fans and alumni creating innovative products, services,
-                and experiences for the Beaver community.
+                third-party partners or the university itself. We are fans and
+                alumni creating innovative products, services, and experiences
+                for the Corvallis community.
               </p>
             </div>
 
             <div>
               <p className="font-bold text-foreground mb-2">
-                Are you an NIL (name, image, and likeness) collective for Oregon
-                State?
+                Are you an NIL (name, image, and likeness) collective for any
+                university?
               </p>
               <p>
                 No, we are not an NIL collective. BVR ST STUDIO is a innovation
