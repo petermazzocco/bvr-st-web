@@ -164,7 +164,7 @@ export default function Page() {
           </h2>
           <div className="flex flex-col gap-3 text-xs text-muted-foreground leading-relaxed">
             <p>
-              BVR ST STUDIO is Corvallis&apos;s innovation studio, dedicated
+              BVR ST STUDIO is an innovation studio dedicated
               to creating sustainable competitive advantages through
               cutting-edge technology and collaboration. Our mission centers on
               three strategic pillars.
@@ -185,7 +185,7 @@ export default function Page() {
               <p>
                 By aligning with NVIDIA through the Inception Program, we serve
                 as the bridge connecting world-class technology partners with
-                college athletics in Corvallis, ensuring our athletic programs have
+                collegiate athletics programs, ensuring our athletic programs have
                 access to industry-leading innovation.
               </p>
             </div>
@@ -233,8 +233,8 @@ export default function Page() {
               on real projects that directly impact competitive outcomes.
             </p>
             <p>
-              Through our partnerships with NVIDIA and academic programs in
-              Corvallis, interns gain access to industry-leading
+              Through our partnerships with NVIDIA and collegiate academic
+              programs, interns gain access to industry-leading
               technology and mentorship while building solutions for athletics
               that matter. This isn&apos;t just resume-building—it&apos;s
               genuine product development experience that prepares students for

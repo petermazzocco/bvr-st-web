@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   keywords: [
     "college athletics studio",
     "collegiate sports innovation",
-    "corvallis innovation studio",
+    "sports innovation studio",
     "college athletics technology",
     "nvidia inception",
     "future of college athletics",

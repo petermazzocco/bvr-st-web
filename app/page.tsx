@@ -169,7 +169,7 @@ export default function Page() {
                 </div>
                 <p className="text-white text-sm font-light leading-relaxed">
                   The innovative studio that&apos;s building the future of
-                  sports in Corvallis.
+                  college athletics.
                 </p>
               </div>
 
@@ -250,7 +250,7 @@ export default function Page() {
                   <p className="text-gray-600 leading-relaxed">
                     By aligning with NVIDIA through the Inception Program, we
                     serve as the bridge connecting world-class technology
-                    partners with college athletics in Corvallis, ensuring our athletic
+                    partners with collegiate athletics programs, ensuring our athletic
                     programs have access to industry-leading innovation.
                   </p>
                   <div className="pt-2">

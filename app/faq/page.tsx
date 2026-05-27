@@ -29,12 +29,12 @@ export default function Page() {
                 university?
               </p>
               <p>
-                While we celebrate and proudly support college athletics in
-                Corvallis and all that it has to offer, BVR ST STUDIO operates
-                independently from any official entity, including any official
-                third-party partners or the university itself. We are fans and
-                alumni creating innovative products, services, and experiences
-                for the Corvallis community.
+                While we celebrate and proudly support college athletics and
+                all that it has to offer, BVR ST STUDIO operates independently
+                from any official entity, including any official third-party
+                partners or any university itself. We are fans and alumni
+                creating innovative products, services, and experiences for
+                the college athletics community.
               </p>
             </div>
 
