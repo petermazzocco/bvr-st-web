@@ -208,7 +208,7 @@ export default function Page() {
               <p>
                 When we create successful products and services internally, we
                 don&apos;t keep them to ourselves. We commercialize proven
-                solutions and offer them to other universities and athletic
+                solutions and offer them to universities and athletic
                 programs, generating revenue while advancing industries broadly.
               </p>
             </div>
